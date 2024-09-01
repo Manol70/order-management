@@ -1,0 +1,109 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ПОРЪЧКИ{% endblock %}
+
+{% block body %}
+
+
+     
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+  <style>
+    table, th, td {
+    border: 1px solid black;
+    }
+  </style>
+  
+</head>
+
+
+<div class="container">
+<a href="/order"><input type="button" class="btn btn-success" value="НАЧАЛО" data-turbo-frame="orders_frame"></a>
+<a href="/create/order"><input type="button" class="btn btn-success" value="Нова поръчка"></a>
+<a href="/admin"><input type="button" class="btn btn-success" value="АДМИН ПАНЕЛ"></a>
+<a href="/reference/index"> <input type="button" class="btn btn-success" value="СПРАВКА"></a>
+
+<!--<div data-controller="version-control" data-version-control-is-full-version-value="true"> 
+  <button data-action="version-control#toggle" data-version="1">Съкратена версия</button>
+</div>-->
+<div {{ stimulus_controller('version-control', {
+            isFullVersion:true
+        }) }}> 
+<button data-action="version-control#toggle" data-version="1">Съкратена версия</button>
+</div>
+</div>
+
+
+    <div class="d-flex flex-row">
+        <h1 class="me-3">Product index</h1>
+        <div {{ stimulus_controller('modal-form', {
+            formUrl: path('app_register')
+        }) }}>
+            <button
+                class="btn btn-primary btn-sm"
+                data-action="modal-form#openModal"
+            >Add+</button>
+            {{ include('_modal.html.twig', {
+                modalTitle: 'Нова поръчка',
+            }) }}
+        </div>
+    </div>
+<div class="search-form-container">
+    {{ form_start(searchForm, { 'method': 'GET', 'action': path('app_order') }) }}
+    
+    <div class="form-row">
+        <div class="form-field">
+            {{ form_label(searchForm.customer) }}
+            {{ form_widget(searchForm.customer, {'attr': {'class': 'form-control'}}) }}
+        </div>
+        <div class="form-field">
+            {{ form_label(searchForm.type) }}
+            {{ form_widget(searchForm.type, {'attr': {'class': 'form-control'}}) }}
+        </div>
+        <div class="form-field">
+            {{ form_label(searchForm.status) }}
+            {{ form_widget(searchForm.status, {'attr': {'class': 'form-control'}}) }}
+        </div>
+        <div class="form-field">
+            {{ form_label(searchForm.glass) }}
+            {{ form_widget(searchForm.glass, {'attr': {'class': 'form-control'}}) }}
+        </div>
+        <div class="form-field">
+            {{ form_label(searchForm.detail) }}
+            {{ form_widget(searchForm.detail, {'attr': {'class': 'form-control'}}) }}
+        </div>
+        <div class="form-field">
+            {{ form_label(searchForm.mosquito) }}
+            {{ form_widget(searchForm.mosquito, {'attr': {'class': 'form-control'}}) }}
+        </div>
+         <div class="form-field">
+            {{ form_label(searchForm.from_date) }}
+            {{ form_widget(searchForm.from_date, {'attr': {'class': 'form-control'}}) }}
+        </div>
+         <div class="form-field">
+            {{ form_label(searchForm.to_date) }}
+            {{ form_widget(searchForm.to_date, {'attr': {'class': 'form-control'}}) }}
+        </div>
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Виж поръчките</button> 
+    {{ form_end(searchForm) }}
+</div>
+
+ 
+<div class="container-fluid mt-4"
+
+{{ stimulus_controller('reload-content',{
+    url: path('app_order', { ajax: 1 })
+}) }}
+data-action="modal-form:success->reload-content#refreshContent"
+>
+   <div data-reload-content-target="content">
+    
+        {% include 'order/_list.html.twig' %}
+       
+    </div>
+</div>
+
+{% endblock %}

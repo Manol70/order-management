@@ -1,0 +1,73 @@
+
+{% extends 'base.html.twig' %}
+{% block title %} Задължения на клиент {% endblock %}
+
+{% block body %}
+<html lang="en">
+
+<head>
+     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ 
+    <title>Your Page Title</title>
+</head>
+<body>
+<a href="/order"><input type="button" class="btn btn-success" value="НАЧАЛНА СТРАНИЦА" data-turbo-frame="orders_frame"></a>
+<h1>Задължения на клиент {{ customer }}</h1>
+
+     <table id="orderTable">
+     <thead>
+
+     <th>Поръчка №</th>
+     <th>Цена поръчка</th>
+     <th>Платено до момента </th>
+     <th>Дължима сума </th>
+    <th>Действия</th> <!-- Новата колона за бутоните -->
+     <th>Плащане </th>
+     <th>Документ</th>
+     <th>№ на док</th>
+     </tr>
+     </thead>
+     <tbody>
+     {% for order in orders %}
+     <tr data-id="{{ order.id }}" data-price="{{ order.price - order.paid }}">
+          <td>{{ order.number }}</td>
+          <td>{{ order.price }}</td>
+          <td>{{ order.paid }}</td>
+          <td id="orderPrice_{{ order.id }}" data-price="{{ order.price - order.paid}}">
+               <span data-price={{ order.price - order.paid }}></span>
+               {{ order.price - order.paid}}
+          </td>
+          <td> 
+               <button class="transferAmountButton" data-order-id="{{ order.id }}" data-order-number="{{ order.number }}">Прехвърли сумата</button>
+          </td>
+          <td>
+               <input type="number" class="paymentInput" data-id="{{ order.id }}" data-order-number="{{ order.number }}" data-price="{{ order.price }}" min="0" max="{{ order.price }}" placeholder="0.00">
+          </td>
+          <td>
+               <input type="text" class="paymentDoc" disabled>
+               <span class="paymentDocError" style="color: red;"></span>
+          </td>
+          <td>
+               <input type="text" class="docNumber" disabled>
+          </td>
+     </tr>
+     {% endfor %}
+     </tbody>
+     </table>
+
+     {{ form_start(form) }}
+     {{ form_widget(form) }}
+     <label>Сума  плащане:</label>
+     <span id="totalAmount">0.00</span>
+     <input type="hidden" name="data" value="123" />
+    <button type="submit">Изпратиttt</button>
+     {{ form_end(form) }}    
+
+     
+
+ 
+</body>
+
+</html>
+{% endblock %}

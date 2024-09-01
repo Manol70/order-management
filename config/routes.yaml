@@ -7,3 +7,9 @@ controllers:
 app_logout:
     path: /logout
     methods: GET
+
+dashboard:
+    path: /admin
+    controller: App\Controller\Admin\DashboardController::index
+
+   

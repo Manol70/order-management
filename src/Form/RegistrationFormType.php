@@ -21,8 +21,8 @@ class RegistrationFormType extends AbstractType
     {
         $roles = [
             'User'=> 'ROLE_USER',
+            'Super User' => 'ROLE_SUPER_USER',
             'Admin' => 'ROLE_ADMIN',
-            'Super Admin' => 'ROLE_SUPER_ADMIN',
             
         ];
         $builder

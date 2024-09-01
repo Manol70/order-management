@@ -1,3 +1,301 @@
-body {
-    background-color: lightgray;
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200&display=swap');
+@import "~bootstrap";
+
+
+
+.header {
+  background-color: hsla(191, 81%, 67%, 0.784); /* цвят на фона */
+  /*border: 2mm solid #888; /* Бордер с широчина 2мм и цвят  */
+  /*border-radius: 10px; /* Закръглени ъгли */
+  padding: 20px; /* Вътрешно разстояние от горната граница до съдържанието */
+  /*box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.10); /* Ефект на изпъкналост */
+  outline: 3mm solid #4291a1b4; /* Тънка линия като бордер */
+  outline-offset: -3mm; /* Отстъп от контура на елемента */
+  height: 20vh; /* Височина 20% от височината на страницата */
+  display: flex; /*  Flexbox */
+  justify-content: space-between; /* Разпределение на елементите равномерно по ширината на "header" */
+  align-items: center; /* ЦентрираKE елементите по вертикалата */
+}
+
+.header img {
+  margin-right: 20px; /* Разстояние от дясната страна на логото до края на "header" */
+}
+
+form {
+  background-color: transparent; /* Премахва сивото задноразстояние */
+  padding: 0; /* Премахва вътрешното разстояние на формата */
+  margin: 0 auto; /* Центрира формата на страницата */
+  max-width: 600px; /* Ограничава максималната ширина на формата */
+  width: auto; /* Автоматична ширина в зависимост от съдържанието */
+  border-radius: 20px; /* Закръгляване на ъглите */
+}
+
+.btn-primary {
+  width: 100%; /* Заема цялата ширина на родителя си */
+  border: none; /* Премахва границата на бутона */
+  border-radius: 50px; /* Закръгляване на ъглите на бутона */
+  background: linear-gradient(90deg, rgb(177, 176, 206) 0%, rgba(75,14,154,1) 35%, rgba(0,212,255,1) 100%); /* Градиентен фон на бутона */
+}
+
+.form-control {
+  color: rgba(0, 0, 0, .87); /* Цвят на текста */
+  border-bottom-color: rgba(0, 0, 0, .42); /* Цвят на долната граница на текстовото поле */
+  box-shadow: none !important; /* Премахва сянката */
+  border: none; /* Премахва границата */
+  border-bottom: 1px solid; /* Добавя долна граница */
+  border-radius: 4px 4px 0 0; /* Закръгляване на горните ъгли */
+}
+
+.search-form-container {
+  background-color: #eee4e4c4; /* Цвят на фона */
+  padding: 20px; /* Вътрешен отстъп */
+  border-radius: 10px; /* Закръгляване на ъглите */
+  margin-bottom: 20px; /* Отстъп долу */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Сянка */
+}
+
+.search-form-container .form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px; /* Разстояние между полетата */
+}
+
+.search-form-container .form-field {
+  flex: 1 1 200px; /* Разпределение на ширината на полетата */
+}
+
+.search-form-container .btn-primary {
+  width: 100%; /* Заема цялата ширина на контейнера */
+  border-radius: 20px; /* Закръгляване на ъглите на бутона */
+  background: linear-gradient(90deg, rgb(177, 176, 206) 0%, rgba(75, 14, 154, 1) 35%, rgba(0, 212, 255, 1) 100%); /* Градиентен фон на бутона */
+  margin-top: 10px; /* Отстъп отгоре */
+  border: none; /* Премахва границата на бутона */
+}
+
+/* Стилизация на текстовите полета */
+.search-form-container .form-control {
+  color: rgba(0, 0, 0, .87);
+  border-bottom-color: rgba(0, 0, 0, .42);
+  box-shadow: none !important;
+  border: none;
+  border-bottom: 1px solid;
+  border-radius: 4px 4px 0 0;
+}
+
+
+ 
+.customer-autocomplete-field {
+  width: 100% !important; /* или по ваш избор */
+}
+.modal-body button {
+  display: none;
+}
+.my-form-class {
+  background-color: #eddbdb; /* Сив цвят на формата */
+    padding: 20px; /* Подравняване на съдържанието вътре във формата */
+}
+
+.my-label-class {
+  background-color: red; /* Променете цвета на етикетите на червено */
+  font-weight: bold; /* Оставете текста удебелен */
+}
+
+.my-input-class {
+  order-color: green; /* Променете цвета на границата на входното поле на зелено */
+  background-color: yellow; /* Променете цвета на фона на входното поле на жълто */
+  width: 100% !important; /* Заето на цялото ширината на родителския елемент */
+  box-sizing: border-box !important; /* Размер на полето включва и границата */
+  padding: 10px !important; /* Вътрешно разстояние */
+  border: 1px solid #ccc !important; /* Граница */
+  border-radius: 5px !important; /* Закръгление на краищата */
+  background-color: white !important; /* Бял цвят на входните полета */
+  margin-bottom: 10px !important; /* Разстояние между входните полета */
+}
+
+.tref {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+.tref th,
+.tref td {
+  border: 1px solid black;
+  border-collapse: collapse; /* Слива границите на клетките */
+  background-color: #f2f2f2;
+  color: #333;
+  font-weight: bold;
+  padding: 8px;
+  text-align: left;
+}
+
+.tref th {
+  border-bottom: 2px solid #ddd; /* Горна граница на клетката */
+}
+
+.search-form {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 20px;
+}
+
+
+.form-group {
+  margin-right: 10px; /* Разстояние между полетата */
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.form-field {
+  flex-grow: 1;
+  margin-right: 10px; /* Променете това според вашите нужди */
+}
+
+.form-field:last-child {
+  margin-right: 0;
+}
+/* Опционално: Стилизиране на бутона за търсене */
+button[type="submit"] {
+  padding: 5px 10px;
+  background-color: #00ff2a;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.table-container {
+  max-height: 300px; /* Определяне на височината на скролируемата част */
+  overflow-y: auto;
+  border: 1px solid #ddd; /* Добавяне на граница за контейнера */
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+th {
+  background-color: #f2f2f2;
+  position: sticky;
+  top: 0;
+  z-index: 1; /* За да стои над клетките на таблицата */
+}
+
+/* за страницата подробна справка за поръчка */
+.example-wrapper {
+  text-align: center;
+  margin-bottom: 20px;
+  background-color: #f2f2f2;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.example-wrapper h1 {
+  margin-top: 0;
+}
+
+.example-wrapper table {
+  width: 100%;
+  margin-top: 20px;
+  border-collapse: collapse;
+}
+
+.example-wrapper table th {
+  background-color: #ddd;
+  padding: 10px;
+}
+
+.example-wrapper table th,
+.example-wrapper table td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: center;
+}
+
+.tables-group {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.tables-group .table-container {
+  width: 48%; /* Ширина на контейнерите за таблиците */
+}
+
+.tables-group .table-container table {
+  width: 100%;
+  margin-top: 10px;
+  border-collapse: collapse;
+}
+
+.tables-group .table-container table th {
+  background-color: #ddd;
+  padding: 10px;
+}
+
+.tables-group .table-container table th,
+.tables-group .table-container table td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: center;
+}
+/* до тук е за ПОДРОБНА СПРАВКА ЗА ПОРЪЧКА */
+
+/* за пагинацията */
+.pagination {
+  display: flex;
+  justify-content: center;
+}
+.page-item.active .page-link {
+  background-color: #007bff;
+  border-color: #007bff;
+  color: white;
+}
+
+.page-item .page-link {
+  color: blue;
+  border: 1px solid blue;
+}
+
+.page-item.disabled .page-link {
+  color: #ccc;
+}
+
+.page-item:not(:last-child) .page-link {
+  margin-right: .25em;
+}
+
+.page-link:hover {
+  background-color: #ccf;
+}
+/* до тук е за пагинацията */
+/* скриване на полета за съкратена версия*/
+.hidden {
+    display: none;
+}
+/*скриване на полетата във формата за търсене*/
+.hidden-field {
+    display: none;
+}
+/*за таблиците в справката за топ поръчки*/
+.tables-container {
+    display: flex;          /* Подрежда децата на контейнера в ред (хоризонтално) */
+    justify-content: space-between; /* Разстояние между таблиците */
+    gap: 20px;              /* Разстояние между всяка от таблиците */
+}
+
+.table-wrapper {
+    flex: 1;                /* Означава, че всяка таблица ще заема равно място */
+    padding: 10px;
+    border: 1px solid #ccc; /* Малка граница около всяка таблица */
+    background-color: #f9f9f9; /* Фонов цвят за яснота */
 }

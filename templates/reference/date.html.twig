@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Справка поръчка{% endblock %}
+
+{% block body %}
+<style>
+</style>
+
+<div class="example-wrapper">
+    <h1>СПРАВКА ЗА {{ date|date('d.m.Y') }}! ✅</h1>
+    <a href="/order"><input type="button" class="btn btn-success" value="НАЧАЛНА СТРАНИЦА" data-turbo-frame="orders_frame"></a>
+</div>
+<div class="reference-form">
+    {{ form_start(referenceDateStatusForm) }}
+    <div class="form-row">
+        <div class="form-field">
+        {{ form_label(referenceDateStatusForm.for_date, 'Дата') }}
+        {{ form_widget(referenceDateStatusForm.for_date) }}
+        </div>
+        <div class="form-field">
+        {{ form_label(referenceDateStatusForm.type, 'Тип') }}
+        {{ form_widget(referenceDateStatusForm.type) }}
+        </div>
+        <div class="form-field">
+        {{ form_label(referenceDateStatusForm.status, 'Статус') }}
+        {{ form_widget(referenceDateStatusForm.status) }}
+        </div>
+    </div>   
+        <button type="submit" class="btn btn-primary">Виж</button> 
+        {{ form_end(referenceDateStatusForm) }}  
+</div>
+<table>
+    <thead>
+        <tr>
+            <th> ПОРЪЧКА № </th>
+            <th> ТИП </th>
+            <th> КЛИЕНТ </th>
+            <th> m2 </th>
+            <th> Статусът е променен на </th>
+            <th> Променил </th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for status in statuses %}
+            <tr>
+                <td> {{ status[0].number_order }} </td>
+                <td> {{ status.typeName }} </td>
+                <td> {{ status.customerName }} </td>
+                <td> {{ status[0]._order.quadrature }} </td>
+                <td> {{ status[0].status.name }} </td>
+                <td> {{ status[0].user.email }} </td>
+            </tr>
+        {% endfor %}
+
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="3">Обща квадратура</td>
+            <td>{{ totalQuadrature }}</td>
+        </tr>
+    </tfoot>
+</table>
+
+</di>
+
+{% endblock %}

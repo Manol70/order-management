@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Справка поръчка{% endblock %}
+
+{% block body %}
+<style>
+</style>
+
+<div class="example-wrapper">
+    <h1>СПРАВКА ЗА КЛИЕНТ {{ customer.name }}! ✅</h1>
+    <br>
+
+    <h2> ТЕЛЕФОН: {% if customer.phone1 == null %} няма
+                  {% else %}
+                   {{customer.phone1}}
+                   {% endif %}
+    </h2>
+    <button onclick="history.back()">Върни се назад</button>
+</div>
+<a href="{{ path('export_reference_customer') }}" class="btn btn-primary">Експортирай като Excel</a>
+<table>
+    <tr>
+        <th> Номер </th>
+        <th> Тип </th>
+        <th> От дата </th>
+        <th> За дата </th>
+        <th> Квадратура </th>
+        <th> Цена </th>
+        <th> Платено </th>
+        <th> Остатък </th>
+    </tr>
+    {% for order in orders %}
+    <tr> 
+        <td> {{ order.number }} </td>
+        <td> {{ order.type.name }} </td>
+        <td> {{ order.createdAt|date('d.m.y') }} </td>
+        <td> {{ order.for_date|date('d.m.y') }} </td>
+        <td> {{ order.quadrature }} </td>
+        <td> {{ order.price }} </td>
+        <td> {{ order.paid }} </td>
+        <td> {{ order.price - order.paid }} </td>
+    </tr>
+    {% endfor %}
+   
+{% endblock %}

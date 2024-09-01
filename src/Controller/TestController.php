@@ -8,13 +8,17 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class TestController extends AbstractController
 {
-    #[Route('/login/test', name: 'app_test')]
-    public function index(): Response
+    #[Route('/testControler', name: 'app_show')]
+    public function show()
     {
-        //$this->denyAccessUnlessGranted('ROLE_USER');
-        
-        return $this->render('test/index.html.twig', [
-            'controller_name' => 'TestController',
+        $answers = [
+            'Make sure your cat is sitting purrrfectly still ?',
+            'Honestly, I like furry shoes better than MY cat',
+            'Maybe... try saying the spell backwards?',
+        ];
+        return $this->render('testControler/show.html.twig', [
+            'question' => 'въпрос',
+            'answers' => $answers,
         ]);
     }
 }

@@ -21,4 +21,7 @@ services:
             - '../src/Kernel.php'
 
     # add more service definitions when explicit configuration is needed
+    BabDev\PagerfantaBundle\View\Twig\Extension\PagerfantaRuntime:
+        tags:
+            - { name: twig.runtime }
     # please note that last definitions always *replace* previous ones

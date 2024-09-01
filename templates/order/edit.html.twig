@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Order{% endblock %}
+
+{% block body %}
+    <h1>Edit Order</h1>
+<!--<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var filenameInput = document.getElementById("filename"); // Промени "filename" с ID на полето за файла
+        if (filenameInput) {
+        filenameInput.required = false;
+    }
+    });
+</script>
+!-->
+    {{ include('order/_form.html.twig', {'button_label': 'Update'}) }}
+
+    
+{% endblock %}

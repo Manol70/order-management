@@ -1,0 +1,15 @@
+<!--<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var filenameInput = document.getElementById("filename"); // Промени "filename" с ID на полето за файла
+        if (filenameInput) {
+        filenameInput.required = false;
+        }
+    });
+</script>
+!-->
+{{ form_start(form, {'attr': {'class': 'my-form-class'}}) }}
+    
+    {{ form_widget(form, {'label_attr': {'class': 'my-label-class'}, 'attr': {'class': 'my-input-class'}}) }}
+    
+    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}

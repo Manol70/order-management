@@ -1,0 +1,19 @@
+{% block body %}
+
+
+<div class="container-fluid mt-4">
+    <div class="d-flex flex-row">
+        <form id="statusChangeForm" action="{{ path('app_order_status_mosquito') }}" method="get">
+        <input type="hidden" name="orderId" value={{ orderId }};>
+        <input type="hidden" name="newMosquitoId" value="{{ newMosquitoId }}">
+        <p> ПОРЪЧКА № {{ numberOrder }} ПРОМЯНА НА СТАТУС КОМАРНИК
+        <p>Статусът от "{{ currentMosquitoName }}" ще бъде променен на "{{ newMosquitoName }}".</p>
+</form>
+        
+        <div {{ stimulus_controller('modal-form') }}>
+            
+        </div>
+    </div>
+</div>
+
+{% endblock %}
