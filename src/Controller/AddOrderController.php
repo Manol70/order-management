@@ -75,7 +75,7 @@ class AddOrderController extends AbstractController
             $entityManager->flush();
             
             //dd($entityManager);
-            $this->addFlash('success', 'ПОРЪЧКАТА Е СЪЗДАДЕНА! Knowledge is power!');
+            $this->addFlash('success', 'ПОРЪЧКАТА Е СЪЗДАДЕНА!');
             return $this->render('order/index.html.twig');
         }
         return $this->render('add_order/index.html.twig', [

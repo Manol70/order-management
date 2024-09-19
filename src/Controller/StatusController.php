@@ -258,7 +258,7 @@ class StatusController extends AbstractController
                                     DetailRepository $detailRepository,
                                     EntityManagerInterface $em): Response
 {
-    //dd($request);
+    dd($request);
     // Получаване на ID на избраните поръчки и новия статус от заявката
     $selectedOrders = $request->get('selectedOrders');
     //dd($selectedOrders);

@@ -30,6 +30,7 @@ use Doctrine\ORM\EntityManager;
 use phpDocumentor\Reflection\PseudoTypes\True_;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Form\SearchFormType;
+use DoctrineExtensions\Query\Mysql\Date;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpParser\Node\Stmt\Echo_;
@@ -37,6 +38,7 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Knp\Component\Pager\PaginatorInterface;
+
 
 #[Route('/order')]
 class OrderController extends AbstractController
@@ -60,7 +62,9 @@ public function index(
     if (!$user) {
         return new RedirectResponse($this->generateUrl('app_login'));
     }
-    
+    if ($this->isGranted('ROLE_USER')) {
+        return $this->forward('App\Controller\CustomerUserController::index');
+    }
     //$template = $request->isXmlHttpRequest() ? '_list.html.twig' : 'index.html.twig';
     $template = $request->query->get('ajax') ? '_list.html.twig' : 'index.html.twig';
 
@@ -85,10 +89,13 @@ public function index(
         
         //$request->query->set('page', 1); // Принудително задаваме page на 1 при ново търсене
         $data = $form->getData();
+        
         $customer = $data['customer'];
         $type = $data['type'];
         $status = $data['status'];
         $glass = $data['glass'];
+        $detail = $data['detail'];
+        $mosquito = $data['mosquito'];
         $source = $data['source'];
         $fromDate = $data['from_date'];
         $toDate = (clone $data['to_date'])->modify('+1 day')->format('Y-m-d');
@@ -109,10 +116,30 @@ public function index(
         if ($status !== null) {
             $queryBuilder->andWhere('o.status = :status')
             ->setParameter('status', $status);
+            $checkboxStatusOrder = true;
+        } else {
+            $checkboxStatusOrder = false;
         }
         if ($glass !== null) {
             $queryBuilder->andWhere('o.glass = :glass')
             ->setParameter('glass', $glass);
+            $checkboxStatusGlass = true;
+        } else {
+            $checkboxStatusGlass = false;
+        }
+        if ($detail !== null) {
+            $queryBuilder->andWhere('o.detail = :detail')
+            ->setParameter('detail', $detail);
+            $checkboxStatusDetail = true;
+        } else {
+            $checkboxStatusDetail = false;
+        }
+        if ($mosquito !== null) {
+            $queryBuilder->andWhere('o.mosquito = :mosquito')
+            ->setParameter('mosquito', $mosquito);
+            $checkboxStatusMosquito = true;
+        } else {
+            $checkboxStatusMosquito = false;
         }
 
         
@@ -125,7 +152,7 @@ public function index(
 
         $adapter = new QueryAdapter($queryBuilder);
         $currentPage = $request->query->getInt('page', 1);
-        dump($currentPage);
+        
         $pagerfanta = Pagerfanta::createForCurrentPageWithMaxPerPage(
             $adapter,
             $request->query->get('page', $currentPage),
@@ -158,6 +185,11 @@ public function index(
             'showCheckboxes' => $source === 'filter',
             'searchForm' => $form->createView(),
             'pager' => $pagerfanta->getCurrentPageResults(), // Използваме само текущите резултати
+            'currentPage'=> $currentPage,
+            'checkbox_status_order' => $checkboxStatusOrder,
+            'checkbox_status_glass' => $checkboxStatusGlass,
+            'checkbox_status_detail' => $checkboxStatusDetail,
+            'checkbox_status_mosquito' => $checkboxStatusMosquito
         ]);
     }
 
@@ -166,14 +198,14 @@ public function index(
     $adapter = new QueryAdapter($queryBuilder);
     $current = $request->query->get('page', 1);
     
-    dump($current);
+    //dump($current);
     $pagerfanta = Pagerfanta::createForCurrentPageWithMaxPerPage(
         $adapter,
         $request->query->get('page', 1),
         9
     );
     $currentPageResults = $pagerfanta->getCurrentPage();
-    dump($currentPageResults);
+    //dump($currentPageResults);
     $currentPage = $currentPageResults;
 
     $pagination = $paginator->paginate(
@@ -193,7 +225,11 @@ public function index(
         'searchForm' => $form->createView(),
         'showCheckboxes' => false,
         'pager' => $pagerfanta,
-        'currentPage' => $currentPage
+        'currentPage' => $currentPage,
+        'checkbox_status_order' => false,
+        'checkbox_status_glass' => false,
+        'checkbox_status_detail' => false,
+        'checkbox_status_mosquito' => false
     ]);
     
     return $response;

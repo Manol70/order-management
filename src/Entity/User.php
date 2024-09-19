@@ -49,6 +49,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: DetailHistory::class)]
     private Collection $detailHistories;
 
+    #[ORM\OneToOne(inversedBy: 'user', cascade: ['persist'])]
+    private ?Customer $customer = null;
+
+    
+
     public function __construct()
     {
         $this->orders = new ArrayCollection();
@@ -92,7 +97,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+       // $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
     }
@@ -289,4 +294,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public function getCustomer(): ?Customer
+    {
+        return $this->customer;
+    }
+
+    public function setCustomer(?Customer $customer): static
+    {
+        $this->customer = $customer;
+
+        return $this;
+    }
+
+    
 }

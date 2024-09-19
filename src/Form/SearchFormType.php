@@ -37,6 +37,7 @@ class SearchFormType extends AbstractType
             'class' => Type::class,
             'choice_label' => 'name',
             'label' => 'Тип',
+            'placeholder' => 'всички',
             'required' => false
         ])
         ->add('status', EntityType::class, [
@@ -73,7 +74,8 @@ class SearchFormType extends AbstractType
         ])
         ->add('to_date', DateType::class,[
             'widget' => 'single_text',
-            'input' => 'datetime_immutable'
+            'input' => 'datetime_immutable',
+            'data' => new \DateTimeImmutable() // задаваме текущата дата
         ])
         ->add('source', HiddenType::class, [
             'data' => 'filter'

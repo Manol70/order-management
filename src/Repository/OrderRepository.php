@@ -52,17 +52,40 @@ class OrderRepository extends ServiceEntityRepository
     {
         $query = $this->entityManager->createQuery(
             "SELECT orders, customer, _type 
-         FROM App\Entity\Order orders 
-         JOIN orders.customer customer
-         JOIN orders.type _type 
-         WHERE customer.id = :customerId"
-        );
-        $query->setParameter('customerId', $customerId);
-        $queryResult = $query->getArrayResult();
+            FROM App\Entity\Order orders 
+            JOIN orders.customer customer
+            JOIN orders.type _type
+            WHERE customer.id = :customerId"
+            );
+            $query->setParameter('customerId', $customerId);
+            $queryResult = $query->getArrayResult();
     
         return $queryResult;
     }
  
+    public function findByCustomerId(int $customerId)
+    {
+        $query = $this->entityManager->createQuery(
+            "SELECT orders.id, orders.number, orders.createdAt, orders.for_date, orders.scheme,
+            orders.price, orders.paid, orders.quadrature, _type.name AS typeName, _status.name AS statusName,
+            glass.name AS glassName, mosquito.name AS mosquitoName, detail.name AS detailName,
+            customer.name AS customerName
+            FROM App\Entity\Order orders 
+            JOIN orders.customer customer
+            JOIN orders.type _type
+            JOIN orders.status _status
+            JOIN orders.glass glass
+            JOIN orders.mosquito mosquito
+            JOIN orders.detail detail
+            WHERE customer.id = :customerId"
+        );
+        $query->setParameter('customerId', $customerId);
+        $queryResult = $query->getArrayResult();
+
+        return $queryResult;
+    }
+    
+
 
     public function createQueryBuilderForAllOrders()
 {

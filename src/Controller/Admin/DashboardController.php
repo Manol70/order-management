@@ -28,7 +28,9 @@ class DashboardController extends AbstractDashboardController
     public function index(): Response
     {
         //return parent::index();
-        return $this->render('admin/index.html.twig');
+        return $this->render('admin/index.html.twig', [
+            'controller_name' => 'DashboardController',
+        ]);
 
         // Option 1. You can make your dashboard redirect to some common page of your backend
         //
@@ -62,6 +64,8 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Type', 'fa fa-type-circle', Type::class);
         yield MenuItem::linkToCrud('TypeMontage', 'fa fa-type_montage', TypeMontage::class);
         yield MenuItem::linkToCrud('Order', 'fa fa-order-circle', Order::class);
+        yield MenuItem::linkToRoute('Начало', 'fas fa-home', 'app_order');
+
         // yield MenuItem::linkToCrud('The Label', 'fas fa-list', EntityClass::class);
     }
 
@@ -69,6 +73,15 @@ class DashboardController extends AbstractDashboardController
     {
         return parent::configureActions()
         ->add(Crud::PAGE_INDEX, Action::DETAIL);
+    }
+
+    public function configureCrud(): Crud
+    {
+        return Crud::new()
+            // Заместваш оригиналния crud/index темплейт с твоя персонализиран
+            ->overrideTemplates([
+                'crud/index' => 'admin/crud/index.html.twig',
+            ]);
     }
 
 }

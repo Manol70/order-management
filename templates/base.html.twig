@@ -11,10 +11,12 @@
     {% block stylesheets %}
         {{ encore_entry_link_tags('app') }}
         
+        
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     {% endblock %}
     {% block javascripts %}
         {{ encore_entry_script_tags('app') }}
+        
         
     {% endblock %}
     <!-- Включете jQuery, Popper.js и Bootstrap JavaScript тук, ако ги използвате -->
@@ -29,7 +31,9 @@
         <!-- заглавие, лого, поздрав !-->
         <img class="img-responsive" src="{{ asset('images/logo.png') }}" alt="logo" width="330" height="170">
         <h2>Здравей, 
-            {% if is_granted('ROLE_USER') %}
+            {% if is_granted('ROLE_USER') or
+                  is_granted('ROLE_SUPER_USER') or
+                  is_granted('ROLE_ADMIN') %}
                 {{ app.user.email }}
             {% else %}
                 гост

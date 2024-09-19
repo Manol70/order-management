@@ -12,7 +12,7 @@
 <a href="/order"><input type="button" class="btn btn-success" value="НАЧАЛО" data-turbo-frame="orders_frame"></a>   
 
     <div class="search-form-container">
-    {{ form_start(searchForm) }}
+    {{ form_start(searchForm, {'attr': {'data-turbo': 'false'}}) }}
     
     <div class="form-row">
         <div class="form-group hidden-field">

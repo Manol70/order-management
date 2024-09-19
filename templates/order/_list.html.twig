@@ -6,8 +6,13 @@
     </div>
     
     {% set showChangeButton = false %}
-     <turbo-frame id="orders-list" data-turbo-action="advance"> 
-    <table class="table">
+    {% set button_status_order = false %}
+    {% set button_status_glass = false %}
+    {% set button_status_detail = false %}
+    {% set button_status_mosquito = false %}
+    
+    <turbo-frame id="orders-list" data-turbo-action="advance"> 
+    <table class="table" >
         <thead>
             <tr>
                 <th>Номер</th>
@@ -29,19 +34,22 @@
                 <th></th>
             </tr>
         </thead>
-        <tbody id="orders-list">
-        
+        <tbody>
         {% for order in orders %}
             <tr >
                 <td> <a href="{{ path('app_reference_order', {'orderId': order.id}) }}" target="_top">{{ order.number }}</a> </td>
-                <td> <a href="{{ path('app_reference_customer', {'customerId': order.customer.id}) }}" target="_top">{{ order.customer.name }}</a> </td>
-                <td class="short-version"> 
+                <td> <a href="{{ path('app_reference_customer', {'customerId': order.customer.id}) }}" target="_top">{{ order.customer.name }} </td>
+                
                 {% if order.scheme == NULL %}
-                    Няма 
-                {% else %}
-                <a href="{{ asset('uploads/' ~ order.scheme) }}" target="_top">Виж схема</a>
-                {% endif %}
+                <td class="short-version"> 
+                    Няма
                 </td>
+                {% else %}
+                <td class="short-version"> 
+                <a href="{{ asset('uploads/' ~ order.scheme) }}" target="_top">Виж схема</a>
+                </td>
+                {% endif %}
+                
                 <td> {{ order.typeMontage.name }} </td>
                 <td> {{ order.type.name }} </td>
                 <td> {{ order.quadrature }} </td>
@@ -55,40 +63,32 @@
                 <td> {{ order.price }}</td>
                 <td> {{ order.paid }}</td>
                 <td> {{ order.price - order.paid }}</td>
-                
                 <td>
                     <form action="{{ path('app_payment_payables') }}"  id="payment-form-{{ order.id }}" data-turbo="false">
                         <input type="hidden" id="customerId-{{ order.id }}" name="customerId" value="{{ order.customer.id }}">
-                        
                         <input type="submit" class="btn btn-success" value="плащане">
                     </form>
                 </td>
-                
-                <td>
                 {% if order.status == null %}
-                {% set showChangeButton = false %}
-                    няма 
-                {% elseif order.status.id == lastStatus.lastStatusOrder.id %}
-                    {{ order.status.name }}
-                    {% set showChangeButton = false %}
-                {% elseif showCheckboxes %}
-                {% set showChangeButton = true %}
-                    {{order.status.name}}
-                    <br> 
-                    
-                    <input type="checkbox" name="selectedOrders[]" value="{{ order.id }}" data-status="{{ order.status.id }}" data-title="Промяна на статус за поръчка ">
-                    Промени
-                              
+                    {% set button_status_order = false %}
+                    <td> няма </td> 
+                {% elseif order.status.id == lastStatus.lastStatusOrder.id %} 
+                    {% set button_status_order = false %}
+                    <td> {{ order.status.name }} </td>
+                {% elseif checkbox_status_order %}
+                    {% set button_status_order = true %}
+                    <td> {{order.status.name}}
+                    <input type="checkbox" name="selectedOrders_status[]" value="{{ order.id }}" data-status="{{ order.status.id }}" data-title="Промяна на статус за поръчка ">
+                    <br> Промени </br>
+                    </td>        
                 {% else %}
-                {% set showChangeButton = false %}
-                    {{order.status.name}}
-                    {{currentPage}}
+                    {% set button_status_order = false %}
+                    <td> {{order.status.name}}
                     <div class="container-fluid mt-4">
                         <div class="d-flex flex-row">
                             <div {{ stimulus_controller('modal-form',{
-                                    formUrl: path('app_status_order', {'orderId': order.id, 'currentPage': currentPage}),
-                                    
-                                    }) }}
+                                    formUrl: path('app_status_order', {'orderId': order.id, 'currentPage': currentPage}),})
+                                    }}
                                     data-action="hidden.bs.modal->modal-form#modalHidden"
                                     >
                                     <button
@@ -100,19 +100,27 @@
                                         {{ include('_modal.html.twig', {
                                             modalTitle: 'Промяна на статус',
                                             changeStatus: 'no' 
-                                       }) }}
-                                       
+                                       }) }}      
                             </div>
                         </div>
                     </div>
                     {% endif %} 
                 </td>
-                <td>
                 {% if order.glass == NULL %}
-                     няма
+                    {% set button_status_glass = false %}
+                    <td> няма </td>
                 {% elseif order.glass.id == lastStatus.lastStatusGlass.id %}
-                    {{ order.glass.name }} 
+                    {% set button_status_glass = false %}
+                    <td> {{ order.glass.name }} </td>
+                {% elseif checkbox_status_glass %}
+                    {% set button_status_glass = true %}
+                    <td> {{order.glass.name}}
+                        <input type="checkbox" name="selectedOrders_glass[]" value="{{ order.id }}" data-status="{{ order.glass.id }}" data-title="Промяна на статус стъклопакет ">
+                        <br> Промени </br> 
+                    </td>          
                 {% else %}
+                    <td>
+                    {% set button_status_glass = false %}
                     {{order.glass.name}}
                         <div class="container-fluid mt-4">
                             <div class="d-flex flex-row">
@@ -123,54 +131,72 @@
                                     >
                                         <button
                                         class="btn btn-primary btn-sm" 
-                                        data-action="modal-form#openModal"
+                                        data-action="modal-form#openModal reload-content#updateUrl"
                                         data-order-id="{{ order.id }}"
-                                         
+                                         data-current-page="{{ currentPage }}"
                                         >промени статус</button>
                                         {{ include('_modal.html.twig', {
                                             modalTitle: 'Промяна на статус стъклопакет'
-                                       }) }}
-                                        
-                                       
+                                       }) }}  
                                 </div>
                             </div>
-                        </div>    
+                        </div>
+                    </td>    
                 {% endif %}
-                </td>
-                <td>
+
                 {% if order.detail == NULL %}
-                    няма
+                    {% set button_status_detail = false %}
+                    <td> няма </td>
                 {% elseif order.detail.id == lastStatus.lastStatusDetail.id %}
-                    {{ order.detail.name }}
-                {% else %}
-                    {{ order.detail.name }} 
-                        <div class="d-flex flex-row">
-                            <div {{ stimulus_controller('modal-form',{
+                    {% set button_status_detail = false %}
+                    <td> {{ order.detail.name }} </td>
+                {% elseif checkbox_status_detail %}
+                    {% set button_status_detail = true %}
+                    <td> {{order.detail.name}}
+                        <input type="checkbox" name="selectedOrders_detail[]" value="{{ order.id }}" data-status="{{ order.detail.id }}" data-title="Промяна на статус ДОПЪЛНИТЕЛЕН ДЕТАЙЛ">
+                        <br> Промени </br> 
+                    </td>
+                    {% else %}
+                        <td>
+                        {% set button_status_detail = false %}   
+                        {{ order.detail.name }} 
+                            <div class="d-flex flex-row">
+                                <div {{ stimulus_controller('modal-form',{
                                    formUrl: path('app_status_detail', {'orderId': order.id})  
                                   }) }}
                                    data-action="hidden.bs.modal->modal-form#modalHidden"
                                     >
                                     <button
                                         class="btn btn-primary btn-sm" 
-                                        data-action="modal-form#openModal"
+                                        data-action="modal-form#openModal reload-content#updateUrl"
                                         data-order-id="{{ order.id }}" 
+                                        data-current-page="{{ currentPage }}"
                                         >промени статус</button>
                                         {{ include('_modal.html.twig', {
                                             modalTitle: 'Промяна на статус Профил'
-                                       }) }} 
-                                       
+                                       }) }}       
+                                </div>
                             </div>
-                        </div>        
+                        </td>        
                 {% endif %}
-                </td>
-                <td>
+    
                 {% if order.mosquito == NULL %}
-                    няма
+                    {% set button_status_mosquito = false %}
+                    <td> няма </td>
                 {% elseif order.mosquito.id == lastStatus.lastStatusMosquito.id %}
-                    {{ order.mosquito.name }}
+                    {% set button_status_mosquito = false %}
+                    <td> {{ order.mosquito.name }} </td>
+                {% elseif checkbox_status_mosquito %}
+                    {% set button_status_mosquito = true %}
+                    <td> {{order.mosquito.name}}
+                        <input type="checkbox" name="selectedOrders_mosquito[]" value="{{ order.id }}" data-status="{{ order.mosquito.id }}" data-title="Промяна на статус КОМАРНИК">
+                        <br> Промени </br> 
+                    </td>
                 {% else %}
-                    {{ order.mosquito.name }} 
-                        <div class="d-flex flex-row">
+                    {% set button_status_mosquito = false %}
+                    <td>
+                    {{ order.mosquito.name }}
+                         <div class="d-flex flex-row">
                             <div {{ stimulus_controller('modal-form',{
                                    formUrl: path('app_status_mosquito', {'orderId': order.id})  
                                   }) }}
@@ -178,34 +204,60 @@
                                     >
                                     <button
                                         class="btn btn-primary btn-sm" 
-                                        data-action="modal-form#openModal"
-                                        data-order-id="{{ order.id }}" 
+                                        data-action="modal-form#openModal reload-content#updateUrl"
+                                        data-order-id="{{ order.id }}"
+                                        data-current-page="{{ currentPage }}" 
                                         >промени статус</button>
                                         {{ include('_modal.html.twig', {
                                             modalTitle: 'Промяна на статус комарник'
-                                       }) }} 
-                                       
+                                       }) }}      
                             </div>
                         </div>
+                    </td>    
                 {% endif %}
-                </td>
-                <td>
-                        
-                        <a href="{{ path('app_order_edit', {'id': order.id}) }}" target="_top">edit</a>
+                
+                <td>   
+                    <a href="{{ path('app_order_edit', {'id': order.id}) }}" target="_top">edit</a>
                 </td>
             </tr>
             
         {% endfor %}
 
-        {% if showChangeButton %}
+        {% if (button_status_order) or (button_status_glass)
+        or (button_status_detail) or (button_status_mosquito) %}
         <tfoot>
-        <tr>
+        <!-- Добавяме под всяка колона бутон за промяна на избраните поръчки -->
+        <tr >
             <td colspan="12"></td>
+            {% if button_status_order %}
+            <td > 
+                <button id="changeStatusButton" class="btn btn-primary">Промени избраните</button>
+            </td>
+            {% else %} 
+            <td></td>
+            {% endif %}
+            {% if button_status_glass %}
+            <td >
+            <button id="changeStatusButtonGlass" class="btn btn-primary">Промени избраните</button>
+            </td>
+            {% else %}
+            <td></td>
+            {% endif %}
+            {% if button_status_detail %}
             <td>
-            <!-- Бутон за промяна на избраните поръчки -->
-<button id="changeStatusButton" class="btn btn-primary">Промени избраните</button>
+                <button id="changeStatusButtonDetail" class="btn btn-primary">Промени избраните</button>
+            </td>
+            {% else %}
+            <td></td>
+            {% endif %}
+            {% if button_status_mosquito %}
+            <td>
+                <button id="changeStatusButtonMosquito" class="btn btn-primary">Промени избраните</button>
+            </td>
+            {% else %}
+            <td></td>
+            {% endif %}
 
-</td>
         </tr>
     </tfoot>
         {% endif %}
@@ -219,19 +271,19 @@
         next_message: 'Следваща',
         
         }) }}  
+        
       
   {# {{ knp_pagination_render(orders) }} #}
  </turbo-frame>   
 
 <script src="{{ asset('build/app.js') }}"></script>
 
-
     <script>
         function checkFile(orderId) {
             var fileInput = document.getElementById('fileInput_' + orderId);
             var filenameInput = document.getElementById('filename_' + orderId);
             var fileError = document.getElementById('fileError_' + orderId);
-
+            
             if (!fileInput.value) {
                 fileError.style.display = 'block';
                 return false; // Прекратява изпращането на формата
@@ -242,6 +294,9 @@
         }
      
     </script>
+
+
+    
 
 
    

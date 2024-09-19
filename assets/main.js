@@ -5,3 +5,5 @@ document.addEventListener('turbo:load', function() {
     url.searchParams.delete('ajax');
     history.replaceState({}, '', url.toString());
 });
+
+

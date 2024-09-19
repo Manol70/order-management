@@ -44,6 +44,16 @@ class PaymentRepository extends ServiceEntityRepository
                 ->getResult();
         }   
 
+        public function findByCustomerId($customerId): array
+        {
+            
+            return $this->createQueryBuilder('p')
+                ->andWhere('p.customer = :customerId')
+                ->setParameter('customerId', $customerId)
+                ->getQuery()
+                ->getResult();
+        }   
+
 
 
 /*      public function findOneBySomeField($value): ?Payment

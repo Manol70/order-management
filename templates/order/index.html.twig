@@ -21,9 +21,11 @@
 <div class="container">
 <a href="/order"><input type="button" class="btn btn-success" value="НАЧАЛО" data-turbo-frame="orders_frame"></a>
 <a href="/create/order"><input type="button" class="btn btn-success" value="Нова поръчка"></a>
-<a href="/admin"><input type="button" class="btn btn-success" value="АДМИН ПАНЕЛ"></a>
-<a href="/reference/index"> <input type="button" class="btn btn-success" value="СПРАВКА"></a>
 
+<a href="/admin"><input type="button" class="btn btn-success" value="АДМИН ПАНЕЛ"></a>
+{% if is_granted('ROLE_ADMIN') %}
+<a href="/reference/index"> <input type="button" class="btn btn-success" value="СПРАВКА"></a>
+{% endif %}
 <!--<div data-controller="version-control" data-version-control-is-full-version-value="true"> 
   <button data-action="version-control#toggle" data-version="1">Съкратена версия</button>
 </div>-->
@@ -50,7 +52,7 @@
         </div>
     </div>
 <div class="search-form-container">
-    {{ form_start(searchForm, { 'method': 'GET', 'action': path('app_order') }) }}
+    {{ form_start(searchForm, { 'method': 'GET', 'action': path('app_order'), turbo:"false" }) }}
     
     <div class="form-row">
         <div class="form-field">
@@ -105,5 +107,6 @@ data-action="modal-form:success->reload-content#refreshContent"
        
     </div>
 </div>
+
 
 {% endblock %}
