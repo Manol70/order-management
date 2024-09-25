@@ -19,13 +19,17 @@
 
 
 <div class="container">
-<a href="/order"><input type="button" class="btn btn-success" value="НАЧАЛО" data-turbo-frame="orders_frame"></a>
+<a href="/order"><input type="button" class="btn btn-success" value="НАЧАЛО" ></a>
 <a href="/create/order"><input type="button" class="btn btn-success" value="Нова поръчка"></a>
 
 <a href="/admin"><input type="button" class="btn btn-success" value="АДМИН ПАНЕЛ"></a>
+<a href="{{ path('app_logout') }}"><input type="button" class="btn btn-success" value="ИЗХОД"></a>
 {% if is_granted('ROLE_ADMIN') %}
 <a href="/reference/index"> <input type="button" class="btn btn-success" value="СПРАВКА"></a>
 {% endif %}
+<a href="{{ path('admin', { 'crudAction': 'new', 'crudControllerFqcn': 'App\\Controller\\Admin\\CustomerCrudController' }) }}">
+    <input type="button" class="btn btn-success" value="НОВ КЛИЕНТ">
+</a>
 <!--<div data-controller="version-control" data-version-control-is-full-version-value="true"> 
   <button data-action="version-control#toggle" data-version="1">Съкратена версия</button>
 </div>-->
@@ -36,21 +40,6 @@
 </div>
 </div>
 
-
-    <div class="d-flex flex-row">
-        <h1 class="me-3">Product index</h1>
-        <div {{ stimulus_controller('modal-form', {
-            formUrl: path('app_register')
-        }) }}>
-            <button
-                class="btn btn-primary btn-sm"
-                data-action="modal-form#openModal"
-            >Add+</button>
-            {{ include('_modal.html.twig', {
-                modalTitle: 'Нова поръчка',
-            }) }}
-        </div>
-    </div>
 <div class="search-form-container">
     {{ form_start(searchForm, { 'method': 'GET', 'action': path('app_order'), turbo:"false" }) }}
     

@@ -17,6 +17,8 @@ security:
             lazy: true
             provider: app_user_provider
 
+            
+
             form_login:
                 # "app_login" is the name of the route created previously
                 login_path: app_login
@@ -25,7 +27,7 @@ security:
             logout:
                 path: app_logout
                 # where to redirect after logout
-                # target: app_any_route
+                target: app_login
 
 
             # activate different ways to authenticate

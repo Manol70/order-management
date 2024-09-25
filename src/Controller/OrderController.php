@@ -171,7 +171,7 @@ public function index(
         $session->set('order_search_results', $orders);
         $lastStatus = $this->lastStatus($request, $statusRepository, $glassRepository, $mosquitoRepository, $detailRepository);
         //$orders = $pagerfanta->getCurrentPageResults();
-        //dd($orders);
+        
         //Маркер
         //$afterQueryExecution = microtime(true);
         //    dump('Query execution time: ' . ($afterQueryExecution - $afterFormHandling) . ' seconds');
@@ -182,7 +182,7 @@ public function index(
             'controller_name' => $user[0],
             'orders' => $pagerfanta,
             'lastStatus' => $lastStatus,
-            'showCheckboxes' => $source === 'filter',
+            'showCheckboxes' => $source,
             'searchForm' => $form->createView(),
             'pager' => $pagerfanta->getCurrentPageResults(), // Използваме само текущите резултати
             'currentPage'=> $currentPage,
@@ -190,7 +190,7 @@ public function index(
             'checkbox_status_glass' => $checkboxStatusGlass,
             'checkbox_status_detail' => $checkboxStatusDetail,
             'checkbox_status_mosquito' => $checkboxStatusMosquito
-        ]);
+        ]); 
     }
 
     $user = $this->getUser()->getRoles();

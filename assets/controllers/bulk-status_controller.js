@@ -1,69 +1,11 @@
-/*import { Controller } from '@hotwired/stimulus';
-
-export default class extends Controller {
-    static values = {
-        urls: Array,
-        statusId: String  
-    }
-
-    connect() {
-        console.log('Modal Cycle Controller е свързан.');
-        console.log('URLs:', this.urlsValue);
-        console.log('Status ID:', this.statusIdValue);
-        this.startCycle(); // Принудително стартиране
-
-        // Също така, провери дали методът startCycle е правилно достъпен
-        console.log('Методът startCycle е достъпен:', typeof this.startCycle === 'function');
-        this.element.addEventListener('click', (event) => {
-            console.log('Click event on modal cycle button detected.', event);
-        });
-    }
-
-    async startCycle() {
-        try {
-            console.log('Започване на цикъл с URL-ите:', this.urlsValue);
-            for (const url of this.urlsValue) {
-                console.log('Предаване на URL:', url);
-                await this.showOrderModal(url);
-            }
-        } catch (error) {
-            console.error('Грешка при стартиране на цикъла:', error);
-        }
-    }
-
-    async showOrderModal(url) {
-        console.log('Показване на модал за URL:', url);
-
-        // Получаване на контролера за модала
-        const modalController = this.application.getControllerForElementAndIdentifier(
-            document.querySelector('[data-controller="modal-form"]'),
-            'modal-form'
-        );
-
-        if (modalController) {
-            modalController.formUrlValue = url;
-            await modalController.openModal();
-
-            return new Promise((resolve) => {
-                modalController.element.addEventListener('success', () => {
-                    console.log('Формата е изпратена успешно');
-                    resolve();
-                });
-            });
-        } else {
-            console.error('Не беше намерен контролер за модала.');
-        }
-    }
-}
-    */
-// controllers/bulk_status_controller.js
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
     static values = {
         urls: Array,
         statusId: String,
-        modalTitle: String 
+        modalTitle: String,
+        
     }
 
     connect() {
@@ -71,6 +13,7 @@ export default class extends Controller {
         console.log('Получени URL-и:', this.urlsValue);
         console.log('Получен Status ID:', this.statusIdValue);
         console.log('Получен modalTitle:', this.modalTitleValue);
+        
 
         this.hasChanges = false;  // Добавяме променлива, която следи за промени
         this.currentUrlIndex = 0;
@@ -82,7 +25,7 @@ export default class extends Controller {
     handleSuccess() {
         console.log('Operation was successful.');
         this.hasChanges = true; // Може да актуализирате променливата при успешна операция
-        this.showSuccessMessage(); // Показваме съобщение за успех
+        //this.showSuccessMessage(); // Показваме съобщение за успех
     }
 
     disconnect() {
@@ -95,17 +38,24 @@ export default class extends Controller {
             const url = this.urlsValue[this.currentUrlIndex];
             
             console.log('Обработка на URL:', url);
-            this.showOrderModal(url);
+            const bulk = true;  // Задаваме `bulk` на true при множествени промени
+            this.showOrderModal(url, bulk);
         } else {
+                        
             console.log('Всички поръчки са обработени.');
+            this.hasChanges = true;
             console.log('hasChanges:', this.hasChanges)
             // Проверка дали всички URL адреси са обработени
         if (this.currentUrlIndex == this.urlsValue.length) {
+            
+                        
             if (this.hasChanges) {  // Показваме съобщението само ако е направена промяна
+                alert('Всички поръчки са обработени.'); 
+                        
                 this.showSuccessMessage();
                 setTimeout(() => {
                     window.location.href = "/order"; // Презареждане на страницата след успешна промяна
-                }, 3000); // Презареждане след 3 секунди
+                }, 0); // Презареждане след 0 секунди, може да се добави време за изчакване
             } else {
                 // Ако няма промени, просто презареждаме страницата без да показваме съобщение за успех
                 window.location.href = "/order";
@@ -114,26 +64,30 @@ export default class extends Controller {
         }
     }
 
-    async showOrderModal(url) {
+    async showOrderModal(url, bulk) {
         const modalController = this.application.getControllerForElementAndIdentifier(
             document.querySelector('[data-controller="modal-form"]'),
             'modal-form'
         );
-
-        if (modalController) {
+            if (modalController) {
             modalController.formUrlValue = url;
+            modalController.bulkValue = bulk;
+            console.log('bulkShowOrderModal:', modalController.bulkValue);
             modalController.modalTitleValue = this.modalTitleValue; // Добавяне на заглавието
             await modalController.openModal();
 
             modalController.element.addEventListener('hidden.bs.modal', () => {
                 console.log('Модалът е затворен, преминаваме към следващия URL.');
+                
                 this.currentUrlIndex++;
                 this.startCycle(); // Преминаваме към следващия URL
             }, { once: true });
         } else {
             console.error('Не беше намерен контролер за модала.');
         }
+    
     }
+
 
     showSuccessMessage() {
         console.log('Attempting to show success message.');

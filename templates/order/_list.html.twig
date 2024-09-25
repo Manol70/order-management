@@ -1,6 +1,6 @@
 
   
-  <div id="content-container" >
+  <div id="content-container" class="orders-table-container">
     <div class="short-version">
         <a  href="{{ path('export_table') }}" class="btn btn-primary">Експортирай като Excel</a>
     </div>
@@ -10,6 +10,7 @@
     {% set button_status_glass = false %}
     {% set button_status_detail = false %}
     {% set button_status_mosquito = false %}
+    {% set filterForm = false %};
     
     <turbo-frame id="orders-list" data-turbo-action="advance"> 
     <table class="table" >
@@ -71,15 +72,33 @@
                 </td>
                 {% if order.status == null %}
                     {% set button_status_order = false %}
-                    <td> няма </td> 
+                    <td> няма</td> 
                 {% elseif order.status.id == lastStatus.lastStatusOrder.id %} 
                     {% set button_status_order = false %}
                     <td> {{ order.status.name }} </td>
                 {% elseif checkbox_status_order %}
                     {% set button_status_order = true %}
+                    
                     <td> {{order.status.name}}
+                    <br>
                     <input type="checkbox" name="selectedOrders_status[]" value="{{ order.id }}" data-status="{{ order.status.id }}" data-title="Промяна на статус за поръчка ">
-                    <br> Промени </br>
+                     Промени </br>
+                    <div {{ stimulus_controller('modal-form',{
+                                    formUrl: path('app_status_order'),})
+                                    }}
+                                    data-action="hidden.bs.modal->modal-form#modalHidden"
+                                    >
+                                    <button
+                                        style="display: none;" 
+                                        data-action="modal-form#openModal"
+                                        data-order-id="hidden-modal"
+                                        data-current-page="hidden"
+                                        >скрит бутон</button>
+                                        
+                                        {{ include('_modal.html.twig', {
+                                            modalTitle: 'Промяна на статус'
+                                       }) }}      
+                            </div>
                     </td>        
                 {% else %}
                     {% set button_status_order = false %}
@@ -91,15 +110,19 @@
                                     }}
                                     data-action="hidden.bs.modal->modal-form#modalHidden"
                                     >
+                                    {% if showCheckboxes == true %}
+                                        {% set filterForm = true %}
+                                    {% endif %}
                                     <button
                                         class="btn btn-primary btn-sm" 
                                         data-action="modal-form#openModal reload-content#updateUrl"
                                         data-order-id="{{ order.number }}"
-                                        data-current-page="{{ currentPage }}" 
+                                        data-current-page="{{ currentPage }}"
+                                        data-filter-form="{{ filterForm }}"
                                         >промени статус</button>
+                                        
                                         {{ include('_modal.html.twig', {
-                                            modalTitle: 'Промяна на статус',
-                                            changeStatus: 'no' 
+                                            modalTitle: 'Промяна на статус'
                                        }) }}      
                             </div>
                         </div>
@@ -115,8 +138,24 @@
                 {% elseif checkbox_status_glass %}
                     {% set button_status_glass = true %}
                     <td> {{order.glass.name}}
+                    <br>
                         <input type="checkbox" name="selectedOrders_glass[]" value="{{ order.id }}" data-status="{{ order.glass.id }}" data-title="Промяна на статус стъклопакет ">
-                        <br> Промени </br> 
+                         Промени </br>
+                        <div {{ stimulus_controller('modal-form',{
+                                    formUrl: path('app_status_glass'),})
+                                    }}
+                                    data-action="hidden.bs.modal->modal-form#modalHidden"
+                                    >
+                                    <button
+                                        style="display: none;" 
+                                        data-action="modal-form#openModal"
+                                        data-order-id="hidden-modal"
+                                        data-current-page="hidden"
+                                        >скрит бутон</button>
+                                        {{ include('_modal.html.twig', {
+                                            modalTitle: 'Промяна на статус Стъклопакет'
+                                       }) }}      
+                            </div> 
                     </td>          
                 {% else %}
                     <td>
@@ -129,11 +168,15 @@
                                     }) }}
                                     data-action="hidden.bs.modal->modal-form#modalHidden"
                                     >
+                                    {% if showCheckboxes == true %}
+                                        {% set filterForm = true %}
+                                    {% endif %}
                                         <button
                                         class="btn btn-primary btn-sm" 
                                         data-action="modal-form#openModal reload-content#updateUrl"
                                         data-order-id="{{ order.id }}"
                                          data-current-page="{{ currentPage }}"
+                                         data-filter-form="{{ filterForm }}"
                                         >промени статус</button>
                                         {{ include('_modal.html.twig', {
                                             modalTitle: 'Промяна на статус стъклопакет'
@@ -153,8 +196,24 @@
                 {% elseif checkbox_status_detail %}
                     {% set button_status_detail = true %}
                     <td> {{order.detail.name}}
+                    <br>
                         <input type="checkbox" name="selectedOrders_detail[]" value="{{ order.id }}" data-status="{{ order.detail.id }}" data-title="Промяна на статус ДОПЪЛНИТЕЛЕН ДЕТАЙЛ">
-                        <br> Промени </br> 
+                         Промени </br>
+                        <div {{ stimulus_controller('modal-form',{
+                                    formUrl: path('app_status_detail'),})
+                                    }}
+                                    data-action="hidden.bs.modal->modal-form#modalHidden"
+                                    >
+                                    <button
+                                        style="display: none;" 
+                                        data-action="modal-form#openModal"
+                                        data-order-id="hidden-modal"
+                                        data-current-page="hidden"
+                                        >скрит бутон</button>
+                                        {{ include('_modal.html.twig', {
+                                            modalTitle: 'Промяна на статус Допълнителен профил' 
+                                       }) }}      
+                            </div> 
                     </td>
                     {% else %}
                         <td>
@@ -166,11 +225,15 @@
                                   }) }}
                                    data-action="hidden.bs.modal->modal-form#modalHidden"
                                     >
+                                    {% if showCheckboxes == true %}
+                                        {% set filterForm = true %}
+                                    {% endif %}
                                     <button
                                         class="btn btn-primary btn-sm" 
                                         data-action="modal-form#openModal reload-content#updateUrl"
                                         data-order-id="{{ order.id }}" 
                                         data-current-page="{{ currentPage }}"
+                                        data-filter-form="{{ filterForm }}"
                                         >промени статус</button>
                                         {{ include('_modal.html.twig', {
                                             modalTitle: 'Промяна на статус Профил'
@@ -189,8 +252,24 @@
                 {% elseif checkbox_status_mosquito %}
                     {% set button_status_mosquito = true %}
                     <td> {{order.mosquito.name}}
+                    <br>
                         <input type="checkbox" name="selectedOrders_mosquito[]" value="{{ order.id }}" data-status="{{ order.mosquito.id }}" data-title="Промяна на статус КОМАРНИК">
-                        <br> Промени </br> 
+                         Промени </br>
+                         <div {{ stimulus_controller('modal-form',{
+                                    formUrl: path('app_status_mosquito'),})
+                                    }}
+                                    data-action="hidden.bs.modal->modal-form#modalHidden"
+                                    >
+                                    <button
+                                        style="display: none;" 
+                                        data-action="modal-form#openModal"
+                                        data-order-id="hidden-modal"
+                                        data-current-page="hidden"
+                                        >скрит бутон</button>
+                                        {{ include('_modal.html.twig', {
+                                            modalTitle: 'Промяна на статус Комарник'
+                                       }) }}      
+                            </div> 
                     </td>
                 {% else %}
                     {% set button_status_mosquito = false %}
@@ -202,11 +281,15 @@
                                   }) }}
                                   data-action="hidden.bs.modal->modal-form#modalHidden"
                                     >
+                                    {% if showCheckboxes == true %}
+                                        {% set filterForm = true %}
+                                    {% endif %}
                                     <button
                                         class="btn btn-primary btn-sm" 
                                         data-action="modal-form#openModal reload-content#updateUrl"
                                         data-order-id="{{ order.id }}"
-                                        data-current-page="{{ currentPage }}" 
+                                        data-current-page="{{ currentPage }}"
+                                        data-filter-form="{{ filterForm }}" 
                                         >промени статус</button>
                                         {{ include('_modal.html.twig', {
                                             modalTitle: 'Промяна на статус комарник'
@@ -231,7 +314,10 @@
             <td colspan="12"></td>
             {% if button_status_order %}
             <td > 
-                <button id="changeStatusButton" class="btn btn-primary">Промени избраните</button>
+                
+                <button id="changeStatusButton" class="btn btn-primary" >Промени избраните</button>
+                            
+                
             </td>
             {% else %} 
             <td></td>
@@ -239,6 +325,7 @@
             {% if button_status_glass %}
             <td >
             <button id="changeStatusButtonGlass" class="btn btn-primary">Промени избраните</button>
+               
             </td>
             {% else %}
             <td></td>
@@ -284,11 +371,13 @@
             var filenameInput = document.getElementById('filename_' + orderId);
             var fileError = document.getElementById('fileError_' + orderId);
             
+            
             if (!fileInput.value) {
                 fileError.style.display = 'block';
                 return false; // Прекратява изпращането на формата
             } else {
                 fileError.style.display = 'none';
+                console.log("JSHTML:", filenameInput);
                 return true; // Позволява изпращането на формата
             }
         }

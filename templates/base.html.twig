@@ -2,63 +2,69 @@
 <html lang="bg">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}PVC {% endblock %}</title>
+    <title>{% block title %}PVC{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
     <link rel="stylesheet" href="{{ asset('build/app.css') }}">
+
     <script src="{{ asset('build/app.js') }}" defer></script>
-    
+
     {% block stylesheets %}
         {{ encore_entry_link_tags('app') }}
-        
-        
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" 
+              integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" 
+              crossorigin="anonymous">
     {% endblock %}
+
     {% block javascripts %}
         {{ encore_entry_script_tags('app') }}
-        
-        
     {% endblock %}
+
     <!-- Включете jQuery, Popper.js и Bootstrap JavaScript тук, ако ги използвате -->
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous" defer></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous" defer></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" 
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" 
+            crossorigin="anonymous" defer></script>
     
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" 
+            integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" 
+            crossorigin="anonymous" defer></script>
+    
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" 
+            integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" 
+            crossorigin="anonymous" defer></script>
+
+
 </head>
 <body data-turbo="true">  
-   
-    <div class="header">
-        <!-- заглавие, лого, поздрав !-->
-        <img class="img-responsive" src="{{ asset('images/logo.png') }}" alt="logo" width="330" height="170">
+
+    <div class="{% if is_granted('IS_AUTHENTICATED_FULLY') %}header{% else %}headerLogin{% endif %}">
+        
+        <img class="img-responsive" src="{{ asset('build/images/logo.png') }}" alt="logo" width="330" height="170">
         <h2>Здравей, 
-            {% if is_granted('ROLE_USER') or
-                  is_granted('ROLE_SUPER_USER') or
-                  is_granted('ROLE_ADMIN') %}
+            {% if is_granted('ROLE_USER') or is_granted('ROLE_SUPER_USER') or is_granted('ROLE_ADMIN') %}
                 {{ app.user.email }}
             {% else %}
                 гост
             {% endif %}
         </h2>
+        
     </div>
-    
+
     {% for message in app.flashes('success') %}
         <div class="alert alert-success custom-alert">
             {{ message }}
         </div>
     {% endfor %}
+    
     <div id="successMessage" class="alert alert-success" style="display: none;">
-    Статусите бяха успешно променени!
-</div>
+        Статусите бяха успешно променени!
+    </div>
 
     <div class="content">
-        
-        
-            {% block body %}{% endblock %}
-        
-       
+        {% block body %}{% endblock %}
     </div>
-    
-    
+
 </body>
 </html>
 

@@ -7,14 +7,15 @@
 
 {% block body %}
     {% if error %}
-        <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+        <div class="alert alert-danger">{{ 'НЕВАЛИДНИ ДАННИ' }}</div>
+        
     {% endif %}
 <style>
         body {
             background-size: cover;
             background-repeat: no-repeat;
             /* Вмъкни стила за фоновата снимка чрез инлайн стил */
-            background-image: url('{{ asset('images/dograma.jpg') }}');
+            background-image: url('{{ asset('build/images/IMG_6529.jpg') }}');
         }
     </style>
     <div class="container-fluid">

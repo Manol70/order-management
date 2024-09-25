@@ -3,23 +3,49 @@
 @import "~bootstrap";
 
 
+/* Стил за headerLogin (без изображение) */
+.headerLogin {
+    /*background-color: #f5f5f5; /* или някакъв друг стил */
+  background-size: cover; /* Фоновата снимка да покрива цялата ширина и височина */
+  background-position: center; /* Центриране на фона */
+  /*background-color: transparent; /* Напълно прозрачен фон */
 
-.header {
-  background-color: hsla(191, 81%, 67%, 0.784); /* цвят на фона */
-  /*border: 2mm solid #888; /* Бордер с широчина 2мм и цвят  */
-  /*border-radius: 10px; /* Закръглени ъгли */
-  padding: 20px; /* Вътрешно разстояние от горната граница до съдържанието */
-  /*box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.10); /* Ефект на изпъкналост */
-  outline: 3mm solid #4291a1b4; /* Тънка линия като бордер */
-  outline-offset: -3mm; /* Отстъп от контура на елемента */
-  height: 20vh; /* Височина 20% от височината на страницата */
-  display: flex; /*  Flexbox */
-  justify-content: space-between; /* Разпределение на елементите равномерно по ширината на "header" */
-  align-items: center; /* ЦентрираKE елементите по вертикалата */
+  background-color: rgba(122, 201, 208, 0.6); /* Полупрозрачен фон */
+  /*outline: 1mm solid rgba(35, 179, 208, 0.6); /* Полупрозрачен outline */
+  outline-offset: -1mm;
+  
+  padding: 20px;
+  height: 20vh;
+  
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .header img {
-  margin-right: 20px; /* Разстояние от дясната страна на логото до края на "header" */
+  margin-right: 20px;
+}
+
+/* Стил за header (с изображение) */
+.header {
+  background-image:url('../images/IMG_6529.jpg'); /* Път до фоновата снимка */ 
+  background-size: cover; /* Фоновата снимка да покрива цялата ширина и височина */
+  background-position: center; /* Центриране на фона */
+  
+  background-color: rgba(66, 145, 161, 0.8); /* Полупрозрачен фон */
+  /*outline: 1mm solid rgba(66, 145, 161, 0.7); /* Полупрозрачен outline */
+  outline-offset: -3mm;
+  
+  padding: 20px;
+  height: 20vh;
+  
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header img {
+  margin-right: 20px;
 }
 
 form {
