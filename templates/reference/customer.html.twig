@@ -7,16 +7,18 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>СПРАВКА ЗА КЛИЕНТ {{ customer.name }}! ✅</h1>
+    <div style="display: flex; align-items: center; justify-content: space-between;">
+        <button onclick="history.back()">Върни се назад</button>
+    <h1 style="margin: 0 auto;">Справка за клиент {{ customer.name }}</h1>
     <br>
 
-    <h2> ТЕЛЕФОН: {% if customer.phone1 == null %} няма
+    <h3> Телефон: {% if customer.phone1 == null %} няма
                   {% else %}
                    {{customer.phone1}}
                    {% endif %}
-    </h2>
-    <button onclick="history.back()">Върни се назад</button>
-</div>
+    </h3>
+    </div> 
+
 <a href="{{ path('export_reference_customer') }}" class="btn btn-primary">Експортирай като Excel</a>
 <table>
     <tr>
@@ -41,5 +43,5 @@
         <td> {{ order.price - order.paid }} </td>
     </tr>
     {% endfor %}
-   
+</div>  
 {% endblock %}

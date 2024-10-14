@@ -18,15 +18,19 @@ use App\Entity\Status;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use DateTimeImmutable;
 
 class SearchFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
+        $defaultDate = (new DateTimeImmutable())->modify('-3 months');
         $builder
 
         ->add('customer', CustomerAutocompleteField::class,[
             'class' => Customer::class,
+            'label' => 'Клиент',
             'choice_label' => function(Customer $Customer){
                 return $Customer->getName();
             },
@@ -70,10 +74,13 @@ class SearchFormType extends AbstractType
         ])
         ->add('from_date', DateType::class,[
             'widget' => 'single_text',
-            'input'  => 'datetime_immutable'
+            'label' => 'От дата',
+            'input'  => 'datetime_immutable',
+            'data' => $defaultDate
         ])
         ->add('to_date', DateType::class,[
             'widget' => 'single_text',
+            'label' => 'До дата',
             'input' => 'datetime_immutable',
             'data' => new \DateTimeImmutable() // задаваме текущата дата
         ])

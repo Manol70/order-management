@@ -7,10 +7,11 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>СПРАВКА ЗА {{ date|date('d.m.Y') }}! ✅</h1>
-    <a href="/order"><input type="button" class="btn btn-success" value="НАЧАЛНА СТРАНИЦА" data-turbo-frame="orders_frame"></a>
-</div>
-<div class="reference-form">
+    <a href="/order"><input type="button" class="btn btn-success" value="НАЧАЛО" data-turbo-frame="orders_frame" style="float: left; margin-top: 20px;"></a>
+    
+    <h1>СПРАВКА ЗА {{ date|date('d.m.Y') }} </h1>
+
+<div class="reference-form" data-turbo="false">
     {{ form_start(referenceDateStatusForm) }}
     <div class="form-row">
         <div class="form-field">
@@ -61,6 +62,6 @@
     </tfoot>
 </table>
 
-</di>
+</div>
 
 {% endblock %}

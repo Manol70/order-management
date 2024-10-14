@@ -10,11 +10,12 @@
 
     <script src="{{ asset('build/app.js') }}" defer></script>
 
-    {% block stylesheets %}
+    {% block stylesheets %} 
         {{ encore_entry_link_tags('app') }}
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" 
               integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" 
               crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     {% endblock %}
 
     {% block javascripts %}
@@ -29,43 +30,44 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" 
             integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" 
             crossorigin="anonymous" defer></script>
-    
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" 
-            integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" 
-            crossorigin="anonymous" defer></script>
-
 
 </head>
-<body data-turbo="true">  
-
-    <div class="{% if is_granted('IS_AUTHENTICATED_FULLY') %}header{% else %}headerLogin{% endif %}">
-        
-        <img class="img-responsive" src="{{ asset('build/images/logo.png') }}" alt="logo" width="330" height="170">
-        <h2>Здравей, 
-            {% if is_granted('ROLE_USER') or is_granted('ROLE_SUPER_USER') or is_granted('ROLE_ADMIN') %}
-                {{ app.user.email }}
-            {% else %}
-                гост
-            {% endif %}
-        </h2>
-        
-    </div>
-
-    {% for message in app.flashes('success') %}
-        <div class="alert alert-success custom-alert">
-            {{ message }}
+<body data-turbo="true">
+    <div class="container-fluid">
+        <!-- Header Section -->
+        <div class="row">
+            <div class="{% if is_granted('IS_AUTHENTICATED_FULLY') %}col-12 header{% else %}col-12 headerLogin{% endif %}">
+                
+                <img class="img-fluid" src="{{ asset('build/images/logo.png') }}" alt="logo">
+                <h2>Потребител: 
+                    {% if is_granted('ROLE_USER') or is_granted('ROLE_SUPER_USER') or is_granted('ROLE_ADMIN') %}
+                        {{ app.user.name }}
+                    {% else %}
+                        гост
+                    {% endif %}
+                </h2>
+                
+            </div>
         </div>
-    {% endfor %}
     
-    <div id="successMessage" class="alert alert-success" style="display: none;">
-        Статусите бяха успешно променени!
+        <!-- Flash Messages -->
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success custom-alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+        
+        <div id="successMessage" class="alert alert-success" style="display: none;">
+            Статусите бяха успешно променени!
+        </div>
     </div>
+        <!-- Main Content Section -->
+        
+                
+                {% block body %}{% endblock %}
+                
 
-    <div class="content">
-        {% block body %}{% endblock %}
-    </div>
-
-</body>
+</body> 
 </html>
 
    

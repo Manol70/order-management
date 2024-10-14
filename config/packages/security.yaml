@@ -16,13 +16,16 @@ security:
         main:
             lazy: true
             provider: app_user_provider
-
+            access_denied_handler: App\Security\AccessDeniedHandler
+            
             
 
             form_login:
                 # "app_login" is the name of the route created previously
                 login_path: app_login
                 check_path: app_login
+                enable_csrf: true
+                csrf_token_id: 'authenticate'
 
             logout:
                 path: app_logout
@@ -39,14 +42,17 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        - { path: ^/admin ^/payment, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
-        # allow unauthenticated users to access the login form
-        - { path: ^/index, roles: PUBLIC_ACCESS }
+    - { path: ^/admin, roles: ROLE_ADMIN }
+    - { path: ^/payment, roles: ROLE_ADMIN }
+    - { path: ^/reference, roles: ROLE_ADMIN }
+    - { path: ^/create, roles: ROLE_ADMIN }
+    - { path: ^/order/.+, roles: ROLE_ADMIN } # Ограничаване на достъпа до всички подстраници след /order (само за администратори)
+    - { path: ^/customer/user, roles: ROLE_USER }
+    - { path: ^/index, roles: PUBLIC_ACCESS }
 #    role_hierarchy:
 #       ROLE_SUPER_USER: ROLE_USER
 #       ROLE_ADMIN: [ROLE_SUPER_USER, ROLE_ALLOWED_TO_SWITCH]
-        
+         
 
 when@test:
     security:
@@ -60,3 +66,7 @@ when@test:
                 cost: 4 # Lowest possible value for bcrypt
                 time_cost: 3 # Lowest possible value for argon
                 memory_cost: 10 # Lowest possible value for argon
+
+                access_denied_handler:
+                # Свързване с AccessDeniedHandler
+                default: App\Security\AccessDeniedHandler

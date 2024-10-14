@@ -162,7 +162,7 @@ class ReferenceController extends AbstractController
         return $this->file($temp_file, $fileName, ResponseHeaderBag::DISPOSITION_INLINE);
     }
 
-    #[Route('/reference', name: 'app_reference_date')]
+    #[Route('/reference/date', name: 'app_reference_date')]
     public function referenceDate(OrderRepository $orderRepository, PaymentRepository $paymentRepository,
                                     StatusRepository $statusRepository,
                                     StatusHistoryRepository $statusHistoryRepository,
@@ -250,6 +250,7 @@ class ReferenceController extends AbstractController
                     foreach ($statuses as $status) {
                         $totalQuadrature += $status[0]['_order']['quadrature'];
                     }
+                    //dd($status);
                     return $this->render('reference/date.html.twig', [
                         'date' => $newDate,
                         'statuses' => $statuses,

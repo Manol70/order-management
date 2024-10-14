@@ -2,50 +2,109 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200&display=swap');
 @import "~bootstrap";
 
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+/* За малки екрани като телефони */
+@media only screen and (max-width: 600px) {
+    body {
+        font-size: 14px;
+    }
+    .container {
+        width: 100%;
+        padding: 10px;
+    }
+}
+
+/* За таблети */
+@media only screen and (min-width: 601px) and (max-width: 1024px) {
+    body {
+        font-size: 16px;
+    }
+    .container {
+        width: 90%;
+        margin: 0 auto;
+    }
+}
+
+/* За десктопи */
+@media only screen and (min-width: 1025px) {
+    body {
+        font-size: 18px;
+    }
+    .container {
+        width: 80%;
+        margin: 0 auto;
+    }
+}
+/* Допълнително за мобилни устройства */
+@media (max-width: 768px) {
+  .header {
+    background-size: cover;   /* Уверяваме се, че покрива цялата ширина на екрана */
+    background-position: top center; /* Позиционираме го да е отгоре и в центъра */
+    min-height: 150px;        /* За мобилни устройства височината може да е по-малка */
+  }
+}
+.row {
+  margin: 0; /* Премахва външните отстояния */
+  padding: 0; /* Премахва вътрешните отстояния, ако е необходимо */
+  width: 100%; /* Задължително да заема цялата ширина на родителя */
+}
 
 /* Стил за headerLogin (без изображение) */
-.headerLogin {
-    /*background-color: #f5f5f5; /* или някакъв друг стил */
+.headerLogin { 
   background-size: cover; /* Фоновата снимка да покрива цялата ширина и височина */
   background-position: center; /* Центриране на фона */
   /*background-color: transparent; /* Напълно прозрачен фон */
-
   background-color: rgba(122, 201, 208, 0.6); /* Полупрозрачен фон */
   /*outline: 1mm solid rgba(35, 179, 208, 0.6); /* Полупрозрачен outline */
   outline-offset: -1mm;
-  
-  padding: 20px;
-  height: 20vh;
-  
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.header img {
-  margin-right: 20px;
 }
 
 /* Стил за header (с изображение) */
 .header {
-  background-image:url('../images/IMG_6529.jpg'); /* Път до фоновата снимка */ 
+  background-image: url('../images/IMG_6529.jpg'); /* Път до фоновата снимка */ 
   background-size: cover; /* Фоновата снимка да покрива цялата ширина и височина */
   background-position: center; /* Центриране на фона */
   
   background-color: rgba(66, 145, 161, 0.8); /* Полупрозрачен фон */
-  /*outline: 1mm solid rgba(66, 145, 161, 0.7); /* Полупрозрачен outline */
   outline-offset: -3mm;
-  
-  padding: 20px;
-  height: 20vh;
-  
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+
+  /* Добавяме тези нови правила */
+  min-height: 200px;  /* Минимална височина за мобилни устройства */
+  width: 100%;        /* Задължително да заема цялата ширина */
+  margin: 0;          /* Премахва всякакви външни отстояния */
+  padding: 0;         /* Премахва всякакви вътрешни отстояния */
 }
 
-.header img {
-  margin-right: 20px;
+.header img, .headerLogin img {
+  max-width: 100%;  /* За адаптивност */
+  height: auto;
+  width: auto;
+  
+}
+.header, .headerLogin {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;  /* Центриране по вертикала на логото */
+  position: relative; /* Нужен за абсолютното позициониране на текста */
+  padding: 20px;
+  height: 20vh;
+  background-size: cover;
+  background-position: center;
+}
+
+/* Позициониране на текста */
+.header h2, .headerLogin h2 {
+  position: absolute;
+  right: 20px;   /* Текстът да бъде вдясно */
+  bottom: 0;     /* Подравняване към дъното */
+  margin: 0;     /* Премахваме допълнителни разстояния */
+  padding: 10px;
+  font-size: 1.5rem; /*големината на текста */
+  color:rgba(195, 207, 216, 0.87)
 }
 
 form {
@@ -57,11 +116,18 @@ form {
   border-radius: 20px; /* Закръгляване на ъглите */
 }
 
+.btn-group-item {
+  display: inline-block; /* Прави съдържанието вътре в div да изглежда като част от групата бутони */
+  margin-right: 10px; /* Добавя разстояние между бутоните */
+  
+}
+
 .btn-primary {
   width: 100%; /* Заема цялата ширина на родителя си */
   border: none; /* Премахва границата на бутона */
-  border-radius: 50px; /* Закръгляване на ъглите на бутона */
-  background: linear-gradient(90deg, rgb(177, 176, 206) 0%, rgba(75,14,154,1) 35%, rgba(0,212,255,1) 100%); /* Градиентен фон на бутона */
+  border-radius: 0 !important; /* Закръгляване на ъглите на бутона */
+  /*background: linear-gradient(90deg, rgb(177, 176, 206) 0%, rgba(75,14,154,1) 35%, rgba(0,212,255,1) 100%); /* Градиентен фон на бутона */
+  margin-right: 10px; /* Отстояние между бутоните */
 }
 
 .form-control {
@@ -73,12 +139,24 @@ form {
   border-radius: 4px 4px 0 0; /* Закръгляване на горните ъгли */
 }
 
+
+/* Центриране на бутоните и фонов цвят */
+.btn-group {
+  display: flex;
+  justify-content: center; /* Центриране по хоризонтала */
+  align-items: center; /* Центриране по вертикала */
+  background-color: #eee4e4c4; /*search-form-container */
+  width: 100%; /* Пълна ширина */
+  /*padding: 10px; /* Премахни или намали padding, ако е необходимо */
+  /*margin-bottom: 20px; /* Добави малък margin, за да оставиш място за следващото съдържание */
+}
+
+ 
 .search-form-container {
   background-color: #eee4e4c4; /* Цвят на фона */
-  padding: 20px; /* Вътрешен отстъп */
-  border-radius: 10px; /* Закръгляване на ъглите */
-  margin-bottom: 20px; /* Отстъп долу */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Сянка */
+  width: 100%;
+  margin-top: 20px; /* Отстъп отгоре */ 
+  margin-bottom: 20px;
 }
 
 .search-form-container .form-row {
@@ -88,7 +166,12 @@ form {
 }
 
 .search-form-container .form-field {
-  flex: 1 1 200px; /* Разпределение на ширината на полетата */
+  flex: 1 1 30%; /* Разпределение на ширината на полетата */
+ 
+}
+.form-field label {
+  font-size: 18px; /* Размер на шрифта на етикета */
+ 
 }
 
 .search-form-container .btn-primary {
@@ -98,22 +181,155 @@ form {
   margin-top: 10px; /* Отстъп отгоре */
   border: none; /* Премахва границата на бутона */
 }
+/* Увеличаване на размера на чекбокса */
+.form-check-input {
+  transform: scale(1.5); /* Скалиране на чекбокса */
+  width: 15px; /* За контролиране на hit area */
+  height: 15px; /* За контролиране на hit area */
+}
+
+/* Контейнерът на бутона */
+.form-submit-container {
+  display: flex;
+  justify-content: flex-end; /* Премества бутона вдясно */
+  margin-top: 20px; /* Добавя малко разстояние от полетата над него */
+}
+
+/* Стилизация на бутона */
+.submit-button {
+  width: 50px ; /* Ширината на бутона */
+  height: 50px ; /* Прави бутона квадратен */
+  display: inline-flex;
+  justify-content: center;
+  align-items: center; /* Центриране на текста в бутона */
+  border-radius: 5px; /* Може да коригираш за да е леко заоблен бутон */
+  font-size: 16px; /* Размер на текста вътре */
+  text-transform: uppercase; /* Прави текста главни букви */
+}
 
 /* Стилизация на текстовите полета */
 .search-form-container .form-control {
-  color: rgba(0, 0, 0, .87);
-  border-bottom-color: rgba(0, 0, 0, .42);
-  box-shadow: none !important;
-  border: none;
-  border-bottom: 1px solid;
-  border-radius: 4px 4px 0 0;
+  
+}
+/* форма за нова поръчка и редакция на поръчка*/
+.create-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  padding: 20px;
+  background-color: #f5f5f5; /* Можеш да добавиш цвят за заглавието */
 }
 
+.create-header a {
+  position: absolute;
+  left: 0; /* Оставя бутона плътно вляво */
+}
 
- 
+.create-header h1 {
+  text-align: center;
+  margin: 0;
+  
+  position: absolute;
+  left: 50%; /* Позиционира заглавието в средата спрямо лявата страна */
+  transform: translateX(-50%); /* Центрира заглавието по средата на екрана */
+  top: 50%; /* За да центрираме вертикално (по желание) */
+  transform: translate(-50%, -50%);
+}
+
+.create-form-container {
+  background-color: #eee4e4c4;
+  width: 100%;
+  margin-top: 20px; /* Естествено отстояние от заглавието */
+  margin-bottom: 20px;
+  padding: 20px;
+}
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Три колони с равни ширини */
+  grid-gap: 20px; /* Разстояние между полетата */
+  align-items: end; /* Подравняване на всички полета по долния край */
+}
+.form-field-create,
+.form-field.form-check {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-field-create.full-width {
+  grid-column: span 3; /* Бутонът заема цялата ширина */
+}
+.form-check-label {
+  display: inline-block; /* Уверяваме се, че label се държи като блок елемент */
+  /*white-space: nowrap;   /* Принуждаваме label-а да стои на един ред */
+  /*vertical-align: middle; /* Подравняваме label спрямо чекбокса по вертикала */
+  height: 20px; /* Или друга подходяща стойност за еднаква височина */
+}
+
+.create-submit{
+  margin-top: 5px;  
+}
+
+.form-check {
+  display: flex;
+  /*align-items: center; /* Центрира чекбоксовете по вертикала */
+  width: 100%; /* Уверяваме се, че заемаме цялата ширина, като другите полета */
+  margin-left: 5px; /* Изравняваме чекбоксовете спрямо лявата страна */
+}
+
+/* Увеличаване на размера на чекбокса */
+.form-check-input {
+  transform: scale(1.5); /* Скалиране на чекбокса */
+  width: 15px; /* За контролиране на hit area */
+  height: 15px; /* За контролиране на hit area */
+}
+.recent-orders-title {
+  text-align: center; /* Центрира текста по хоризонтала */
+  margin-top: 15px; /* Отстъп отгоре, за да има място под формата */
+  margin-bottom: 0px; /* Намалява разстоянието между заглавието и таблицата */
+  /*font-weight: bold; /* Добавяме малко тежест на шрифта, ако е необходимо */
+  position: relative; 
+  top: 10px; /* Контролира позицията надолу */
+}
+.recent-orders-table {
+  margin-top: -15px; /* Отрицателният маргин се прилага само за тази таблица */
+}
+.checkboxes-grid-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* Три колони с равни ширини */
+  grid-gap: 20px; /* Разстояние между полетата */
+  margin-left: 10px;
+  /*align-items: end; /* Подравняване на всички полета по долния край */
+}
+.form-field-create label{
+  font-size: 18px;
+}
+.checkbox-item label{
+  /*display: inline-block; /* Уверяваме се, че label се държи като блок елемент */
+  white-space: nowrap;   /* Принуждаваме label-а да стои на един ред */
+  /*vertical-align: middle; /* Подравняваме label спрямо чекбокса по вертикала */
+ /* height: 40px; /* Или друга подходяща стойност за еднаква височина */
+  margin-left: -10px;
+  text-align: center;
+  font-size: 18px;
+}
+.input-check-edit{
+  transform: scale(1.5); /* Скалиране на чекбокса */
+  width: 15px; /* За контролиране на hit area */
+  height: 15px; /* За контролиране на hit area */
+  margin-left: 5px;
+  text-align: center;
+}
+.form-grid .checkbox-item label{
+  margin-left:10px;
+  
+}
+/*До тук за формата за нова поръчка и edit*/
+
 .customer-autocomplete-field {
   width: 100% !important; /* или по ваш избор */
 }
+
 .modal-body button {
   display: none;
 }
@@ -177,7 +393,7 @@ form {
 
 .form-field {
   flex-grow: 1;
-  margin-right: 10px; /* Променете това според вашите нужди */
+  margin-right: 10px; 
 }
 
 .form-field:last-child {
@@ -186,26 +402,42 @@ form {
 /* Опционално: Стилизиране на бутона за търсене */
 button[type="submit"] {
   padding: 5px 10px;
-  background-color: #00ff2a;
+  /*background-color: #00ff2a;*/
   color: white;
   border: none;
   cursor: pointer;
 }
+.table-collection {
+  background-color: #baf0ad; /* избери подходящ цвят */
+  padding: 10px; /* пространство около таблиците */
+  border-radius: 5px; /* закръглени ъгли, ако желаеш */
+  margin-top: 20px;
+}
+
 
 .table-container {
   max-height: 300px; /* Определяне на височината на скролируемата част */
   overflow-y: auto;
-  border: 1px solid #ddd; /* Добавяне на граница за контейнера */
+  border: 3px solid #0f0e0e; /* Добавяне на граница за контейнера */
+  text-align: center;
+  background-color: #f4eef0;
 }
+.table-container th{
+  background-color: #dddddd;
+}
+
+
 
 table {
   width: 100%;
   border-collapse: collapse;
 }
 
+
 th, td {
   border: 1px solid #ddd;
   padding: 8px;
+  background-color: hsl(210, 14%, 97%);
 }
 
 th {
@@ -223,6 +455,7 @@ th {
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  min-height: 100vh; /* Поне толкова, колкото е височината на прозореца */
 }
 
 .example-wrapper h1 {
@@ -320,8 +553,33 @@ th {
 }
 
 .table-wrapper {
-    flex: 1;                /* Означава, че всяка таблица ще заема равно място */
+    flex: 1;         /* Означава, че всяка таблица ще заема равно място */
     padding: 10px;
     border: 1px solid #ccc; /* Малка граница около всяка таблица */
     background-color: #f9f9f9; /* Фонов цвят за яснота */
 }
+
+/*Оцветява клетката за дължима сума*/
+.green {
+    background-color: #59e379 !important ;/* светло зелено */
+}
+
+.red {
+    background-color: #e7626d !important; /* светло червено */
+}
+
+.first {
+  background-color: #efefe4 !important ;/* бяло */
+}
+.second{
+  background-color: #def439 !important ;/* жълто */
+}
+.third{
+  background-color: #ce4416 !important ;/* кафяво */
+}
+.last {
+  background-color: #67da82 !important ;/* светло зелено */
+}
+
+
+

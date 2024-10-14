@@ -2,7 +2,7 @@
 
 
 
-{% block title %}ПОРЪЧКИ{% endblock %}
+{% block title %}PVC RUSE{% endblock %}
 
 {% block body %}
 
@@ -13,43 +13,61 @@
     table, th, td {
     border: 1px solid black;
     }
-  </style>
-  
+  </style> 
 </head>
-<table class="table">
-        <thead>
-            <tr>
-                <th>Номер</th>
-                <th>Клиент</th>
-                <th class="short-version">Произв. схема</th>
-                <th>Тип</th>
-                <th>m2</th>
-                <th>от дата</th>
-                <th>за дата</th>
-                <th>цена</th>
-                <th>платено</th>
-                <th>остатък</th>
-                <th>статус</th>
-                <th>стъклопакет</th>
-                <th>доп. профил</th>
-                <th>комарник</th>
-            </tr>
-        </thead>
-        {% for order in orders %}
-            <tr>
-                <td> {{ order.number }} </td>
-                <td> {{ order.customerName }} </td>
-                <td> {{ order.scheme }} </td>
-                <td> {{ order.typeName }} </td>
-                <td> {{ order.quadrature }} </td>
-                <td> {{ order.createdAt|date('d.m.y') }} </td>
-                <td> {{ order.for_date|date('d.m.y') }} </td>
-                <td> {{ order.price }} </td>
-                <td> {{ order.paid }} </td>
-                <td> {{ order.price - order.paid }} </td>
-                <td> {{ order.statusName }} </td>
-                <td> {{ order.glassName }} </td>
-                <td> {{ order.detailName }} </td>
-                <td> {{ order.mosquitoName }} </td>
-        {% endfor %}      
+
+<div class="example-wrapper">
+  <div style="text-align: right; margin-top: 20px;">
+    <a href="{{ path('app_logout') }}" class="btn btn-info" data-turbo="false">ИЗХОД</a>
+  </div> 
+  <h1> ИНФОРМАЦИЯ ЗА ВАШИТЕ ПОРЪЧКИ </h1>
+  
+  <table>
+    <thead> 
+      <tr>
+        <th>Номер</th>
+        <th>Клиент</th>
+        <th class="short-version">Произв. схема</th>
+        <th>Тип</th>
+        <th>m2</th>
+        <th>от дата</th>
+        <th>за дата</th>
+        <th>цена</th>
+        <th>платено</th>
+        <th>остатък</th>
+        <th>статус</th>  
+        <th>стъклопакет</th>
+        <th>доп. профил</th>
+        <th>комарник</th>
+      </tr>
+    </thead>
+    {% for order in orders %}
+      <tr>
+        <td> {{ order.number }} </td>
+        <td> {{ order.customerName }} </td>
+        {% if order.scheme == NULL %}
+          <td> Няма </td>
+        {% else %}
+          <td> 
+          <a href="{{ asset('uploads/' ~ order.scheme) }}" >Виж схема</a>
+          </td>
+        {% endif %}
+        <td> {{ order.typeName }} </td>
+        <td> {{ order.quadrature }} </td>
+        <td> {{ order.createdAt|date('d.m.y') }} </td>
+        <td> {{ order.for_date|date('d.m.y') }} </td>
+        <td> {{ order.price }} </td>
+        <td> {{ order.paid }} </td>
+        <td> {{ order.price - order.paid }} </td>
+        <td> {{ order.statusName }} </td>
+        <td> {{ order.glassName }} </td>
+        <td> {{ order.detailName }} </td>
+        <td> {{ order.mosquitoName }} </td>
+      {% endfor %}
+</div>   
+{% for message in app.flashes('error') %}
+    <div class="alert alert-danger">
+        {{ message }}
+    </div>
+{% endfor %}          
 {% endblock %}

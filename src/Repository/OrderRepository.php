@@ -10,7 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 
 /**
- * @extends ServiceEntityRepository<Order>
+ * @extends ServiceEntityRepository<Order> 
  *
  * @method Order|null find($id, $lockMode = null, $lockVersion = null)
  * @method Order|null findOneBy(array $criteria, array $orderBy = null)
@@ -77,7 +77,12 @@ class OrderRepository extends ServiceEntityRepository
             JOIN orders.glass glass
             JOIN orders.mosquito mosquito
             JOIN orders.detail detail
-            WHERE customer.id = :customerId"
+            WHERE customer.id = :customerId
+            AND (orders.price - orders.paid > 0 OR 
+            _status.name != 'Взета' OR 
+            glass.name != 'Взет' OR 
+            mosquito.name != 'Взет' OR 
+            detail.name != 'Взет')"
         );
         $query->setParameter('customerId', $customerId);
         $queryResult = $query->getArrayResult();
@@ -196,6 +201,9 @@ public function getTopCountOrderByCustomer(EntityManager $entityManager, $fromDa
     $result = $query->getResult();
     return $result;   
 }
+
+
+
    /* public function findAllOrders():array
     {
         return $this->createQueryBuilder('mix')

@@ -1,8 +1,12 @@
 {% extends '@EasyAdmin/page/content.html.twig' %}
 
 {% block page_content %}
+    
     <div class="custom-logo" style="text-align: center;">
-        <img src="{{ asset('images/logo.png') }}" alt="Logo" style="width: 200px; margin-bottom: 200px;">
+        <img src="{{ asset('build/images/logo.png') }}" alt="Logo" style="width: 200px; margin-bottom: 200px;">
+    </div>
+    <div class="custom-greeting" style="text-align: center;">
+        <h2>ДОБРЕ ДОШЛИ В АДМИН ПАНЕЛ!</h2>
     </div>
 
     {{ parent() }} {# Оригиналното съдържание на страницата #}
@@ -10,7 +14,7 @@
 
 {% block user_menu %}
     <div class="custom-greeting">
-        <h2>Welcome, !</h2>
+        <h2>Здравей, !</h2>
     </div>
     {{ parent() }}
 {% endblock %}

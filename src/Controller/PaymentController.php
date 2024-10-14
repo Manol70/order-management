@@ -59,7 +59,7 @@ class PaymentController extends AbstractController
         
         // Създаване на форма за въвеждане на плащания
         
-        
+         
         $form = $this->createForm(PaymentType::class,);
         
         $form->handleRequest($request);
@@ -104,6 +104,7 @@ class PaymentController extends AbstractController
                 $order = $orderRepository->getOrderById($orderId);
                 
                 $paymentAmount = $orderPayment['paymentAmount'];
+                
                 $orderNumber = $orderPayment['orderNumber'];
                 $paymentDoc = $orderPayment['paymentDoc'];
                 $docNumber = $orderPayment['docNumber'];
@@ -119,7 +120,7 @@ class PaymentController extends AbstractController
                 $payment->setUser($user);
                 $payment->setCustomer($customer);
                 $payment->setOrder($order);
-
+                
                 // Запазване на записа в базата данни
                 $entityManager->persist($payment);
 

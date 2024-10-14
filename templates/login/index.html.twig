@@ -18,9 +18,10 @@
             background-image: url('{{ asset('build/images/IMG_6529.jpg') }}');
         }
     </style>
-    <div class="container-fluid">
+    
       <form class="mx-auto" action="{{ path('app_login') }}" method="post" >
         <div class="mb-3 mt-5">
+          <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
           <h4 class="text-center">Login</h4>
           <label for="username" class="form-label">Email address</label>
           <input type="text" class="form-control" id="username" aria-describedby="emailHelp" name="_username" value="{{ last_username }}">
@@ -32,8 +33,8 @@
         <input type="hidden" name="_target_path" value="/order">
         <button type="submit" value="/order" class="btn btn-primary">Login</button>
       </form>
-    </div>
+    
 
-    <!-- Option 1: Bootstrap Bundle with Popper -->
+    
   
 {% endblock body %}

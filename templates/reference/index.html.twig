@@ -2,15 +2,14 @@
 
 {% block title %}Hello ReferenceController!{% endblock %}
 
-{% block body %}
+{% block body %} 
 <style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
     .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
 </style>
 
 <div class="example-wrapper">
-<a href="/order"><input type="button" class="btn btn-success" value="НАЧАЛО" data-turbo-frame="orders_frame"></a>   
-
+<a href="/order"><input type="button" class="btn btn-success" value="НАЧАЛО" data-turbo-frame="orders_frame" style="float: left; margin-top: 20px;"></a>
+ 
     <div class="search-form-container">
     {{ form_start(searchForm, {'attr': {'data-turbo': 'false'}}) }}
     
@@ -51,26 +50,33 @@
     
     <button type="submit" class="btn btn-primary">Виж</button> 
     {{ form_end(searchForm) }}
-</div>
-</div>
+    </div>
+
 
 {% if fromDate != null %}
 <h1> СПРАВКА ЗА ПЕРИОДА {{ fromDate }} - {{ toDate  }} </h1>
 <table>
     <thead>
         <tr>
-        <th>Брой поръчки</th>
-        <th>Квадратура</th>
-        <th>Обща сума</th>
-        <th>Платено</th>
-        <th>Неплатено</th>
+            <th>Брой поръчки</th>
+            <th>Квадратура</th>
+            <th>Обща сума</th>
+            <th>Платено</th>
+            <th>Неплатено</th>
         </tr>
         <tr>
-        <td> {{ totalOrders }} </td>
-        <td> {{ totalQuadrature }} </td>
-        <td> {{ totalAmount }} </td>
-        <td> {{ totalPaid }} </td>
-        <td> {{ totalAmount - totalPaid }}</td>
+            <td> {{ totalOrders }} </td>
+            <td> {{ totalQuadrature }} </td>
+            <td> {{ totalAmount }} </td>
+            <td> {{ totalPaid }} </td>
+            <td> {{ totalAmount - totalPaid }}</td>
+        </tr>
+        <tr>
+            
+            <td colspan="2" style="text-align: right;">Без ДДС</td>
+            <td> {{ (totalAmount / 1.2) | number_format(2) }} </td>
+            <td> {{ (totalPaid /1.2) | number_format(2) }} </td>
+            <td> {{ ((totalAmount - totalPaid) /1.2) | number_format(2) }} </td>
         </tr>
     </thead>
 </table>
@@ -117,6 +123,7 @@
              {% endfor %}
         </table>
     </div>
+</div>
 </div>
 {% endif %}
 {% endblock %}

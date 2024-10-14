@@ -52,24 +52,25 @@ class DashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            ->setTitle('Workshop');
+            ->setTitle('АДМИН ПАНЕЛ');
     }
 
     public function configureMenuItems(): iterable
     {
-        yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
-        yield MenuItem::linkToCrud('User', 'fa fa-user-circle', User::class);
-        yield MenuItem::linkToCrud('Customer', 'fa fa-customer-circle', Customer::class);
-        yield MenuItem::linkToCrud('Glass','fa fa-glass-circle', Glass::class);
-        yield MenuItem::linkToCrud('Type', 'fa fa-type-circle', Type::class);
-        yield MenuItem::linkToCrud('TypeMontage', 'fa fa-type_montage', TypeMontage::class);
-        yield MenuItem::linkToCrud('Order', 'fa fa-order-circle', Order::class);
+        //yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
         yield MenuItem::linkToRoute('Начало', 'fas fa-home', 'app_order');
+        yield MenuItem::linkToCrud('Потребители', 'fa fa-user-circle', User::class);
+        yield MenuItem::linkToCrud('Клиенти', 'fa fa-customer-circle', Customer::class);
+        //yield MenuItem::linkToCrud('Glass','fa fa-glass-circle', Glass::class);
+        //yield MenuItem::linkToCrud('Type', 'fa fa-type-circle', Type::class);
+        //yield MenuItem::linkToCrud('TypeMontage', 'fa fa-type_montage', TypeMontage::class);
+        //yield MenuItem::linkToCrud('Order', 'fa fa-order-circle', Order::class);
+        
 
         // yield MenuItem::linkToCrud('The Label', 'fas fa-list', EntityClass::class);
     }
 
-    public function configureActions(): Actions
+    public function configureActions(): Actions 
     {
         return parent::configureActions()
         ->add(Crud::PAGE_INDEX, Action::DETAIL);
@@ -82,6 +83,7 @@ class DashboardController extends AbstractDashboardController
             ->overrideTemplates([
                 'crud/index' => 'admin/crud/index.html.twig',
             ]);
+            
     }
 
 }

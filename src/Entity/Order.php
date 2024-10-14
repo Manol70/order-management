@@ -9,11 +9,19 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Exception\PersisterException;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use phpDocumentor\Reflection\Types\Integer;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints\GroupSequence;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
+
 
 use PHPUnit\TextUI\XmlConfiguration\RemoveEmptyFilter;
 
 #[ORM\Entity(repositoryClass: OrderRepository::class)]
 #[ORM\Table(name: '`order`')]
+
 class Order
 {
     use TimestampableEntity;
@@ -25,14 +33,23 @@ class Order
     #[ORM\Column]
     private ?int $number = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: 'float')]
+    #[Assert\NotBlank]
+    #[Assert\Type('float')]
+    #[Assert\PositiveOrZero]
     private ?float $quadrature = null;
-
-
+    
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Assert\NotBlank]
+    #[Assert\GreaterThanOrEqual(value: 'today', message: 'The date must be today or in the future.')]
+   /* #[Assert\Date(groups: ["create"])]//тези 2 реда се използват, ако искаме да валидираме датата и при edit
+    #[Assert\GreaterThanOrEqual("today", groups: ["create"])] */
     private ?\DateTimeInterface $for_date = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: 'float')]
+    #[Assert\NotBlank]
+    #[Assert\Type('float')]
+    #[Assert\PositiveOrZero]
     private ?float $price = null;
 
     #[ORM\Column]
@@ -42,7 +59,7 @@ class Order
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $scheme = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $note = null;
 
     #[ORM\Column(nullable: true)]
@@ -87,6 +104,8 @@ class Order
 
     #[ORM\OneToMany(mappedBy: '_order', targetEntity: DetailHistory::class)]
     private Collection $detailHistories;
+
+    
 
     public function __construct()
     {
@@ -180,7 +199,7 @@ class Order
         return $this->note;
     }
 
-    public function setNote(string $note): static
+    public function setNote(?string $note): static
     {
         $this->note = $note;
 

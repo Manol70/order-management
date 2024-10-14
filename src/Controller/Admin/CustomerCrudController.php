@@ -19,6 +19,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 
 
 class CustomerCrudController extends AbstractCrudController
@@ -43,20 +45,66 @@ class CustomerCrudController extends AbstractCrudController
     }
 
     
+
+    public function configureCrud(Crud $crud): Crud
+    {
+        return $crud
+            ->setEntityLabelInPlural('Клиенти')  // Заглавие за множествено число
+            ->setEntityLabelInSingular('Клиент') // Заглавие за единствено число
+            ->setPageTitle(Crud::PAGE_NEW, 'Нов клиент') // Промяна на заглавието на страницата за нов клиент
+            ->setPageTitle(Crud::PAGE_EDIT, 'Редактирай клиент')
+            ->setPageTitle(Crud::PAGE_INDEX, 'Списък с клиенти')
+            ->setPageTitle(Crud::PAGE_DETAIL, 'Детайли за клиента');         
+    }
+    public function configureActions(Actions $actions): Actions
+{
+    return $actions
+        ->update(Crud::PAGE_INDEX, Action::NEW, function (Action $action) {
+            return $action->setLabel('Нов клиент'); // Задаване на нов текст за бутона
+        })
+        ->update(Crud::PAGE_INDEX, Action::EDIT, function (Action $action) {
+            return $action->setLabel('редактиране'); // Задаване на нов текст за бутона
+        })
+        ->update(Crud::PAGE_INDEX, Action::DELETE, function (Action $action) {
+            return $action->setLabel('изтрий'); // Задаване на нов текст за бутона
+        })
+        ->update(Crud::PAGE_INDEX, Action::DETAIL, function (Action $action) {
+            return $action->setLabel('детайли за клиента'); // Задаване на нов текст за бутона
+        })
+        ->update(Crud::PAGE_NEW, Action::SAVE_AND_RETURN, function (Action $action) {
+            return $action->setLabel('Запиши');
+        })
+        ->update(Crud::PAGE_NEW, Action::SAVE_AND_ADD_ANOTHER, function (Action $action) {
+            return $action->setLabel('Запиши и създай нов клиент');
+        })
+        ->update(Crud::PAGE_EDIT, Action::SAVE_AND_RETURN, function (Action $action) {
+            return $action->setLabel('Запази и върни');
+        })
+        ->update(Crud::PAGE_EDIT, Action::SAVE_AND_CONTINUE, function (Action $action) {
+            return $action->setLabel('Запази и продължи');
+        })
+        ->update(Crud::PAGE_DETAIL, Action::DELETE, function (Action $action) {
+            return $action->setLabel('Изтрий');
+        })
+        ->update(Crud::PAGE_DETAIL, Action::INDEX, function (Action $action) {
+            return $action->setLabel('Обратно към списъка');
+        })
+        ->update(Crud::PAGE_DETAIL, Action::EDIT, function (Action $action) {
+            return $action->setLabel('Редактиране');
+        });
+}
+
     public function configureFields(string $pageName): iterable
     {
-        
-
-
         return [
             //IdField::new('id'),
-            TextField::new('name'),
-            TextField::new('town'),
-            TextField::new('address'),
-            TextField::new('phone1'),
-            TextField::new('phone2'),
-            TextField::new('mail', 'ел. поща'),
-            TextEditorField::new('note'),
+            TextField::new('name', 'Име'),
+            TextField::new('town', 'Град'),
+            TextField::new('address', 'Адрес'),
+            TextField::new('phone1', 'Телефон1'),
+            TextField::new('phone2', 'Телефон2'),
+            TextField::new('mail', 'Ел. поща'),
+            TextEditorField::new('note', 'Забележка'),
             BooleanField::new('isUser', 'Потребител')
             ->renderAsSwitch(false)
             ->setHelp('Маркирай, ако този клиент ще има достъп като потребител'),
@@ -95,7 +143,8 @@ class CustomerCrudController extends AbstractCrudController
 
                 // Изпращаме имейл с паролата
                 //dd($user);
-            //$this->sendPasswordEmail($user->getEmail(), $plainPassword);
+                //код за стартиране на работника за мейли от конзолата:  php bin/console messenger:consume async
+            $this->sendPasswordEmail($user->getEmail(), $plainPassword);
                 
                 // Запазване на новия User
                 $this->entityManager->persist($user);
@@ -114,10 +163,10 @@ class CustomerCrudController extends AbstractCrudController
     {
         
         $emailMessage = (new Email())
-            ->from('manolvelikov@gmail.com')
+            ->from('noreply@pvcruse.com')
             ->to($email)
             ->subject('Вашата парола за PVC RUSE')
-            ->text("Вашата нова парола е: $plainPassword");
+            ->html("Вашата парола, за да можете да следите поръчките си в PVC РУСЕ е: <strong>$plainPassword</strong><br><br>Можете да влезете в профила си тук: <a href='https://yourdomain.com/login'>Вход в профила</a>");
 
         $this->mailer->send($emailMessage);
     }
@@ -144,7 +193,7 @@ class CustomerCrudController extends AbstractCrudController
 
                 // Изпращаме имейл с паролата
                 //dd($user);
-                //$this->sendPasswordEmail($user->getEmail(), $plainPassword);
+                $this->sendPasswordEmail($user->getEmail(), $plainPassword);
                 
                 // Запазване на новия User
                 $this->entityManager->persist($user);

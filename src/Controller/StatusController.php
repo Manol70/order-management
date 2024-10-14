@@ -309,7 +309,9 @@ class StatusController extends AbstractController
     // Добавяне на flash съобщение
     $this->addFlash('success', 'Статусите бяха променени успешно.');
     // Пренасочване към страницата с поръчките
-    return $this->redirectToRoute('app_order');
+    return $this->redirectToRoute('app_order',[
+        'fromStatus' => true
+    ]);
 }
 
 }

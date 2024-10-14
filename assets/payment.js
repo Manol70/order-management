@@ -21,12 +21,7 @@ function processPayment(exclamationCount) {
     
     console.log('Payment.js is loaded!');
     
-    // Този код може да се използва за тест
-    document.addEventListener('DOMContentLoaded', function () {
-    var testElement = document.createElement('div');
-    testElement.innerText = 'Hello from payment.js!';
-    document.body.appendChild(testElement);
-    });
+    
     
     var totalAmount = 0;
     var orderPayments = [
@@ -254,7 +249,7 @@ function processPayment(exclamationCount) {
             var hiddenInput = form.querySelector('input[name="orderPaymentsJson"]');
             if (!hiddenInput) {
             hiddenInput = document.createElement('input');
-            hiddenInput.type = 'text'; // Променете типа на полето на text
+            hiddenInput.type = 'hidden'; // можем да променим типа на полето на text, ако искаме да видим какъв масив изпраща
             hiddenInput.name = 'orderPaymentsJson';
             form.appendChild(hiddenInput);
             }

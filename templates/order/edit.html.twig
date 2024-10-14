@@ -3,17 +3,108 @@
 {% block title %}Edit Order{% endblock %}
 
 {% block body %}
-    <h1>Edit Order</h1>
-<!--<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        var filenameInput = document.getElementById("filename"); // Промени "filename" с ID на полето за файла
-        if (filenameInput) {
-        filenameInput.required = false;
-    }
-    });
-</script>
-!-->
-    {{ include('order/_form.html.twig', {'button_label': 'Update'}) }}
+    <div class="create-header">
+<a href="/order"><input type="button" class="btn btn-success" value="НАЧАЛНА СТРАНИЦА" data-turbo-frame="orders_frame"></a>
+<h1> РЕДАКТИРАНЕ НА ПОРЪЧКА № {{ order.number }} </h1>
 
+{# Показване на Flash съобщенията #}
+{% for message in app.flashes('error') %}
+    <div class="alert alert-danger">{{ message }}</div>
+{% endfor %}
+</div> 
+<div class="create-form-container">
+    {{ form_start(form) }}
+    <div class="form-grid">
+        <div class="form-field-create">
+            {{ form_label(form.customer) }}
+            {{ form_widget(form.customer, {'attr':  {'class': 'form-control'}}) }}
+        </div>
+        <div class="form-field-create">
+            {{ form_label(form.type) }}
+            {{ form_widget(form.type, {'attr':  {'class': 'form-control'}}) }}
+        </div>
+        <div class="form-field-create">
+            {{ form_label(form.quadrature) }}
+            {{ form_widget(form.quadrature, {'attr':  {'class': 'form-control'}}) }}
+            {{ form_errors(form.quadrature) }} {# Показва грешки за полето quadrature #}
+        </div>
+        <div class="form-field-create">
+            {{ form_label(form.price) }}
+            {{ form_widget(form.price, {'attr':  {'class': 'form-control'}}) }}
+            {{ form_errors(form.price) }} {# Показва грешки за полето price #}
+        </div>
+        <div class="form-field-create">
+            {{ form_label(form.for_date) }}
+            {{ form_widget(form.for_date, {'attr':  {'class': 'form-control'}}) }}
+        </div>
+        <div class="form-fieldt-create">
+            {{ form_label(form.note) }}
+            {{ form_widget(form.note, {'attr':  {'class': 'form-control'}}) }}
+        </div>
+        <div class="form-fieldt-create">
+            {{ form_label(form.scheme) }}
+            {{ form_widget(form.scheme, {'attr':  {'class': 'form-control'}}) }}
+        </div>
+        <div class="form-field-create">
+            {{ form_label(form.schemeFile) }}
+            {{ form_widget(form.schemeFile, {'attr':  {'class': 'form-control'}}) }}
+        </div>
+        <div class="form-field-create">
+            {{ form_label(form.filename) }}
+            {{ form_widget(form.filename, {'attr':  {'class': 'form-control'}}) }}
+        </div>
+        <div class="checkbox-item">
+            {{ form_widget(form.removeScheme, {'attr': {'class': 'input-check-edit'}}) }}
+            {{ form_label(form.removeScheme) }}
+        </div>
+    </div>
+    <div class="checkboxes-grid-container">
+        <div class="checkbox-item">
+            {{ form_label(form.glass, null, {'attr': {'class': 'label-edit'}}) }}
+        </div>
+        <div class="checkbox-item">
+            {{ form_widget(form.glass, {'attr': {'class': 'input-check-edit'}}) }}
+        </div>
+        
+        <div class="checkbox-item">
+            {{ form_label(form.newGlass, null, {'attr': {'class': 'label-edit'}}) }}
+        </div>
+        <div class="checkbox-item">
+        {{ form_widget(form.newGlass, {'attr': {'class': 'input-check-edit'}}) }}
+        </div>
+        <div class="checkbox-item">
+            {{ form_label(form.detail,  null, {'attr': {'class': 'label-edit'}}) }}
+        </div>
+        <div class="checkbox-item">
+            {{ form_widget(form.detail, {'attr': {'class': 'input-check-edit'}}) }}
+        </div>
+        <div class="checkbox-item">
+            {{ form_label(form.newDetail, null, {'attr': {'class': 'label-edit'}}) }}
+        </div>
+        <div class="checkbox-item">
+            {{ form_widget(form.newDetail, {'attr': {'class': 'input-check-edit'}}) }}
+         </div>
+         <div class="checkbox-item">
+            {{ form_label(form.mosquito, null, {'attr': {'class': 'label-edit'}}) }}
+        </div>
+        <div class="checkbox-item">
+            {{ form_widget(form.mosquito, {'attr': {'class': 'input-check-edit'}}) }}
+         </div>
+         <div class="checkbox-item">
+            {{ form_label(form.newMosquito, null, {'attr': {'class': 'label-edit'}}) }}
+        </div>
+        <div class="checkbox-item">
+            {{ form_widget(form.newMosquito, {'attr': {'class': 'input-check-edit'}}) }}
+         </div>
+    </div>
+
+        <div class="form-field">
+            <button type="submit" class="btn btn-primary">Запиши промените</button> 
+        </div>
+
+    
+    
+    {{ form_end(form) }}
+</div>
     
 {% endblock %}

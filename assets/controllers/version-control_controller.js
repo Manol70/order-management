@@ -32,7 +32,7 @@ export default class extends Controller {
     updateButton() {
         // Актуализиране на текста на бутона в зависимост от състоянието
         const button = this.element.querySelector('button');
-        button.innerText = this.isFullVersionValue ? 'Съкратена версия' : 'Пълна версия';
+        button.innerText = this.isFullVersionValue ? 'Към кратка версия' : 'Към пълната версия';
     }
     
     updateTable() {

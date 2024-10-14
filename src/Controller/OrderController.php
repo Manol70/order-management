@@ -63,7 +63,7 @@ public function index(
         return new RedirectResponse($this->generateUrl('app_login'));
     }
     if ($this->isGranted('ROLE_USER')) {
-        return $this->forward('App\Controller\CustomerUserController::index');
+        return $this->redirectToRoute('app_customer_user');
     }
     //$template = $request->isXmlHttpRequest() ? '_list.html.twig' : 'index.html.twig';
     $template = $request->query->get('ajax') ? '_list.html.twig' : 'index.html.twig';
@@ -84,11 +84,13 @@ public function index(
         'csrf_protection' => false,
     ]);
     $form->handleRequest($request);
-    
+    //dd($request);
     if ($form->isSubmitted() && $form->isValid()) {
         
         //$request->query->set('page', 1); // Принудително задаваме page на 1 при ново търсене
         $data = $form->getData();
+        // Получаваме стойността на totalPages от GET заявката
+        $totalPages = $request->query->get('totalPages', 1); 
         
         $customer = $data['customer'];
         $type = $data['type'];
@@ -141,6 +143,17 @@ public function index(
         } else {
             $checkboxStatusMosquito = false;
         }
+        if($checkboxStatusOrder || $checkboxStatusGlass || $checkboxStatusDetail || $checkboxStatusMosquito){
+            $filter = true;
+        } else {
+            $filter = false;
+        }
+        $queryBuilderForTotal = clone $queryBuilder;
+        $totalSum = $queryBuilderForTotal
+            ->select('SUM(o.quadrature)', 'SUM(o.price)', 'SUM(o.paid)', 'COUNT(o.id)')
+            ->getQuery()
+            ->getResult();
+            
 
         
 
@@ -156,9 +169,10 @@ public function index(
         $pagerfanta = Pagerfanta::createForCurrentPageWithMaxPerPage(
             $adapter,
             $request->query->get('page', $currentPage),
-            9
+            15
         );   
         $currentPageResults = $pagerfanta->getCurrentPage();
+        //$totalPages = $pagerfanta->getNbPages();  // Общият брой страници при
         //dump($currentPageResults);
         //dump($pagerfanta);
 
@@ -182,19 +196,38 @@ public function index(
             'controller_name' => $user[0],
             'orders' => $pagerfanta,
             'lastStatus' => $lastStatus,
-            'showCheckboxes' => $source,
+            'showCheckboxes' => $filter,
             'searchForm' => $form->createView(),
             'pager' => $pagerfanta->getCurrentPageResults(), // Използваме само текущите резултати
             'currentPage'=> $currentPage,
             'checkbox_status_order' => $checkboxStatusOrder,
             'checkbox_status_glass' => $checkboxStatusGlass,
             'checkbox_status_detail' => $checkboxStatusDetail,
-            'checkbox_status_mosquito' => $checkboxStatusMosquito
+            'checkbox_status_mosquito' => $checkboxStatusMosquito,
+            'total_sum' => $totalSum,
+            'totalPages' => $totalPages
         ]); 
     }
 
     $user = $this->getUser()->getRoles();
-    $queryBuilder = $orderRepository->createQueryBuilderForAllOrders();
+    
+    $dateObject = new \DateTimeImmutable();
+    $fromDate = (clone $dateObject)->modify('-90 days')->format('Y-m-d');
+    $toDate = (clone $dateObject)->modify('+1 day')->format('Y-m-d');
+    //dd($request);
+    
+    $queryBuilder = $orderRepository->createQueryBuilderForAllOrders('o')
+       ->andWhere('o.createdAt >= :fromDate AND o.createdAt < :toDate')
+        ->setParameter('fromDate', $fromDate)
+        ->setParameter('toDate', $toDate);
+
+    $queryBuilderForTotal = clone $queryBuilder;
+        $totalSum = $queryBuilderForTotal
+            ->select('SUM(o.quadrature)', 'SUM(o.price)', 'SUM(o.paid)', 'COUNT(o.id)')
+            ->getQuery()
+            ->getResult();
+
+
     $adapter = new QueryAdapter($queryBuilder);
     $current = $request->query->get('page', 1);
     
@@ -202,8 +235,10 @@ public function index(
     $pagerfanta = Pagerfanta::createForCurrentPageWithMaxPerPage(
         $adapter,
         $request->query->get('page', 1),
-        9
+        15
     );
+    $totalPages = $pagerfanta->getNbPages();  // Общият брой страници при първоначалното зареждане
+    
     $currentPageResults = $pagerfanta->getCurrentPage();
     //dump($currentPageResults);
     $currentPage = $currentPageResults;
@@ -216,7 +251,7 @@ public function index(
     $orders = $orderRepository->findBy([], ['id' => 'DESC']);
     $session->set('order_search_results', $orders);
     $lastStatus = $this->lastStatus($request, $statusRepository, $glassRepository, $mosquitoRepository, $detailRepository);
-
+    
     
     $response = $this->render('order/' . $template, [
         'controller_name' => $user[0],
@@ -229,7 +264,9 @@ public function index(
         'checkbox_status_order' => false,
         'checkbox_status_glass' => false,
         'checkbox_status_detail' => false,
-        'checkbox_status_mosquito' => false
+        'checkbox_status_mosquito' => false,
+        'totalPages' => $totalPages,  // Подаваме общия брой страници
+        'total_sum' => $totalSum
     ]);
     
     return $response;
@@ -268,8 +305,19 @@ public function index(
     public function edit(Request $request, Order $order, EntityManagerInterface $entityManager,
                         GlassRepository $glassRepository, MosquitoRepository $mosquitoRepository,
                         DetailRepository $detailRepository): Response
-    {
+    {       
         //dd($order);
+        // Вземаме стойността на полето for_date от обекта Order
+    $forDate = $order->getForDate();
+    
+    // Проверяваме дали датата е по-стара от днешната
+    if ($forDate < new \DateTimeImmutable('today')) {
+        // Ако датата е в миналото, показваме съобщение и прекратяваме обработката
+        $this->addFlash('error', 'Не можете да редактирате поръчки с минала дата.');
+        
+        // Може да направите пренасочване към страница или друга логика
+        return $this->redirectToRoute('app_order'); // или друга страница
+    }
        if ($order->getGlass() !== null ) {
             $glassValue = true;
         } else{
@@ -284,10 +332,15 @@ public function index(
             'mosquito_value' => $mosquitoValue,
             'detail_value' => $detailValue
         ]);
-
+        $form->handleRequest($request);
+        //dd($form);
+ 
         //проверяваме какво се връща от формата след субмит/update/
         if ($request->getMethod() === 'POST') {
             $formData = $request->request->all(); // Вземаме всички POST данни
+            //dd($form->getData()->getForDate());
+            
+            //$order->setNote($note);
             //$glassValue = $formData['order']['glass'];
             //dd($glassValue);
             $newGlassValue = isset($formData['order']['glass']) ? (bool) $formData['order']['glass'] : false;
@@ -299,10 +352,20 @@ public function index(
             
             
         }
-        $form->handleRequest($request);
-        //dd($form);
+        
         if ($form->isSubmitted() && $form->isValid()) {
-            //dd($form);
+            //dd($form->all());
+            if ($form['removeScheme']->getData() == true){
+                if($form->getData()->getScheme()){
+                    $filePath = $this->getParameter('kernel.project_dir') .'/public/uploads'. '/' . $form->getData()->getScheme();
+                    if (file_exists($filePath)) {
+                        unlink($filePath);
+                        $order->setScheme(null);
+                    }
+                }
+            }
+           
+           
             /** @var UploadedFile $uploadedFile */
             $uploadedFile = $form['schemeFile']->getData();
             
@@ -366,6 +429,7 @@ public function index(
                     $order->setDetail(Null);
                 }
             }
+            
 
             $entityManager->flush();
 
@@ -374,6 +438,7 @@ public function index(
 
         return $this->render('order/edit.html.twig', [
             'form' => $form,
+            'order' => $order,  // Предаваме order на Twig, въпреки че данните вече ги има във $form, но така ще можем да покажем номера в twig
         ]);
     }
 

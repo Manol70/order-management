@@ -22,13 +22,13 @@ class PaymentType extends AbstractType
         public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('orderId', HiddenType::class)
+            ->add('orderId', HiddenType::class);
             /*->add('paymentAmount', NumberType::class, [
                 'label' => 'Сум за плащане',
             ])*/
-            ->add('orderPayments', HiddenType::class);
+            /*->add('orderPayments', HiddenType::class);*/
             
-            //->add('submit', SubmitType::class, ['label' => 'Submit']);
+            /*->add('submit', SubmitType::class, ['label' => 'Submit']);*/
             
             
     }

@@ -20,7 +20,7 @@ class Payment
     private ?int $number_order = null;
 
     #[ORM\Column]
-    private ?int $paid = null;
+    private ?float $paid = null;
 
     #[ORM\Column(length: 255)]
     private ?string $document = null;
@@ -57,12 +57,12 @@ class Payment
         return $this;
     }
 
-    public function getPaid(): ?int
+    public function getPaid(): ?float
     {
         return $this->paid;
     }
 
-    public function setPaid(int $paid): static
+    public function setPaid(float $paid): static
     {
         $this->paid = $paid;
 

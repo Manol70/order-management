@@ -13,7 +13,9 @@
 </head>
 <body>
 <a href="/order"><input type="button" class="btn btn-success" value="НАЧАЛНА СТРАНИЦА" data-turbo-frame="orders_frame"></a>
+<div style="display: flex; justify-content: center; text-align: center;">
 <h1>Задължения на клиент {{ customer }}</h1>
+</div>
 
      <table id="orderTable">
      <thead>
@@ -53,20 +55,22 @@
           </td>
      </tr>
      {% endfor %}
+     <tr style="background-color: white; border-top: 1px solid #ccc;">
+          <td colspan="4" style="border: none; border-top: 1px solid #ccc;"></td>
+          {{ form_start(form) }}
+          <td style="border: none; border-top: 1px solid #ccc;">
+          <label style="font-size: 24px;" >Обща сума:</label>
+          </td>
+          <td style="border: none; border-top: 1px solid #ccc;">
+          <span id="totalAmount" style="font-size: 24px; color: red; margin: 20px;">0.00</span>
+          </td>
+          <td colspan="2" style="border: none; border-top: 1px solid #ccc;">
+          <button type="submit" class="btn btn-success">ПЛАЩАНЕ</button>
+          </td>
+          {{ form_end(form) }}
+     <tr>
      </tbody>
      </table>
-
-     {{ form_start(form) }}
-     {{ form_widget(form) }}
-     <label>Сума  плащане:</label>
-     <span id="totalAmount">0.00</span>
-     <input type="hidden" name="data" value="123" />
-    <button type="submit">Изпратиttt</button>
-     {{ form_end(form) }}    
-
-     
-
- 
 </body>
 
 </html>

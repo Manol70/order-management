@@ -64,7 +64,7 @@
                 // Ако има избрани чекбоксове за статус, деактивирай бутоните за glass, detail, mosquito
                 if(glassButton){
                     statusButton.disabled = false;
-                    glassButton.disabled = false;
+                    glassButton.disabled = true;
                 } 
                 if(detailButton){
                     statusButton.disabled = false;
