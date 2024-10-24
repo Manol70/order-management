@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Справка поръчка{% endblock %}
+{% block title %}Справка за дата{% endblock %}
 
 {% block body %}
 <style>
@@ -8,9 +8,7 @@
 
 <div class="example-wrapper">
     <a href="/order"><input type="button" class="btn btn-success" value="НАЧАЛО" data-turbo-frame="orders_frame" style="float: left; margin-top: 20px;"></a>
-    
     <h2>СПРАВКА ЗА {{ date|date('d.m.Y') }} </h2>
-
 <div class="reference-form" data-turbo="false">
     {{ form_start(referenceDateStatusForm) }}
     <div class="form-row">
@@ -28,22 +26,22 @@
         </div>
     </div>   
         <button type="submit" class="btn btn-primary">Виж</button> 
-        {{ form_end(referenceDateStatusForm) }}  
+    {{ form_end(referenceDateStatusForm) }}  
 </div>
 <div class="table-responsive-sm p-0 mt-2">
     <table class="table table-sm table-hover table-sticky">
         <thead class="thead-light"> 
-        <tr>
-            <th> ПОРЪЧКА № </th>
-            <th> ТИП </th>
-            <th> КЛИЕНТ </th>
-            <th> m2 </th>
-            <th> Статусът е променен на </th>
-            <th> Променил </th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for status in statuses %}
+            <tr>
+                <th> ПОРЪЧКА № </th>
+                <th> ТИП </th>
+                <th> КЛИЕНТ </th>
+                <th> m2 </th>
+                <th> Статусът е променен на </th>
+                <th> Променил </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for status in statuses %}
             <tr>
                 <td> {{ status[0].number_order }} </td>
                 <td> {{ status.typeName }} </td>
@@ -52,16 +50,15 @@
                 <td> {{ status[0].status.name }} </td>
                 <td> {{ status[0].user.email }} </td>
             </tr>
-        {% endfor %}
-
-    </tbody>
-    <tfoot>
-        <tr>
-            <td colspan="3">Обща квадратура</td>
-            <td>{{ totalQuadrature }}</td>
-        </tr>
-    </tfoot>
-</table>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3">Обща квадратура</td>
+                <td>{{ totalQuadrature }}</td>
+            </tr>
+        </tfoot>
+    </table>
 </div>
 
 {% endblock %}

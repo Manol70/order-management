@@ -1,37 +1,33 @@
-
-  <!--<div id="content-container" class="orders-table-container"> -->
-  {% set button_status_order = false %}
-  {% set button_status_glass = false %}
-  {% set button_status_detail = false %}
-  {% set button_status_mosquito = false %}
-  {% set filterForm = false %}
+{% set button_status_order = false %}
+{% set button_status_glass = false %}
+{% set button_status_detail = false %}
+{% set button_status_mosquito = false %}
+{% set filterForm = false %}
  
-    <turbo-frame id="orders-list" data-turbo-action="advance"> 
-    <div class="table-responsive-sm p-0 mt-2">
+<turbo-frame id="orders-list" data-turbo-action="advance"> 
+<div class="table-responsive-sm p-0 mt-2">
     <table class="table table-sm table-hover table-sticky" id="order-table">
         <thead class="thead-light">
             <tr>
                 <th>
-               
                     Номер
                     {% if sort == 'id' %}
-                        <!-- Показвай съответната стрелка в зависимост от текущото сортиране -->
                         {% if sortDirection == 'asc' %}
-                        <a href="{{ path('app_order', 
-                            app.request.query.all() | merge({'sort': 'id', 'sortDirection': 'asc'})
-                        ) }}" target="_top" title="сортирай възходящо">
-                        &#9660; <!-- Стрелка за възходящо сортиране -->
-                        </a>
-                        &#9609;
+                            <a href="{{ path('app_order', 
+                                app.request.query.all() | merge({'sort': 'id', 'sortDirection': 'asc'})
+                            ) }}" target="_top" title="сортирай възходящо">
+                            &#9660; <!-- Стрелка за възходящо сортиране -->
+                            </a>
+                            &#9609;
                         {% else %}
-                        <br>
-                        &#9609;
-                        <a href="{{ path('app_order', 
-                            app.request.query.all() | merge({'sort': 'id', 'sortDirection': 'desc'})
-                        ) }}" target="_top" title="сортирай низходящо">
-                             &#9650; <!-- Стрелка за низходящо сортиране -->
-                        </a>
-                    {% endif %}
+                            <br>
+                            &#9609;
+                            <a href="{{ path('app_order', 
+                                app.request.query.all() | merge({'sort': 'id', 'sortDirection': 'desc'})
+                            ) }}" target="_top" title="сортирай низходящо">
+                                &#9650; <!-- Стрелка за низходящо сортиране -->
+                            </a>
+                        {% endif %}
                     {% else %}
                         <a href="{{ path('app_order', {
                             'sort': 'id',
@@ -46,7 +42,6 @@
                             &#9660; <!-- Стрелка надолу (триъгълник) -->
                         </a>
                     {% endif %}
-                
                 </th>
                 <th>Клиент</th>
                 <th class="short-version">Схема</th>
@@ -56,9 +51,8 @@
                 <th>за дата</th>
                 <th>цена</th>
                 <th>платено</th>
-                <th>
-                
-                    Дължима сума
+                <th>            
+                    Дължима <br> сума
                     {% if sort == 'id' %}
                         <a href="{{ path('app_order', {
                             'sort': 'balance',
@@ -68,7 +62,7 @@
                     {% else %}
                         &#9609;
                     {% endif %}
-                </a>
+                        </a>
                 </th>
                 <th>плащане</th>
                 <th>статус</th>
@@ -83,7 +77,6 @@
             <tr >
                 <td> <a href="{{ path('app_reference_order', {'orderId': order.id}) }}" target="_top" title='Подробности за поръчка'>{{ order.number }} </a>
                  <br>
-                    {# Проверка дали има забележка и показване на различна иконка и цвят #}
                     <a href="#" data-bs-toggle="modal" data-bs-target="#note-modal-{{ order.id }}"title={{order.note}}>
                     {% if order.note %}
                         <i>📝</i> {# Иконка за забележка, ако има такава #}
@@ -91,7 +84,6 @@
                         <i class="fas fa-book" style="color: black;"></i> {# Иконка за липса на забележка #}
                     {% endif %}
                     </a>
-
                     {# Модален прозорец за показване на забележката #}
                     <div class="modal fade" id="note-modal-{{ order.id }}" tabindex="-1" aria-hidden="true">
                         <div class="modal-dialog modal-lg" role="document">
@@ -111,8 +103,9 @@
                         </div>
                     </div>
                 </td>
-                <td> <a href="{{ path('app_reference_customer', {'customerId': order.customer.id}) }}" target="_top" title='Всички поръчки на клиента'>{{ order.customer.name }} </td>
-                
+                <td><a href="{{
+                        path('app_reference_customer', {'customerId': order.customer.id})
+                    }}" target="_top" title='Всички поръчки на клиента'>{{ order.customer.name }} </td>
                 {% if order.scheme == NULL %}
                 <td class="short-version"> 
                     Няма
@@ -124,24 +117,24 @@
                 {% endif %}
                 <td> {{ order.type.name }} </td>
                 <td> {{ order.quadrature }} </td>
-                <td >  
+                <td>  
                 <form action="{{ path('app_reference_date') }}" method="POST" data-turbo="false" >
                     <input type="hidden" name="date" value="{{ order.createdAt|date('d.m.Y') }}">
                     <button type="submit" class="btn btn-info">{{ order.createdAt|date('d.m.Y') }} </button>
                 </form> 
                 </td>
-                <td> {{order.forDate|date('d.m.Y')}}</td>
-                <td> {{ order.price }}</td>
-                <td> {{ order.paid }}</td>
+                <td>{{order.forDate|date('d.m.Y')}}</td>
+                <td>{{ order.price }}</td>
+                <td>{{ order.paid }}</td>
                 
-                <td class="{% if (order.price - order.paid) == 0 %}green{% else %}red{% endif %}">
-                    {{ order.price - order.paid }}
+                <td class="{% if (order.balance) == 0 %}green{% else %}red{% endif %}">
+                    {{ order.balance }}
                 </td>
                 <td style="text-align: center; vertical-align: middle;">
                     <form action="{{ path('app_payment_payables') }}" id="payment-form-{{ order.id }}" data-turbo="false">
                         <input type="hidden" id="customerId-{{ order.id }}" name="customerId" value="{{ order.customer.id }}">
                         <button type="submit" class="btn" style="background: none ; border: none ; padding: 0; cursor: pointer;">
-                        <i class="fas fa-dollar-sign" title="Плащане" style="font-size: 24px; color: #053210;"></i> 
+                            <i class="fas fa-dollar-sign" title="Плащане" style="font-size: 24px; color: #053210;"></i> 
                         </button>
                     </form>
                 </td>
@@ -154,10 +147,10 @@
                 {% elseif checkbox_status_order %} 
                     {% set button_status_order = true %}
                     <td> {{order.status.name}}
-                    <br>
-                    <input type="checkbox" name="selectedOrders_status[]" value="{{ order.id }}" data-status="{{ order.status.id }}" data-title="Промяна на статус за поръчка ">
-                     Промени </br>
-                    <div {{ stimulus_controller('modal-form',{
+                        <br>
+                        <input type="checkbox" name="selectedOrders_status[]" value="{{ order.id }}" data-status="{{ order.status.id }}" data-title="Промяна на статус за поръчка ">
+                        Промени </br>
+                        <div {{ stimulus_controller('modal-form',{
                                 formUrl: path('app_status_order'),})
                             }}
                                 data-action="hidden.bs.modal->modal-form#modalHidden"
@@ -168,43 +161,42 @@
                                     data-order-id="hidden-modal"
                                     data-current-page="hidden"
                                     >скрит бутон</button> 
-                            {{ include('_modal.html.twig', {
-                                modalTitle: 'Промяна на статус'
-                                }) 
-                            }}      
-                    </div>
+                                {{ include('_modal.html.twig', {
+                                    modalTitle: 'Промяна на статус'
+                                    }) 
+                                }}      
+                        </div>
                     </td>        
                 {% else %}
                     {% set button_status_order = false %}
                     <td class="{% if (order.status.name) == 'Приета' %}first
-                               {% elseif(order.status.name) == 'Производство' %}second
-                               {% elseif(order.status.name) == 'Готова' %}third
-                               {% endif %}">
-                     {{order.status.name}}
+                            {% elseif(order.status.name) == 'Производство' %}second
+                            {% elseif(order.status.name) == 'Готова' %}third
+                            {% endif %}">
+                    {{order.status.name}}
                         <div class="d-flex flex-row">
                             <div {{ stimulus_controller('modal-form',{
-                                    formUrl: path('app_status_order', {'orderId': order.id, 'currentPage': currentPage}),})
-                                    }}
-                                    data-action="hidden.bs.modal->modal-form#modalHidden"
+                                formUrl: path('app_status_order', {'orderId': order.id, 'currentPage': currentPage}),})
+                            }}
+                                data-action="hidden.bs.modal->modal-form#modalHidden"
                                     >
-                                    {% if showCheckboxes == true %}
-                                        {% set filterForm = true %}
-                                    {% endif %}
-                                    <button
-                                        class="btn btn-primary btn-sm" 
-                                        data-action="modal-form#openModal reload-content#updateUrl"
-                                        data-order-id="{{ order.number }}"
-                                        data-current-page="{{ currentPage }}"
-                                        data-filter-form="{{ filterForm }}"
-                                        >промени</button>
-                                        
-                                        {{ include('_modal.html.twig', {
-                                            modalTitle: 'Промяна на статус'
-                                       }) }}      
+                                {% if showCheckboxes == true %}
+                                    {% set filterForm = true %}
+                                {% endif %}
+                                <button
+                                    class="btn btn-primary btn-sm" 
+                                    data-action="modal-form#openModal reload-content#updateUrl"
+                                    data-order-id="{{ order.number }}"
+                                    data-current-page="{{ currentPage }}"
+                                    data-filter-form="{{ filterForm }}"
+                                    >промени</button>
+                                    {{ include('_modal.html.twig', {
+                                        modalTitle: 'Промяна на статус'
+                                    }) }}      
                             </div>
                         </div>
-                    {% endif %} 
-                </td>
+                {% endif %} 
+                    </td>
                 {% if order.glass == NULL %}
                     {% set button_status_glass = false %}
                     <td> няма </td>
@@ -218,19 +210,19 @@
                         <input type="checkbox" name="selectedOrders_glass[]" value="{{ order.id }}" data-status="{{ order.glass.id }}" data-title="Промяна на статус стъклопакет ">
                          Промени </br>
                         <div {{ stimulus_controller('modal-form',{
-                                    formUrl: path('app_status_glass'),})
-                                    }}
-                                    data-action="hidden.bs.modal->modal-form#modalHidden"
-                                    >
-                                    <button
-                                        style="display: none;" 
-                                        data-action="modal-form#openModal"
-                                        data-order-id="hidden-modal"
-                                        data-current-page="hidden"
-                                        >скрит бутон</button>
-                                        {{ include('_modal.html.twig', {
-                                            modalTitle: 'Промяна на статус Стъклопакет'
-                                       }) }}      
+                            formUrl: path('app_status_glass'),})
+                         }}
+                        data-action="hidden.bs.modal->modal-form#modalHidden"
+                                >
+                        <button
+                            style="display: none;" 
+                            data-action="modal-form#openModal"
+                            data-order-id="hidden-modal"
+                            data-current-page="hidden"
+                            >скрит бутон</button>
+                        {{ include('_modal.html.twig', {
+                                modalTitle: 'Промяна на статус Стъклопакет'
+                            }) }}      
                         </div> 
                     </td>          
                 {% else %}
@@ -240,7 +232,6 @@
                                {% elseif(order.glass.name) == 'Доставен' %}third
                                {% endif %}">
                     {{order.glass.name}}
-                        
                             <div class="d-flex flex-row">
                                 <div {{ stimulus_controller('modal-form',{
                                         formUrl: path('app_status_glass', {'orderId': order.id, })  
@@ -262,10 +253,8 @@
                                        }) }}  
                                 </div>
                             </div>
-                        
                     </td>    
                 {% endif %}
-
                 {% if order.detail == NULL %}
                     {% set button_status_detail = false %}
                     <td> няма </td>
@@ -279,31 +268,31 @@
                         <input type="checkbox" name="selectedOrders_detail[]" value="{{ order.id }}" data-status="{{ order.detail.id }}" data-title="Промяна на статус ДОПЪЛНИТЕЛЕН ДЕТАЙЛ">
                          Промени </br>
                         <div {{ stimulus_controller('modal-form',{
-                                    formUrl: path('app_status_detail'),})
-                                    }}
-                                    data-action="hidden.bs.modal->modal-form#modalHidden"
-                                    >
-                                    <button
-                                        style="display: none;" 
-                                        data-action="modal-form#openModal"
-                                        data-order-id="hidden-modal"
-                                        data-current-page="hidden"
-                                        >скрит бутон</button>
-                                        {{ include('_modal.html.twig', {
-                                            modalTitle: 'Промяна на статус Допълнителен профил' 
-                                       }) }}      
-                            </div> 
+                                formUrl: path('app_status_detail'),})
+                            }}
+                            data-action="hidden.bs.modal->modal-form#modalHidden"
+                                >
+                                <button
+                                    style="display: none;" 
+                                    data-action="modal-form#openModal"
+                                    data-order-id="hidden-modal"
+                                    data-current-page="hidden"
+                                    >скрит бутон</button>
+                                    {{ include('_modal.html.twig', {
+                                         modalTitle: 'Промяна на статус Допълнителен профил' 
+                                    }) }}      
+                        </div> 
                     </td>
-                    {% else %}
-                        {% set button_status_detail = false %}  
-                        <td class="{% if (order.detail.name) == 'Приет' %}first
+                {% else %}
+                    {% set button_status_detail = false %}  
+                    <td class="{% if (order.detail.name) == 'Приет' %}first
                                    {% elseif(order.detail.name) == 'Производство' %}second
                                    {% elseif(order.detail.name) == 'Готов' %}third
                                    {% endif %}"> 
                         {{ order.detail.name }} 
-                            <div class="d-flex flex-row">
-                                <div {{ stimulus_controller('modal-form',{
-                                   formUrl: path('app_status_detail', {'orderId': order.id})  
+                        <div class="d-flex flex-row">
+                            <div {{ stimulus_controller('modal-form',{
+                                    formUrl: path('app_status_detail', {'orderId': order.id})  
                                   }) }}
                                    data-action="hidden.bs.modal->modal-form#modalHidden"
                                     >
@@ -320,11 +309,10 @@
                                         {{ include('_modal.html.twig', {
                                             modalTitle: 'Промяна на статус Профил'
                                        }) }}       
-                                </div>
                             </div>
-                        </td>        
+                        </div>
+                    </td>        
                 {% endif %}
-    
                 {% if order.mosquito == NULL %}
                     {% set button_status_mosquito = false %}
                     <td> няма </td>
@@ -338,20 +326,20 @@
                         <input type="checkbox" name="selectedOrders_mosquito[]" value="{{ order.id }}" data-status="{{ order.mosquito.id }}" data-title="Промяна на статус КОМАРНИК">
                          Промени </br>
                          <div {{ stimulus_controller('modal-form',{
-                                    formUrl: path('app_status_mosquito'),})
-                                    }}
-                                    data-action="hidden.bs.modal->modal-form#modalHidden"
-                                    >
-                                    <button
-                                        style="display: none;" 
-                                        data-action="modal-form#openModal"
-                                        data-order-id="hidden-modal"
-                                        data-current-page="hidden"
-                                        >скрит бутон</button>
-                                        {{ include('_modal.html.twig', {
-                                            modalTitle: 'Промяна на статус Комарник'
-                                       }) }}      
-                            </div> 
+                                formUrl: path('app_status_mosquito'),})
+                            }}
+                            data-action="hidden.bs.modal->modal-form#modalHidden"
+                                >
+                                <button
+                                    style="display: none;" 
+                                     data-action="modal-form#openModal"
+                                    data-order-id="hidden-modal"
+                                    data-current-page="hidden"
+                                    >скрит бутон</button>
+                                    {{ include('_modal.html.twig', {
+                                        modalTitle: 'Промяна на статус Комарник'
+                                    }) }}      
+                        </div> 
                     </td>
                 {% else %}
                     {% set button_status_mosquito = false %}
@@ -359,13 +347,13 @@
                                {% elseif(order.mosquito.name) == 'Производство' %}second
                                {% elseif(order.mosquito.name) == 'Готов' %}third
                                {% endif %}">
-                    {{ order.mosquito.name }}
-                         <div class="d-flex flex-row">
+                        {{ order.mosquito.name }}
+                        <div class="d-flex flex-row">
                             <div {{ stimulus_controller('modal-form',{
-                                   formUrl: path('app_status_mosquito', {'orderId': order.id})  
-                                  }) }}
-                                  data-action="hidden.bs.modal->modal-form#modalHidden"
-                                    >
+                                    formUrl: path('app_status_mosquito', {'orderId': order.id})  
+                                }) }}
+                                data-action="hidden.bs.modal->modal-form#modalHidden"
+                                >
                                     {% if showCheckboxes == true %}
                                         {% set filterForm = true %}
                                     {% endif %}
@@ -378,173 +366,95 @@
                                         >промени</button>
                                         {{ include('_modal.html.twig', {
                                             modalTitle: 'Промяна на статус комарник'
-                                       }) }}      
+                                        }) }}      
                             </div>
                         </div>
                     </td>    
                 {% endif %}
-                
                 <td>   
                     <a href="{{ path('app_order_edit', {'id': order.id}) }}" target="_top" title="Edit">✍</a>
-                   
                 </td>
             </tr>
-            
         {% endfor %}
         <tfoot>
-        <!-- Добавяме под всяка колона бутон за промяна на избраните поръчки -->
-        <tr>        
-        
-        {% if (button_status_order) or (button_status_glass)
-        or (button_status_detail) or (button_status_mosquito) %}
-        <!-- Добавяме под всяка колона бутон за промяна на избраните поръчки -->
-            <td colspan="4">Общ брой поръчки:<span style="margin-left: 15px">{{ total_sum[0][4] }}</span> </td>
-            <td>{{ total_sum[0][1]}}</td>
-            <td colspan="2"></td>
-            <td>{{ total_sum[0][2] }}</td>
-            <td>{{ total_sum[0][3] }}</td>
-            <td>{{ total_sum[0][2] - total_sum[0][3] }}</td>
-            <td></td>
-            {% if button_status_order %}
-            <td > 
-                <button id="changeStatusButton" class="btn btn-primary" >Промени избраните</button>
-            </td>
-            {% else %} 
-            <td></td>
-            {% endif %}
-            {% if button_status_glass %}
-            <td >
-            <button id="changeStatusButtonGlass" class="btn btn-primary">Промени избраните</button>
-            </td>
-            {% else %}
-            <td></td>
-            {% endif %}
-            {% if button_status_detail %}
-            <td>
-                <button id="changeStatusButtonDetail" class="btn btn-primary">Промени избраните</button>
-            </td>
-            {% else %}
-            <td></td>
-            {% endif %}
-            {% if button_status_mosquito %}
-            <td>
-                <button id="changeStatusButtonMosquito" class="btn btn-primary">Промени избраните</button>
-            </td>
-            {% else %}
-            <td></td>
-            {% endif %}
-            <td></td>
-        {% else %}
-        <td colspan="4">Общ брой поръчки:<span style="margin-left: 15px">{{ total_sum[0][4] }}</span> </td>
-            <td>{{ total_sum[0][1]}}</td>
-            <td colspan="2"></td>
-            <td>{{ total_sum[0][2] }}</td>
-            <td>{{ total_sum[0][3] }}</td>
-            <td>{{ total_sum[0][2] - total_sum[0][3] }}</td>
-            <td colspan="5"><td>
-        </tr>
-    </tfoot>
-        {% endif %}
-        
+            <!-- Добавяме под всяка колона бутон за промяна на избраните поръчки -->
+            <tr>        
+                {% if (button_status_order) or (button_status_glass)
+                    or (button_status_detail) or (button_status_mosquito) %}
+                    <td colspan="4">Общ брой поръчки:<span style="margin-left: 15px">{{ total_sum[0][4] }}</span> </td>
+                    <td>{{ total_sum[0][1]}}</td>
+                    <td colspan="2"></td>
+                    <td>{{ total_sum[0][2] }}</td>
+                    <td>{{ total_sum[0][3] }}</td>
+                    <td>{{ total_sum[0][2] - total_sum[0][3] }}</td>
+                    <td></td>
+                {% if button_status_order %}
+                    <td > 
+                        <button id="changeStatusButton" class="btn btn-primary" >Промени избраните</button>
+                    </td>
+                {% else %} 
+                    <td></td>
+                {% endif %}
+                {% if button_status_glass %}
+                    <td>
+                        <button id="changeStatusButtonGlass" class="btn btn-primary">Промени избраните</button>
+                    </td>
+                {% else %}
+                    <td></td>
+                {% endif %}
+                {% if button_status_detail %}
+                    <td>
+                        <button id="changeStatusButtonDetail" class="btn btn-primary">Промени избраните</button>
+                    </td>
+                {% else %}
+                    <td></td>
+                {% endif %}
+                {% if button_status_mosquito %}
+                    <td>
+                        <button id="changeStatusButtonMosquito" class="btn btn-primary">Промени избраните</button>
+                    </td>
+                {% else %}
+                    <td></td>
+                {% endif %}
+                    <td></td>
+                {% else %}
+                <td colspan="4">Общ брой поръчки:<span style="margin-left: 15px">{{ total_sum[0][4] }}</span> </td>
+                <td>{{ total_sum[0][1]}}</td>
+                <td colspan="2"></td>
+                <td>{{ total_sum[0][2] }}</td>
+                <td>{{ total_sum[0][3] }}</td>
+                <td>{{ total_sum[0][2] - total_sum[0][3] }}</td>
+                <td colspan="5"><td>
+                {% endif %}
+            </tr>
+        </tfoot>
         </tbody>
     </table>
-
-        
-        
-        </tbody>
-    </table>
-    
-  <div data-turbo='false'> 
-  {{ pagerfanta(orders, 'twitter_bootstrap5', { 
-        prev_message: 'Предишна',
-        next_message: 'Следваща',
-        
-        }) }}  
-        </div>
-   </div>     
-      
-  {# {{ knp_pagination_render(orders) }} #}
- </turbo-frame>   
-
+ 
+<div data-turbo='false'> 
+{{ pagerfanta(orders, 'twitter_bootstrap5', { 
+    prev_message: 'Предишна',
+    next_message: 'Следваща',
+    }) }}  
+</turbo-frame>   
 <script src="{{ asset('build/app.js') }}"></script>
 
-    <script>
-        function checkFile(orderId) {
-            var fileInput = document.getElementById('fileInput_' + orderId);
-            var filenameInput = document.getElementById('filename_' + orderId);
-            var fileError = document.getElementById('fileError_' + orderId);
+<script>
+    function checkFile(orderId) {
+        var fileInput = document.getElementById('fileInput_' + orderId);
+        var filenameInput = document.getElementById('filename_' + orderId);
+        var fileError = document.getElementById('fileError_' + orderId);
             
-            
-            if (!fileInput.value) {
-                fileError.style.display = 'block';
-                return false; // Прекратява изпращането на формата
-            } else {
-                fileError.style.display = 'none';
-                console.log("JSHTML:", filenameInput);
-                return true; // Позволява изпращането на формата
-            }
+        if (!fileInput.value) {
+            fileError.style.display = 'block';
+            return false; // Прекратява изпращането на формата
+        } else {
+            fileError.style.display = 'none';
+            console.log("JSHTML:", filenameInput);
+            return true; // Позволява изпращането на формата
         }
-
-
-        //код за сортиране по колона "остатък"
-var originalOrder = [];
-
-window.onload = function() {
-    saveOriginalOrder();
-};
-
-function saveOriginalOrder() {
-    var table = document.getElementById("order-table");
-    var rows = table.rows;
-
-    for (var i = 1; i < rows.length; i++) {
-        originalOrder.push(rows[i].outerHTML);
-    }
-}
-
-function sortTable(columnIndex, order) {
-    var table, rows, switching, i, x, y, shouldSwitch;
-    table = document.getElementById("order-table");
-    switching = true;
-
-    while (switching) {
-        switching = false;
-        rows = table.rows;
-        for (i = 1; i < (rows.length - 1); i++) {
-            shouldSwitch = false;
-            x = rows[i].getElementsByTagName("TD")[columnIndex];
-            y = rows[i + 1].getElementsByTagName("TD")[columnIndex];
-
-            // Compare values for descending order
-            if (order === 'desc') {
-                if (parseFloat(x.innerHTML) < parseFloat(y.innerHTML)) {
-                    shouldSwitch = true;
-                    break;
-                }
-            }
-        }
-        if (shouldSwitch) {
-            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-            switching = true;
-        }
-    }
-}
-function resetTable() {
-    var table = document.getElementById("order-table");
-    var rows = table.rows;
-
-    // Clear current rows
-    for (var i = rows.length - 1; i > 0; i--) {
-        table.deleteRow(i);
-    }
-
-    // Restore original rows
-    for (var i = 0; i < originalOrder.length; i++) {
-        table.tBodies[0].insertRow().outerHTML = originalOrder[i];
-    }
-}
-     
-    </script>
+    } 
+</script>
 
 
     

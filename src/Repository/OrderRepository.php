@@ -67,7 +67,7 @@ class OrderRepository extends ServiceEntityRepository
     {
         $query = $this->entityManager->createQuery(
             "SELECT orders.id, orders.number, orders.createdAt, orders.for_date, orders.scheme,
-            orders.price, orders.paid, orders.quadrature, _type.name AS typeName, _status.name AS statusName,
+            orders.price, orders.paid, orders.balance, orders.quadrature, _type.name AS typeName, _status.name AS statusName,
             glass.name AS glassName, mosquito.name AS mosquitoName, detail.name AS detailName,
             customer.name AS customerName
             FROM App\Entity\Order orders 
@@ -142,7 +142,7 @@ public function getTotalPaid( $fromDate,  $toDate)
         ->setParameter('to_date', $toDate)
         ->getQuery()
         ->getSingleScalarResult();
-}
+} 
 
 public function getTopTurnover(EntityManager $entityManager, $fromDate,  $toDate)
 { 

@@ -1,6 +1,5 @@
 
-
-{% block title %}смяна на статус{% endblock %}
+{% block title %}смяна на статус Стъклопакет{% endblock %}
 
 {% block body %}
 
@@ -8,15 +7,13 @@
 <div class="container-fluid mt-4">
     <div class="d-flex flex-row">
         <form id="statusChangeForm" action="{{ path('app_order_status_glass') }}" method="get">
-    <input type="hidden" name="orderId" value={{ orderId }};>
-    <input type="hidden" name="newGlassId" value="{{ newGlassId }}">
-    <p> ПОРЪЧКА № {{ numberOrder }} ПРОМЯНА НА СТАТУС СТЪКЛОПАКЕТ
-    <p>Статусът от "{{ currentGlassName }}" ще бъде променен на "{{ newGlassName }}".</p>
-    <button type="submit" class="btn btn-primary">Потвърди</button>
-</form>
-        
-        <div {{ stimulus_controller('modal-form') }}>
-            
+            <input type="hidden" name="orderId" value={{ orderId }};>
+            <input type="hidden" name="newGlassId" value="{{ newGlassId }}">
+            <p> ПОРЪЧКА № {{ numberOrder }} ПРОМЯНА НА СТАТУС СТЪКЛОПАКЕТ
+            <p>Статусът от "{{ currentGlassName }}" ще бъде променен на "{{ newGlassName }}".</p>
+            <button type="submit" class="btn btn-primary">Потвърди</button>
+        </form>
+        <div {{ stimulus_controller('modal-form') }}>    
         </div>
     </div>
 </div>

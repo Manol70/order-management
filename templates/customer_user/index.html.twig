@@ -1,7 +1,5 @@
 {% extends 'base.html.twig' %}
 
-
-
 {% block title %}PVC RUSE{% endblock %}
 
 {% block body %}
@@ -56,7 +54,7 @@
         <td> {{ order.for_date|date('d.m.y') }} </td>
         <td> {{ order.price }} </td>
         <td> {{ order.paid }} </td>
-        <td> {{ order.price - order.paid }} </td>
+        <td> {{ order.balance }} </td>
         <td> {{ order.statusName }} </td>
         <td> {{ order.glassName }} </td>
         <td> {{ order.detailName }} </td>
@@ -64,8 +62,8 @@
       {% endfor %}
 
 {% for message in app.flashes('error') %}
-    <div class="alert alert-danger">
-        {{ message }}
-    </div>
+  <div class="alert alert-danger">
+    {{ message }}
+  </div>
 {% endfor %}          
 {% endblock %}

@@ -3,13 +3,11 @@
 {% block title %}Нова поръчка{% endblock %}
 
 {% block body %}
-<style>
-    
+<style>  
 </style>
 <div class="create-header">
     <a href="/order"><input type="button" class="btn btn-success" value="НАЧАЛО" data-turbo-frame="orders_frame"></a>
     <h2> НОВА ПОРЪЧКА № {{ numberOrder }} </h2>
-
     {# Показване на Flash съобщенията #}
     {% for message in app.flashes('error') %}
         <div class="alert alert-danger">{{ message }}</div>
@@ -61,11 +59,10 @@
             {{ form_widget(createOrderData) }}
             <button type="submit" class="btn btn-primary create-submit">Създай поръчка!</button> 
         </div>
-    {{ form_end(createOrderData) }}
     </div>
+    {{ form_end(createOrderData) }}  
 </div> 
 <h2 class="recent-orders-title">Последни поръчки</h2>
-
 <div class="table-responsive-sm p-0 mt-2">
     <table class="table table-sm table-hover table-sticky">
         <thead class="thead-light">
@@ -93,12 +90,12 @@
                 <td> {{ order.number }} </td>
                 <td> {{ order.customer.name }} </td>
                 {% if order.scheme == NULL %}
-                <td class="short-version"> 
-                    Няма
-                </td>
+                    <td class="short-version"> 
+                        Няма
+                    </td>
                 {% else %}
-                <td class="short-version"> 
-                </td>
+                    <td class="short-version"> 
+                    </td>
                 {% endif %}
                 <td> {{ order.type.name }} </td>
                 <td> {{ order.quadrature }} </td>
@@ -106,14 +103,13 @@
                 <td> {{order.forDate|date('d.m.Y')}}</td>
                 <td> {{ order.price }}</td>
                 <td> {{ order.paid }}</td>
-                <td> {{ order.price - order.paid }}</td>
-                
+                <td> {{ order.balance }}</td>   
                 {% if order.status == null %}
                     <td> няма</td> 
                 {% else %} 
                     <td> {{ order.status.name }} </td>
-                {% endif %} 
-                
+                {% endif %}
+
                 {% if order.glass == NULL %}
                     <td> няма </td>
                 {% else %}
@@ -125,16 +121,14 @@
                 {% else %}
                     <td> {{ order.detail.name }} </td>        
                 {% endif %}
-    
+
                 {% if order.mosquito == NULL %}
                     <td> няма </td>
-                
                 {% else %}
                     <td> {{ order.mosquito.name }} </td>    
                 {% endif %}
-                
+             </tr>   
         {% endfor %}
-            </tr>
         </tbody>
     </table>
 </div>   

@@ -1,20 +1,17 @@
-{% block title %}смяна на статус{% endblock %}
+{% block title %}смяна на статус ДД{% endblock %}
 
 {% block body %}
-
 
 <div class="container-fluid mt-4">
     <div class="d-flex flex-row">
         <form id="statusChangeForm" action="{{ path('app_order_status_detail') }}" method="get">
-    <input type="hidden" name="orderId" value={{ orderId }};>
-    <input type="hidden" name="newDetailId" value="{{ newDetailId }}">
-    <p> ПОРЪЧКА № {{ numberOrder }} ПРОМЯНА НА СТАТУС ДОП. ДЕТАЙЛ
-    <p>Статусът от "{{ currentDetailName }}" ще бъде променен на "{{ newDetailName }}".</p>
-    <button type="submit" class="btn btn-primary">Потвърди</button>
-</form>
-        
+            <input type="hidden" name="orderId" value={{ orderId }};>
+            <input type="hidden" name="newDetailId" value="{{ newDetailId }}">
+            <p> ПОРЪЧКА № {{ numberOrder }} ПРОМЯНА НА СТАТУС ДОП. ДЕТАЙЛ
+            <p>Статусът от "{{ currentDetailName }}" ще бъде променен на "{{ newDetailName }}".</p>
+            <button type="submit" class="btn btn-primary">Потвърди</button>
+        </form> 
         <div {{ stimulus_controller('modal-form') }}>
-            
         </div>
     </div>
 </div>

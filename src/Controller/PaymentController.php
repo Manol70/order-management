@@ -84,7 +84,7 @@ class PaymentController extends AbstractController
             //return new JsonResponse(['success' => true]);
 
         }
-        return $this->render('payment/payables2.html.twig', [
+        return $this->render('payment/payables.html.twig', [
             'orders' => $orders, 'customer' => $customerName, 'form' => $form->createView()
         ]);
     }

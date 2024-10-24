@@ -8,43 +8,43 @@
 <div class="container-fluid">
     <a href="/order"><input type="button" class="btn btn-success" value="НАЧАЛО" data-turbo-frame="orders_frame"></a>
     <div class="search-form-container">
-    {{ form_start(searchForm, {'attr': {'data-turbo': 'false'}}) }}
-        <div class="form-row">
-            <div class="form-group hidden-field">
-                {{ form_label(searchForm.customer) }}
-                {{ form_widget(searchForm.customer, {'attr': {'class': 'form-control'}}) }}
+        {{ form_start(searchForm, {'attr': {'data-turbo': 'false'}}) }}
+            <div class="form-row">
+                <div class="form-group hidden-field">
+                    {{ form_label(searchForm.customer) }}
+                    {{ form_widget(searchForm.customer, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class="form-group hidden-field">
+                    {{ form_label(searchForm.type) }}
+                    {{ form_widget(searchForm.type, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class="form-group hidden-field">
+                    {{ form_label(searchForm.status) }}
+                    {{ form_widget(searchForm.status, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class="form-group hidden-field">
+                    {{ form_label(searchForm.glass) }}
+                    {{ form_widget(searchForm.glass, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class="form-group hidden-field">
+                    {{ form_label(searchForm.detail) }}
+                    {{ form_widget(searchForm.detail, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class="form-group hidden-field">
+                    {{ form_label(searchForm.mosquito) }}
+                    {{ form_widget(searchForm.mosquito, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class="form-field">
+                    {{ form_label(searchForm.from_date) }}
+                    {{ form_widget(searchForm.from_date, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class="form-field">
+                    {{ form_label(searchForm.to_date) }}
+                    {{ form_widget(searchForm.to_date, {'attr': {'class': 'form-control'}}) }}
+                </div>
             </div>
-            <div class="form-group hidden-field">
-                {{ form_label(searchForm.type) }}
-                {{ form_widget(searchForm.type, {'attr': {'class': 'form-control'}}) }}
-            </div>
-            <div class="form-group hidden-field">
-                {{ form_label(searchForm.status) }}
-                {{ form_widget(searchForm.status, {'attr': {'class': 'form-control'}}) }}
-            </div>
-            <div class="form-group hidden-field">
-                {{ form_label(searchForm.glass) }}
-                {{ form_widget(searchForm.glass, {'attr': {'class': 'form-control'}}) }}
-            </div>
-            <div class="form-group hidden-field">
-                {{ form_label(searchForm.detail) }}
-                {{ form_widget(searchForm.detail, {'attr': {'class': 'form-control'}}) }}
-            </div>
-            <div class="form-group hidden-field">
-                {{ form_label(searchForm.mosquito) }}
-                {{ form_widget(searchForm.mosquito, {'attr': {'class': 'form-control'}}) }}
-            </div>
-            <div class="form-field">
-                {{ form_label(searchForm.from_date) }}
-                {{ form_widget(searchForm.from_date, {'attr': {'class': 'form-control'}}) }}
-            </div>
-            <div class="form-field">
-                {{ form_label(searchForm.to_date) }}
-                {{ form_widget(searchForm.to_date, {'attr': {'class': 'form-control'}}) }}
-            </div>
-        </div>
-    <button type="submit" class="btn btn-primary" id="form-reference">Виж</button> 
-    {{ form_end(searchForm) }}
+            <button type="submit" class="btn btn-primary" id="form-reference">Виж</button> 
+        {{ form_end(searchForm) }}
     </div>
 </div>
 
@@ -68,7 +68,6 @@
                 <td> {{ totalAmount - totalPaid }}</td>
             </tr>
             <tr>
-                
                 <td colspan="2" style="text-align: right;">Без ДДС</td>
                 <td> {{ (totalAmount / 1.2) | number_format(2) }} </td>
                 <td> {{ (totalPaid /1.2) | number_format(2) }} </td>

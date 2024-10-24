@@ -4,19 +4,12 @@
 
 {% block body %}
 
-
-     
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  
-  
-
   <style>
         body { 
-            /* Вмъкни стила за фоновата снимка чрез инлайн стил */
-            /*background-image: url('{{ asset('build/images/IMG_6529.jpg') }}');*/
             background-color: #eee4e4; /*search-form-container */
-        }
+            }
     </style> 
 </head>
 <div class="container">
@@ -37,13 +30,13 @@
         </div>
     </div>
 </div>    
-   {% for label, messages in app.flashes %}
+{% for label, messages in app.flashes %}
     <div class="alert alert-{{ label }}" role="alert" style="color: red; font-weight: bold;">
         {% for message in messages %}
             {{ message }}
         {% endfor %}
     </div> 
-    {% endfor %}
+{% endfor %}
 <div class="container">
     <div class="row">
         <div class="search-form-container">
@@ -81,7 +74,6 @@
                     {{ form_label(searchForm.to_date) }}
                     {{ form_widget(searchForm.to_date, {'attr': {'class': 'form-control'}}) }}
                 </div>
-                <!-- Скрито поле за totalPages -->
                 <input type="hidden" name="totalPages" value="{{ totalPages }}" />
                 <div class="form-field">
                     <button type="submit" class="btn btn-primary submit-button">Виж поръчките</button> 
@@ -102,7 +94,5 @@
    {% include 'order/_list.html.twig' %}  
    </div>
 </div>
-
-
 
 {% endblock %}

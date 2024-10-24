@@ -39,7 +39,7 @@
                 <td> {{ order.quadrature }} </td>
                 <td> {{ order.price }} </td>
                 <td> {{ order.paid }} </td>
-                <td> {{ order.price - order.paid }} </td>
+                <td> {{ order.balance }} </td>
                 {% if order.status == NULL %}
                     <td> няма </td>
                 {% else %}
@@ -63,7 +63,7 @@
                 <td> <a href="{{ asset('uploads/' ~ order.scheme) }}">Виж схема </a> </td>
                 <td> {{ order.forDate|date('d.m.y') }} </td>
                 <td> {{ order.note }} </td>
-                <td> {{ order.user.email }} </td>
+                <td> {{ order.user.name }} </td>
             </tr>
         </thead>
     </table>
@@ -86,13 +86,13 @@
                     <td> {{ payment.paid }} </td>
                     <td> {{ payment.document }} </td>
                     <td> {{ payment.numberDoc }} </td>
-                    <td> {{ payment.user.email }} </td>
+                    <td> {{ payment.user.name }} </td>
                 </tr>
             {% endfor %}
         </table>
     </div>
     <div class="tables-group">
-         <div class="table-container">
+        <div class="table-container">
             <b>ИСТОРИЯ СТАТУС ПОРЪЧКА</b>
             <table class="table table-sm table-hover table-sticky">
                 <tr>
@@ -104,7 +104,7 @@
                     <tr>
                         <td> {{ status.createdAt|date('d.m.y') }} </td>
                         <td> {{ status.status.name }} </td>
-                        <td> {{ status.user.email }} </td>
+                        <td> {{ status.user.name }} </td>
                     </tr>
                 {% endfor %}
             </table>
@@ -125,7 +125,7 @@
                         {% else %}
                             <td> {{ statusGlass.glass.name }} </td>
                         {% endif %}
-                        <td> {{ statusGlass.user.Name }} </td>
+                        <td> {{ statusGlass.user.name }} </td>
                     </tr>
                 {% endfor %}
             </table>
@@ -144,7 +144,7 @@
                     <tr>
                         <td> {{ statusDetail.createdAt|date('d.m.y') }} </td>
                         <td> {{ statusDetail.detail.name }} </td>
-                        <td> {{ statusDetail.user.email }} </td>
+                        <td> {{ statusDetail.user.name }} </td>
                     </tr>
                 {% endfor %}
             </table>
@@ -161,7 +161,7 @@
                     <tr>
                         <td> {{ statusMosquito.createdAt|date('d.m.y') }} </td>
                         <td> {{ statusMosquito.mosquito.name }} </td>
-                        <td> {{ statusMosquito.user.email }} </td>
+                        <td> {{ statusMosquito.user.name }} </td>
                     </tr>
                 {% endfor %}
             </table>

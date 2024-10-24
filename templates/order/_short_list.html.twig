@@ -1,62 +1,59 @@
 
 <table>
-        <thead>
-            <tr>
-                <th>Номер</th>
-                <th>Клиент</th>
-                <th>Произв. схема</th>
-                <th>Тип монтаж</th>
-                <th>Тип</th>
-                <th>m2</th>
-                <th>от дата</th>
-                <th>за дата</th>
-                <th>цена</th>
-                <th>платено</th>
-                <th>остатък</th>
-                <th>плащане</th>
-                <th>статус</th>
-                <th>стъклопакет</th>
-                <th>доп. профил</th>
-                <th>комарник</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody id="orders-list">
-        {% set showChangeButton = false %}
-        {% for order in pager %}
-            <tr >
-                <td> <a href="{{ path('app_reference_order', {'orderId': order.id}) }}" target="_top">{{ order.number }}</a> </td>
-                <td> <a href="{{ path('app_reference_customer', {'customerId': order.customer.id}) }}" target="_top">{{ order.customer.name }}</a> </td>
-                <td> 
+    <thead>
+        <tr>
+            <th>Номер</th>
+            <th>Клиент</th>
+            <th>Произв. схема</th>
+            <th>Тип монтаж</th>
+            <th>Тип</th>
+            <th>m2</th>
+            <th>от дата</th>
+            <th>за дата</th>
+            <th>цена</th>
+            <th>платено</th>
+            <th>остатък</th>
+            <th>плащане</th>
+            <th>статус</th>
+            <th>стъклопакет</th>
+            <th>доп. профил</th>
+            <th>комарник</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody id="orders-list">
+    {% set showChangeButton = false %}
+    {% for order in orders %}
+        <tr >
+            <td> <a href="{{ path('app_reference_order', {'orderId': order.id}) }}" target="_top">{{ order.number }}</a> </td>
+            <td> <a href="{{ path('app_reference_customer', {'customerId': order.customer.id}) }}" target="_top">{{ order.customer.name }}</a> </td>
+            <td> 
                 {% if order.scheme == NULL %}
                     Няма 
                 {% else %}
-                <a href="{{ asset('uploads/' ~ order.scheme) }}" target="_top">Виж схема</a>
+                    <a href="{{ asset('uploads/' ~ order.scheme) }}" target="_top">Виж схема</a>
                 {% endif %}
-                </td>
-                <td> {{ order.typeMontage.name }} </td>
-                <td> {{ order.type.name }} </td>
-                <td> {{ order.quadrature }} </td>
-                <td >  
+            </td>
+            <td> {{ order.typeMontage.name }} </td>
+            <td> {{ order.type.name }} </td>
+            <td> {{ order.quadrature }} </td>
+            <td >  
                 <form action="{{ path('app_reference_date') }}" method="POST" data-turbo="false" >
                     <input type="hidden" name="date" value="{{ order.createdAt|date('d.m.Y') }}">
                     <button type="submit">{{ order.createdAt|date('d.m.Y') }} </button>
                 </form>
-                </td>
-                <td> {{order.forDate|date('d.m.Y')}}</td>
-                <td> {{ order.price }}</td>
-                <td> {{ order.paid }}</td>
-                <td> {{ order.price - order.paid }}</td>
-                
-                <td>
-                    <form action="{{ path('app_payment_payables') }}"  id="payment-form-{{ order.id }}" data-turbo="false">
-                        <input type="hidden" id="customerId-{{ order.id }}" name="customerId" value="{{ order.customer.id }}">
-                        
-                        <input type="submit" class="btn btn-success" value="плащане">
-                    </form>
-                </td>
-                
-                <td>
+            </td>
+            <td> {{order.forDate|date('d.m.Y')}}</td>
+            <td> {{ order.price }}</td>
+            <td> {{ order.paid }}</td>
+            <td> {{ order.price - order.paid }}</td>
+            <td>
+                <form action="{{ path('app_payment_payables') }}"  id="payment-form-{{ order.id }}" data-turbo="false">
+                    <input type="hidden" id="customerId-{{ order.id }}" name="customerId" value="{{ order.customer.id }}">
+                    <input type="submit" class="btn btn-success" value="плащане">
+                </form>
+            </td>
+            <td>
                 {% if order.status == null %}
                 {% set showChangeButton = false %}
                     няма 
@@ -69,33 +66,31 @@
                     <br> 
                     <input type="checkbox" name="selectedOrders[]" value="{{ order.id }}" data-status="{{ order.status.id }}">
                     Промени
-                              
                 {% else %}
-                {% set showChangeButton = false %}
+                    {% set showChangeButton = false %}
                     {{order.status.name}}
                     <div class="container-fluid mt-4">
                         <div class="d-flex flex-row">
                             <div {{ stimulus_controller('modal-form',{
-                                    formUrl: path('app_status_order', {'orderId': order.id}), 
+                                formUrl: path('app_status_order', {'orderId': order.id}), 
+                             }) }}
+                                data-action="hidden.bs.modal->modal-form#modalHidden"
+                                >
+                                <button
+                                    class="btn btn-primary btn-sm" 
+                                    data-action="modal-form#openModal"
+                                    data-order-id="{{ order.id }}" 
+                                    >промени статус</button>
+                                    {{ include('_modal.html.twig', {
+                                        modalTitle: 'Промяна на статус',
+                                        changeStatus: 'no' 
                                     }) }}
-                                    data-action="hidden.bs.modal->modal-form#modalHidden"
-                                    >
-                                    <button
-                                        class="btn btn-primary btn-sm" 
-                                        data-action="modal-form#openModal"
-                                        data-order-id="{{ order.id }}" 
-                                        >промени статус</button>
-                                        
-                                       {{ include('_modal.html.twig', {
-                                            modalTitle: 'Промяна на статус',
-                                            changeStatus: 'no' 
-                                       }) }}
                             </div>
                         </div>
                     </div>
-                    {% endif %} 
-                </td>
-                <td>
+                {% endif %} 
+            </td>
+            <td>
                 {% if order.glass == NULL %}
                      няма
                 {% elseif order.glass.id == lastStatus.lastStatusGlass.id %}
@@ -122,8 +117,8 @@
                             </div>
                         </div>    
                 {% endif %}
-                </td>
-                <td>
+            </td>
+            <td>
                 {% if order.detail == NULL %}
                     няма
                 {% elseif order.detail.id == lastStatus.lastStatusDetail.id %}
@@ -147,8 +142,8 @@
                             </div>
                         </div>        
                 {% endif %}
-                </td>
-                <td>
+            </td>
+            <td>
                 {% if order.mosquito == NULL %}
                     няма
                 {% elseif order.mosquito.id == lastStatus.lastStatusMosquito.id %}
@@ -172,38 +167,30 @@
                             </div>
                         </div>
                 {% endif %}
-                </td>
-                <td>
-                        
-                        <a href="{{ path('app_order_edit', {'id': order.id}) }}" target="_top">edit</a>
-                </td>
-            </tr>
-            
-        {% endfor %}
-
-        {% if showChangeButton %}
-        <tfoot>
-        <tr>
-            <td colspan="12"></td>
+            </td>
             <td>
-            <!-- Бутон за промяна на избраните поръчки -->
-<!--<button id="changeStatusButton" class="btn btn-primary">Промени избраните</button>-->
-<button id="changeStatusButton" data-url="{{ path('app_status_orderBulk') }}" class="btn btn-primary">Промени избраните</button>
-</td>
+                <a href="{{ path('app_order_edit', {'id': order.id}) }}" target="_top">edit</a>
+            </td>
         </tr>
-    </tfoot>
-        {% endif %}
-        
-        </tbody>
-    </table>
-    
-    
-    {{ pagerfanta(pager, 'twitter_bootstrap5', { 
-        prev_message: 'Предишна',
-        next_message: 'Следваща', 
-        
-        }) }}
+    {% endfor %}
+    {% if showChangeButton %}
+        <tfoot>
+            <tr>
+                <td colspan="12"></td>
+                <td>
+                    <!-- Бутон за промяна на избраните поръчки -->
+                    <button id="changeStatusButton" data-url="{{ path('app_status_orderBulk') }}" class="btn btn-primary">Промени избраните</button>
+                </td>   
+            </tr>
+        </tfoot>
+    {% endif %}
+    </tbody>
+</table>
 
+{{ pagerfanta(pager, 'twitter_bootstrap5', { 
+    prev_message: 'Предишна',
+    next_message: 'Следваща', 
+    }) }}
 
-    <script src="{{ asset('build/app.js') }}"></script>
+<script src="{{ asset('build/app.js') }}"></script>
 

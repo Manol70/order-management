@@ -1,41 +1,39 @@
+{% block title %}смяна на статус ПОРЪЧКА{% endblock %}
 {% block body %}
 
-
 <div class="container-fluid mt-4">
-<div>
+    <div>
         <P> ПОРЪЧКА № {{ numberOrder }}
         <p>Статусът от "{{ currentStatus }}" ще бъде променен на "{{ newStatusName }}".</p>
-        </div>
+    </div>
     <div class="d-flex flex-row">
         <form id="statusChangeForm" action="{{ path('app_order_status') }}" method="get">
-        <input type="hidden" name="orderId" value={{ orderId }};>
-        <input type="hidden" name="newStatusId" value={{ newStatusId }};>
-        <input type="hidden" name="newGlassId" value={{ newGlassId }};>
-        <input type='hidden' name="newMosquitoId" value={{ newMosquitoId }};>
-        <input type='hidden' name="newDetailId" value={{ newDetailId }};>
-        
-        <p> {{ messageGlass|raw }} </p>
-        {% if glass == true %}
-        <p> Промени статуса на стъклопакет 
-        <input type="checkbox" name="glass"> </p>
-        {% endif %}
-        <p> {{ messageMosquito|raw }} </p>
-        {% if mosquito == true %}
-        <p> Промени статуса на комарник 
-        <input type="checkbox" name="mosquito"> </p>
-        {% endif %}
-        <p> {{ messageDetail|raw }} </p>
-        {% if detail == true %}
-        <p> Промени статуса на профил
-        <input type="checkbox" name="detail"> </p>
-        {% endif %}
+            <input type="hidden" name="orderId" value={{ orderId }};>
+            <input type="hidden" name="newStatusId" value={{ newStatusId }};>
+            <input type="hidden" name="newGlassId" value={{ newGlassId }};>
+            <input type='hidden' name="newMosquitoId" value={{ newMosquitoId }};>
+            <input type='hidden' name="newDetailId" value={{ newDetailId }};>
+            
+            <p> {{ messageGlass|raw }} </p>
+            {% if glass == true %}
+                <p> Промени статуса на стъклопакет 
+                <input type="checkbox" name="glass"> </p>
+            {% endif %}
+            <p> {{ messageMosquito|raw }} </p>
+            {% if mosquito == true %}
+                <p> Промени статуса на комарник 
+                <input type="checkbox" name="mosquito"> </p>
+            {% endif %}
+            <p> {{ messageDetail|raw }} </p>
+            {% if detail == true %}
+                <p> Промени статуса на профил
+                <input type="checkbox" name="detail"> </p>
+            {% endif %}
         </form>
     </div>
 
-        
-        <div {{ stimulus_controller('modal-form') }}>
-        </div>
-    
+    <div {{ stimulus_controller('modal-form') }}>
+    </div>
     
 </div>
 

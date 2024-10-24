@@ -23,21 +23,12 @@ class PaymentType extends AbstractType
     {
         $builder
             ->add('orderId', HiddenType::class);
-            /*->add('paymentAmount', NumberType::class, [
-                'label' => 'Сум за плащане',
-            ])*/
-            /*->add('orderPayments', HiddenType::class);*/
-            
-            /*->add('submit', SubmitType::class, ['label' => 'Submit']);*/
-            
-            
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => null,
-            
         ]);
     }
         
