@@ -1,5 +1,5 @@
 
-  <div id="content-container" class="orders-table-container">
+  <!--<div id="content-container" class="orders-table-container"> -->
   {% set button_status_order = false %}
   {% set button_status_glass = false %}
   {% set button_status_detail = false %}
@@ -7,10 +7,47 @@
   {% set filterForm = false %}
  
     <turbo-frame id="orders-list" data-turbo-action="advance"> 
-    <table class="table">
+    <div class="table-responsive-sm p-0 mt-2">
+    <table class="table table-sm table-hover table-sticky" id="order-table">
         <thead class="thead-light">
             <tr>
-                <th>Номер</th>
+                <th>
+               
+                    Номер
+                    {% if sort == 'id' %}
+                        <!-- Показвай съответната стрелка в зависимост от текущото сортиране -->
+                        {% if sortDirection == 'asc' %}
+                        <a href="{{ path('app_order', 
+                            app.request.query.all() | merge({'sort': 'id', 'sortDirection': 'asc'})
+                        ) }}" target="_top" title="сортирай възходящо">
+                        &#9660; <!-- Стрелка за възходящо сортиране -->
+                        </a>
+                        &#9609;
+                        {% else %}
+                        <br>
+                        &#9609;
+                        <a href="{{ path('app_order', 
+                            app.request.query.all() | merge({'sort': 'id', 'sortDirection': 'desc'})
+                        ) }}" target="_top" title="сортирай низходящо">
+                             &#9650; <!-- Стрелка за низходящо сортиране -->
+                        </a>
+                    {% endif %}
+                    {% else %}
+                        <a href="{{ path('app_order', {
+                            'sort': 'id',
+                            'sortDirection': 'desc'
+                        }) }}" target="_top" title="сортирай низходящо">
+                            &#9650;
+                        </a>
+                         <a href="{{ path('app_order', {
+                            'sort': 'id',
+                            'sortDirection': 'asc'
+                        }) }}" target="_top" title="сортирай възходящо">
+                            &#9660; <!-- Стрелка надолу (триъгълник) -->
+                        </a>
+                    {% endif %}
+                
+                </th>
                 <th>Клиент</th>
                 <th class="short-version">Схема</th>
                 <th>Тип</th>
@@ -19,7 +56,20 @@
                 <th>за дата</th>
                 <th>цена</th>
                 <th>платено</th>
-                <th>остатък</th>
+                <th>
+                
+                    Дължима сума
+                    {% if sort == 'id' %}
+                        <a href="{{ path('app_order', {
+                            'sort': 'balance',
+                            'sortDirection': 'asc'
+                        }) }}" target="_top">
+                        &#9660;
+                    {% else %}
+                        &#9609;
+                    {% endif %}
+                </a>
+                </th>
                 <th>плащане</th>
                 <th>статус</th>
                 <th>стъклопакет</th>
@@ -31,7 +81,36 @@
         <tbody>
         {% for order in orders %}
             <tr >
-                <td> <a href="{{ path('app_reference_order', {'orderId': order.id}) }}" target="_top" title='Подробности за поръчка'>{{ order.number }} </a> </td>
+                <td> <a href="{{ path('app_reference_order', {'orderId': order.id}) }}" target="_top" title='Подробности за поръчка'>{{ order.number }} </a>
+                 <br>
+                    {# Проверка дали има забележка и показване на различна иконка и цвят #}
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#note-modal-{{ order.id }}"title={{order.note}}>
+                    {% if order.note %}
+                        <i>📝</i> {# Иконка за забележка, ако има такава #}
+                    {% else %}
+                        <i class="fas fa-book" style="color: black;"></i> {# Иконка за липса на забележка #}
+                    {% endif %}
+                    </a>
+
+                    {# Модален прозорец за показване на забележката #}
+                    <div class="modal fade" id="note-modal-{{ order.id }}" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Забележка за поръчка № {{ order.id }}</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    {% if order.note %}
+                                        {{ order.note }}
+                                    {% else %}
+                                        <p>Няма забележка.</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
                 <td> <a href="{{ path('app_reference_customer', {'customerId': order.customer.id}) }}" target="_top" title='Всички поръчки на клиента'>{{ order.customer.name }} </td>
                 
                 {% if order.scheme == NULL %}
@@ -62,7 +141,7 @@
                     <form action="{{ path('app_payment_payables') }}" id="payment-form-{{ order.id }}" data-turbo="false">
                         <input type="hidden" id="customerId-{{ order.id }}" name="customerId" value="{{ order.customer.id }}">
                         <button type="submit" class="btn" style="background: none ; border: none ; padding: 0; cursor: pointer;">
-                        <i class="fas fa-dollar-sign" title="Плащане" style="font-size: 24px; color: #053210;"></i> <!-- можеш да промениш размера и цвета -->
+                        <i class="fas fa-dollar-sign" title="Плащане" style="font-size: 24px; color: #053210;"></i> 
                         </button>
                     </form>
                 </td>
@@ -306,41 +385,12 @@
                 {% endif %}
                 
                 <td>   
-                    <a href="{{ path('app_order_edit', {'id': order.id}) }}" target="_top">редактиране</a>
-                    <br>
-                    {# Проверка дали има забележка и показване на различна иконка и цвят #}
-                    <a href="#" data-bs-toggle="modal" data-bs-target="#note-modal-{{ order.id }}"title={{order.note}}>
-                    {% if order.note %}
-                        <i class="fas fa-book" style="color: red;"></i> {# Иконка за забележка, ако има такава #}
-                    {% else %}
-                        <i class="fas fa-book" style="color: black;"></i> {# Иконка за липса на забележка #}
-                    {% endif %}
-                    </a>
-
-                    {# Модален прозорец за показване на забележката #}
-                    <div class="modal fade" id="note-modal-{{ order.id }}" tabindex="-1" aria-hidden="true">
-                        <div class="modal-dialog modal-lg" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">Забележка за поръчка № {{ order.id }}</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    {% if order.note %}
-                                        {{ order.note }}
-                                    {% else %}
-                                        <p>Няма забележка.</p>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <a href="{{ path('app_order_edit', {'id': order.id}) }}" target="_top" title="Edit">✍</a>
+                   
                 </td>
             </tr>
             
         {% endfor %}
-        
-
         <tfoot>
         <!-- Добавяме под всяка колона бутон за промяна на избраните поръчки -->
         <tr>        
@@ -398,14 +448,20 @@
         
         </tbody>
     </table>
+
+        
+        
+        </tbody>
+    </table>
     
-    
+  <div data-turbo='false'> 
   {{ pagerfanta(orders, 'twitter_bootstrap5', { 
         prev_message: 'Предишна',
         next_message: 'Следваща',
         
         }) }}  
-        
+        </div>
+   </div>     
       
   {# {{ knp_pagination_render(orders) }} #}
  </turbo-frame>   
@@ -428,6 +484,65 @@
                 return true; // Позволява изпращането на формата
             }
         }
+
+
+        //код за сортиране по колона "остатък"
+var originalOrder = [];
+
+window.onload = function() {
+    saveOriginalOrder();
+};
+
+function saveOriginalOrder() {
+    var table = document.getElementById("order-table");
+    var rows = table.rows;
+
+    for (var i = 1; i < rows.length; i++) {
+        originalOrder.push(rows[i].outerHTML);
+    }
+}
+
+function sortTable(columnIndex, order) {
+    var table, rows, switching, i, x, y, shouldSwitch;
+    table = document.getElementById("order-table");
+    switching = true;
+
+    while (switching) {
+        switching = false;
+        rows = table.rows;
+        for (i = 1; i < (rows.length - 1); i++) {
+            shouldSwitch = false;
+            x = rows[i].getElementsByTagName("TD")[columnIndex];
+            y = rows[i + 1].getElementsByTagName("TD")[columnIndex];
+
+            // Compare values for descending order
+            if (order === 'desc') {
+                if (parseFloat(x.innerHTML) < parseFloat(y.innerHTML)) {
+                    shouldSwitch = true;
+                    break;
+                }
+            }
+        }
+        if (shouldSwitch) {
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;
+        }
+    }
+}
+function resetTable() {
+    var table = document.getElementById("order-table");
+    var rows = table.rows;
+
+    // Clear current rows
+    for (var i = rows.length - 1; i > 0; i--) {
+        table.deleteRow(i);
+    }
+
+    // Restore original rows
+    for (var i = 0; i < originalOrder.length; i++) {
+        table.tBodies[0].insertRow().outerHTML = originalOrder[i];
+    }
+}
      
     </script>
 

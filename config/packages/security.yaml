@@ -17,6 +17,12 @@ security:
             lazy: true
             provider: app_user_provider
             access_denied_handler: App\Security\AccessDeniedHandler
+            custom_authenticator: App\Security\LoginFormAuthenticator
+
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800 # Времетраене на сесията в секунди (по подразбиране 1 седмица)
+               # always_remember_me: true 
             
             
 

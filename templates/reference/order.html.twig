@@ -3,70 +3,76 @@
 {% block title %}Справка поръчка{% endblock %}
 
 {% block body %}
-<style> 
+<style>  
 </style>
+ 
+<div class="container-fluid d-flex justify-content-between align-items-center">
+    <h2 class="text-center flex-grow-1">СПРАВКА ЗА ПОРЪЧКА № {{ order.number }}</h2>
+    <button onclick="history.back()" class="btn btn-secondary">Върни се назад</button>
+</div>
 
-<div class="example-wrapper">
-    <div style="display: flex; align-items: center; justify-content: space-between;">
-        <button onclick="history.back()">Върни се назад</button>
-        <h1 style="margin: 0 auto;">СПРАВКА ЗА ПОРЪЧКА № {{ order.number }}</h1>
-    </div>
-    <table class="tref">
-        <tr>
-            <th> Номер </th>
-            <th> Клиент </th>
-            <th> Приета на </th>
-            <th> Квадратура </th>
-            <th> Цена </th>
-            <th> Платено </th>
-            <th> Дължима <br>сума</br> </th>
-            <th> Статус </th>
-            <th> Стъклопакет </th>
-            <th> Профил </th>
-            <th> Комарник </th>
-            <th> Схема </th>
-            <th> Готова на </th>
-            <th> Забележка </th>
-            <th> Приета от </th>
-        </tr>
-        <tr>
-            <td> {{ order.number }} </td>
-            <td> {{ order.customer.name}} </td>
-            <td> {{ order.createdAt|date('d.m.Y') }} </td>
-            <td> {{ order.quadrature }} </td>
-            <td> {{ order.price }} </td>
-            <td> {{ order.paid }} </td>
-            <td> {{ order.price - order.paid }} </td>
-            {% if order.status == NULL %}
-                <td> няма </td>
-            {% else %}
-                <td> {{ order.status.name }} </td>
-            {% endif %}
-            {% if order.glass == NULL %}
-                <td> няма </td>
-            {% else %}
-                <td> {{ order.glass.name }} </td>
-            {% endif %}
-            {% if order.detail == NULL %}
-                <td> няма </td>
-            {% else %}
-                <td> {{ order.detail.name }} </td>
-            {% endif %}
-            {% if order.mosquito == NULL %}
-                <td> няма </td>
-            {% else %}
-                <td> {{ order.mosquito.name }} </td>
+<div class="table-responsive-sm p-0 mt-2">
+    <table class="table table-sm table-hover table-sticky">
+        <thead class="thead-light">
+            <tr> 
+                <th> Номер </th>
+                <th> Клиент </th>
+                <th> Приета на </th>
+                <th> Квадратура </th>
+                <th> Цена </th>
+                <th> Платено </th>
+                <th> Дължима <br>сума</br> </th>
+                <th> Статус </th>
+                <th> Стъклопакет </th>
+                <th> Профил </th>
+                <th> Комарник </th>
+                <th> Схема </th>
+                <th> Готова на </th>
+                <th> Забележка </th>
+                <th> Приета от </th>
+            </tr>
+        </thead>
+            <tr>
+                <td> {{ order.number }} </td>
+                <td> {{ order.customer.name}} </td>
+                <td> {{ order.createdAt|date('d.m.Y') }} </td>
+                <td> {{ order.quadrature }} </td>
+                <td> {{ order.price }} </td>
+                <td> {{ order.paid }} </td>
+                <td> {{ order.price - order.paid }} </td>
+                {% if order.status == NULL %}
+                    <td> няма </td>
+                {% else %}
+                    <td> {{ order.status.name }} </td>
+                {% endif %}
+                {% if order.glass == NULL %}
+                    <td> няма </td>
+                {% else %}
+                    <td> {{ order.glass.name }} </td>
+                {% endif %}
+                {% if order.detail == NULL %}
+                    <td> няма </td>
+                {% else %}
+                    <td> {{ order.detail.name }} </td>
+                {% endif %}
+                {% if order.mosquito == NULL %}
+                    <td> няма </td>
+                {% else %}
+                    <td> {{ order.mosquito.name }} </td>
                 {% endif %}
                 <td> <a href="{{ asset('uploads/' ~ order.scheme) }}">Виж схема </a> </td>
                 <td> {{ order.forDate|date('d.m.y') }} </td>
                 <td> {{ order.note }} </td>
                 <td> {{ order.user.email }} </td>
-        </tr>
+            </tr>
+        </thead>
     </table>
-    <div class="table-collection">
-        <div class="table-container">
-        <p>ИСТОРИЯ НА ПЛАЩАНИЯТА</p>
-        <table>
+</div>
+
+<div class="table-collection">
+    <div class="table-container">
+        <b>ИСТОРИЯ НА ПЛАЩАНИЯТА</b>
+        <table class="table table-sm table-hover table-sticky">
             <tr>
                 <th> Дата </th>
                 <th> Платена сума </th>
@@ -75,89 +81,91 @@
                 <th> Приел сумата </th>
             </tr>
             {% for payment in payments %}
-            <tr>
-                <td> {{ payment.createdAt|date('d.m.Y') }} </td>
-                <td> {{ payment.paid }} </td>
-                <td> {{ payment.document }} </td>
-                <td> {{ payment.numberDoc }} </td>
-                <td> {{ payment.user.email }} </td>
-            </tr>
+                <tr>
+                    <td> {{ payment.createdAt|date('d.m.Y') }} </td>
+                    <td> {{ payment.paid }} </td>
+                    <td> {{ payment.document }} </td>
+                    <td> {{ payment.numberDoc }} </td>
+                    <td> {{ payment.user.email }} </td>
+                </tr>
             {% endfor %}
         </table>
-        </div>
+    </div>
     <div class="tables-group">
          <div class="table-container">
-            <p>ИСТОРИЯ СТАТУС ПОРЪЧКА</p>
-            <table>
+            <b>ИСТОРИЯ СТАТУС ПОРЪЧКА</b>
+            <table class="table table-sm table-hover table-sticky">
                 <tr>
                     <th> Дата </th>
                     <th> Статус </th>
                     <th> Променил </th>
                 </tr>
                 {% for status in statuses %}
-                <tr>
-                    <td> {{ status.createdAt|date('d.m.y') }} </td>
-                    <td> {{ status.status.name }} </td>
-                    <td> {{ status.user.email }} </td>
-                </tr>
+                    <tr>
+                        <td> {{ status.createdAt|date('d.m.y') }} </td>
+                        <td> {{ status.status.name }} </td>
+                        <td> {{ status.user.email }} </td>
+                    </tr>
                 {% endfor %}
             </table>
         </div>
         <div class="table-container">
-            <p>ИСТОРИЯ СТАТУС СТЪКЛОПАКЕТ</p>
-            <table>
+            <b>ИСТОРИЯ СТАТУС СТЪКЛОПАКЕТ</b>
+            <table class="table table-sm table-hover table-sticky">
                 <tr>
                     <th> Дата </th>
                     <th> Статус Стъклопакет </th>
                     <th> Променил </th>
                 </tr>
                 {% for statusGlass in glass %}
-                <tr>
-                    <td> {{ statusGlass.createdAt|date('d.m.y') }} </td>
-                    <td> {{ statusGlass.glass.name }} </td>
-                    <td> {{ statusGlass.user.email }} </td>
-                </tr>
+                    <tr>
+                        <td> {{ statusGlass.createdAt|date('d.m.y') }} </td>
+                        {% if statusGlass.glass == null %}
+                            <td> няма </td>
+                        {% else %}
+                            <td> {{ statusGlass.glass.name }} </td>
+                        {% endif %}
+                        <td> {{ statusGlass.user.Name }} </td>
+                    </tr>
                 {% endfor %}
             </table>
         </div>
     </div>
     <div class="tables-group">
         <div class="table-container">
-            <p>ИСТОРИЯ СТАТУС ДОП. ПРОФИЛ</p>
-            <table>
+            <b>ИСТОРИЯ СТАТУС ДОП. ПРОФИЛ</b>
+            <table class="table table-sm table-hover table-sticky">
                 <tr>
                     <th> Дата </th>
                     <th> Статус Профил </th>
                     <th> Променил </th>
                 </tr>
                 {% for statusDetail in detail %}
-                <tr>
-                    <td> {{ statusDetail.createdAt|date('d.m.y') }} </td>
-                    <td> {{ statusDetail.detail.name }} </td>
-                    <td> {{ statusDetail.user.email }} </td>
-                </tr>
+                    <tr>
+                        <td> {{ statusDetail.createdAt|date('d.m.y') }} </td>
+                        <td> {{ statusDetail.detail.name }} </td>
+                        <td> {{ statusDetail.user.email }} </td>
+                    </tr>
                 {% endfor %}
             </table>
         </div>
-
         <div class="table-container">
-            <p>ИСТОРИЯ СТАТУС КОМАРНИК</p>
-            <table>
+            <b>ИСТОРИЯ СТАТУС КОМАРНИК</b>
+            <table class="table table-sm table-hover table-sticky">
                 <tr>
                     <th> Дата </th>
                     <th> Статус Комарник </th>
                     <th> Променил </th>
                 </tr>
                 {% for statusMosquito in mosquito %}
-                <tr>
-                    <td> {{ statusMosquito.createdAt|date('d.m.y') }} </td>
-                    <td> {{ statusMosquito.mosquito.name }} </td>
-                    <td> {{ statusMosquito.user.email }} </td>
-                </tr>
+                    <tr>
+                        <td> {{ statusMosquito.createdAt|date('d.m.y') }} </td>
+                        <td> {{ statusMosquito.mosquito.name }} </td>
+                        <td> {{ statusMosquito.user.email }} </td>
+                    </tr>
                 {% endfor %}
             </table>
         </div>
     </div>
 </div>
-
 {% endblock %}

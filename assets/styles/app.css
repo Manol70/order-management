@@ -4,107 +4,227 @@
 
 html, body {
   height: 100%;
+  width: 100%;
   margin: 0;
   padding: 0;
 }
-/* За малки екрани като телефони */
-@media only screen and (max-width: 600px) {
-    body {
-        font-size: 14px;
-    }
-    .container {
-        width: 100%;
-        padding: 10px;
-    }
-}
-
-/* За таблети */
-@media only screen and (min-width: 601px) and (max-width: 1024px) {
-    body {
-        font-size: 16px;
-    }
-    .container {
-        width: 90%;
-        margin: 0 auto;
-    }
-}
-
-/* За десктопи */
-@media only screen and (min-width: 1025px) {
-    body {
-        font-size: 18px;
-    }
-    .container {
-        width: 80%;
-        margin: 0 auto;
-    }
-}
-/* Допълнително за мобилни устройства */
-@media (max-width: 768px) {
-  .header {
-    background-size: cover;   /* Уверяваме се, че покрива цялата ширина на екрана */
-    background-position: top center; /* Позиционираме го да е отгоре и в центъра */
-    min-height: 150px;        /* За мобилни устройства височината може да е по-малка */
+/* За малки екрани (мобилни устройства) */
+@media (max-width: 576px) {
+  .custom-btn {
+    font-size: 12px !important; /* Още по-малък шрифт за малки екрани */
+    padding: 6px 10px !important;/* Още по-малки вътрешни разстояния */
   }
+  .search-form-container .form-field {
+    font-size: 12px !important; /* Още по-малък шрифт за малки екрани */
+    padding: 2px 4px !important;/* Още по-малки вътрешни разстояния */
+   
+  }
+  .form-field label {
+    font-size: 12px !important; /* Размер на шрифта на етикета */
+  }
+  /* Стилизация на текстовите полета */
+.search-form-container .form-control {
+  font-size: 11px !important; /* Още по-малък шрифт за малки екрани */
+    padding: 4px 8px !important;/* Още по-малки вътрешни разстояния */
+    height: 25px !important;
+    width: 70px !important;
 }
+h2 {
+  font-size: 0.8em !important;
+  margin: 0 auto;
+  /*white-space: normal !important;*/
+  max-width: 40% !important;
+}
+.period-header {
+  font-size: 0.8em !important;
+  white-space: nowrap !important;
+  text-align: center !important;
+  max-width: 100% !important;
+}
+.ts-control {
+  width: 10px !important;
+  padding: 0rem !important;
+}
+.search-form-container .form-row {
+  gap: 0px !important;
+}
+.search-form-container .btn-primary {
+  width: 80% !important;
+  height: 20% !important;
+  font-size: 11px !important;
+  white-space: normal; 
+}
+.table {
+  font-size: 10px !important;
+}
+.btn-info {
+  color: #fff;
+  background-color: #17a2b8;
+  font-size: 10px !important;
+}
+.form-grid {
+  grid-template-columns: repeat(2, 1fr) !important; /* Две колони на по-малки екрани */
+}
+.customer{
+  grid-column: 1/2 !important;
+  grid-row: 1 !important;
+}
+.type{
+  grid-column: 2/3 !important;
+  grid-row: 1 !important;
+}
+.quadrature{
+  grid-column: 1/2 !important;
+  grid-row: 2 !important;
+}
+.glass{
+  grid-column: 2/3 !important;
+  grid-row: 2 !important;
+}
+.detail{
+  grid-column: 2/3 !important;
+  grid-row: 3 !important;
+}
+.mosquito{
+  grid-column: 2/3 !important;
+  grid-row: 4 !important;
+}
+.price{
+  grid-column: 1/2 !important;
+  grid-row: 3 !important;
+}
+.for_date{
+  grid-column: 1/2 !important;
+  grid-row: 4 !important;
+}
+.note{
+  grid-column: 1/2 !important;
+  grid-row: 5 !important;
+}
+.create-submit{
+  grid-column: 2/3 !important;
+  grid-row: 5 !important;
+}
+
+.form-field-create label{
+  font-size: 12px !important;
+}
+.form-control{
+  width: 6rem !important;
+  height: 1.5rem !important;
+  font-size: 12px !important;
+  padding: 0.1rem !important;
+}
+.ts-wrapper.form-control{
+  width: 100% !important; /* Задействай ширината само за малките екрани */
+  height: 1.5rem !important; 
+}
+.ts-wrapper {
+  min-height: 1.5rem !important;
+  padding-bottom: 0.1rem !important;
+}
+
+.ts-wrapper.single .ts-control input {
+  font-size: 12px !important; /* По-малък шрифт за малки екрани */
+}
+.form-field-create {
+  display: flex;
+  flex-direction: column; /* Вертикално подреждане */
+  justify-content: center; /* Центриране на съдържанието */
+}
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  background-color: hsl(210, 14%, 97%);
+  align-content: center;
+  text-align: center !important;
+  align-items: center;
+  font-size: 10px !important;
+}
+.btn-secondary {
+  font-size: 12px !important;
+  padding: 3px 6px !important; /* вътрешни отстъпи */
+}
+.btn-success {
+  font-size: 12px !important;
+  padding: 3px 6px !important; 
+}
+.table-container {
+  text-align: center !important;
+  font-size: 0.5em !important;
+}
+#form-reference {
+  width: 100% !important;
+}
+
+}
+
+/* За средни екрани (таблети) */
+@media (min-width: 577px) and (max-width: 768px) {
+  .custom-btn {
+    font-size: 12px !important; /* Намаляване на шрифта */
+    padding: 6px 10px !important; /* Намаляване на вътрешните разстояния */
+  }
+ 
+}
+
+/* За големи екрани (десктоп) */
+@media (min-width: 769px) {
+  .custom-btn {
+    font-size: 15px !important; /* Още по-малък шрифт за малки екрани */
+    padding: 8px 12px !important;/* Още по-малки вътрешни разстояния */
+  }
+  
+}
+.container-fluid .row {
+  margin-right: 0;
+  margin-left: 0;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
 .row {
   margin: 0; /* Премахва външните отстояния */
   padding: 0; /* Премахва вътрешните отстояния, ако е необходимо */
-  width: 100%; /* Задължително да заема цялата ширина на родителя */
+  
+  
 }
 
-/* Стил за headerLogin (без изображение) */
-.headerLogin { 
-  background-size: cover; /* Фоновата снимка да покрива цялата ширина и височина */
-  background-position: center; /* Центриране на фона */
-  /*background-color: transparent; /* Напълно прозрачен фон */
-  background-color: rgba(122, 201, 208, 0.6); /* Полупрозрачен фон */
-  /*outline: 1mm solid rgba(35, 179, 208, 0.6); /* Полупрозрачен outline */
-  outline-offset: -1mm;
-}
 
-/* Стил за header (с изображение) */
 .header {
-  background-image: url('../images/IMG_6529.jpg'); /* Път до фоновата снимка */ 
-  background-size: cover; /* Фоновата снимка да покрива цялата ширина и височина */
-  background-position: center; /* Центриране на фона */
-  
-  background-color: rgba(66, 145, 161, 0.8); /* Полупрозрачен фон */
-  outline-offset: -3mm;
-
-  /* Добавяме тези нови правила */
-  min-height: 200px;  /* Минимална височина за мобилни устройства */
-  width: 100%;        /* Задължително да заема цялата ширина */
-  margin: 0;          /* Премахва всякакви външни отстояния */
-  padding: 0;         /* Премахва всякакви вътрешни отстояния */
-}
-
-.header img, .headerLogin img {
-  max-width: 100%;  /* За адаптивност */
-  height: auto;
-  width: auto;
-  
-}
-.header, .headerLogin {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;  /* Центриране по вертикала на логото */
-  position: relative; /* Нужен за абсолютното позициониране на текста */
-  padding: 20px;
-  height: 20vh;
+  background-image: url('../images/IMG_6529.jpg');
   background-size: cover;
   background-position: center;
+  height: 20vh; /* Височина в проценти от височината на прозореца (viewport height) */
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* За да държим логото и текста на потребителя в рамките на заглавката */
+  padding: 10px; /* Малко padding за вътрешен отстъп */
+  align-items: flex-end; /* Поставя съдържанието в началото по вертикала */
+}
+
+/* Стилове за реда преди логин (логин форма) */
+.headerLogin {
+  background-color: rgba(122, 201, 208, 0.6);
+}
+.col-sm-10 img{
+  max-width: 50%; /* Логото ще заема 50% от ширината на колоната */
+  height: auto; /* Височината на логото ще се адаптира пропорционално */
 }
 
 /* Позициониране на текста */
-.header h2, .headerLogin h2 {
-  position: absolute;
-  right: 20px;   /* Текстът да бъде вдясно */
-  bottom: 0;     /* Подравняване към дъното */
-  margin: 0;     /* Премахваме допълнителни разстояния */
-  padding: 10px;
-  font-size: 1.5rem; /*големината на текста */
-  color:rgba(195, 207, 216, 0.87)
+.user-col {
+  display: flex;                  /* Активира Flexbox */
+  flex-direction: column;        /* Подрежда елементите по вертикала */
+  justify-content: flex-end;     /* Поставя елементите най-долу */
+  text-align: right;                  
+}
+.user-text {
+  color: hsl(204, 33%, 97%); /* Цвят на текста */
+  font-size: 1em; /* Размер на шрифта */
+  font-weight: normal; /* Обикновен шрифт */
+  /*margin-top: 10px; /* Горен отстъп */
+  
 }
 
 form {
@@ -116,11 +236,31 @@ form {
   border-radius: 20px; /* Закръгляване на ъглите */
 }
 
-.btn-group-item {
-  display: inline-block; /* Прави съдържанието вътре в div да изглежда като част от групата бутони */
-  margin-right: 10px; /* Добавя разстояние между бутоните */
-  
+.custom-btn {
+  display: flex; 
+  padding: 10px 15px;
+  border: none; /* Премахване на бордера */
+  margin: 5px; /* Разстояние между бутоните */
+  text-decoration: none; /* Без подчертаване на текста */
+  background-color: #007bff; /* Основен цвят на бутона */
+  color: white; /* Цвят на текста */
+  border-radius: 5px; /* Заоблени ъгли */
+  align-items: center;      /* Центрира по вертикала */
+  justify-content: center;  /* Центрира по хоризонтала */
+  white-space: nowrap;      /* Предотвратява пренасянето на текста на нов ред */
+  max-width: 150px; /* Максимална ширина на бутоните */
+  width: auto; /* Позволява бутоните да заемат динамично място */
+  flex: 1 1 auto;   /* Позволява бутоните да растат и се свиват */
+  font-size: 15px;
 }
+
+.custom-btn:hover {
+  background-color: #0056b3; /* Цвят на бутона при задържане */
+  color: white; /*Текстът остава видим при натискане*/
+  text-decoration: none;
+}
+
+
 
 .btn-primary {
   width: 100%; /* Заема цялата ширина на родителя си */
@@ -146,9 +286,12 @@ form {
   justify-content: center; /* Центриране по хоризонтала */
   align-items: center; /* Центриране по вертикала */
   background-color: #eee4e4c4; /*search-form-container */
-  width: 100%; /* Пълна ширина */
-  /*padding: 10px; /* Премахни или намали padding, ако е необходимо */
-  /*margin-bottom: 20px; /* Добави малък margin, за да оставиш място за следващото съдържание */
+  flex-wrap: wrap;
+}
+.btn-group a.custom-btn,
+.btn-group button.custom-btn {
+    flex: 1; /* Задава бутоните да имат еднаква ширина */
+    margin: 5px; /* Добавя малко разстояние между бутоните */
 }
 
  
@@ -216,30 +359,21 @@ form {
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
   padding: 20px;
   background-color: #f5f5f5; /* Можеш да добавиш цвят за заглавието */
 }
-
-.create-header a {
-  position: absolute;
-  left: 0; /* Оставя бутона плътно вляво */
+.create-header h2 {
+  flex-grow: 1; /* Заставя заглавието да заеме наличното пространство */
+  text-align: center; /* Центрира текста вътре в заглавието */
 }
 
-.create-header h1 {
-  text-align: center;
-  margin: 0;
-  
-  position: absolute;
-  left: 50%; /* Позиционира заглавието в средата спрямо лявата страна */
-  transform: translateX(-50%); /* Центрира заглавието по средата на екрана */
-  top: 50%; /* За да центрираме вертикално (по желание) */
-  transform: translate(-50%, -50%);
+.create-header a {
+  margin-right: auto;
 }
 
 .create-form-container {
   background-color: #eee4e4c4;
-  width: 100%;
+  /*max-width: 800px;*/
   margin-top: 20px; /* Естествено отстояние от заглавието */
   margin-bottom: 20px;
   padding: 20px;
@@ -250,6 +384,37 @@ form {
   grid-gap: 20px; /* Разстояние между полетата */
   align-items: end; /* Подравняване на всички полета по долния край */
 }
+.customer{
+  grid-column: 1/2;
+}
+.type{
+  grid-column: 2/3;
+}
+.quadrature{
+  grid-column: 3/4;
+}
+.glass{
+  grid-column: 1/2;
+}
+.detail{
+  grid-column: 2/3;
+}
+.mosquito{
+  grid-column: 3/4;
+}
+.price{
+  grid-column: 1/2;
+}
+.for_date{
+  grid-column: 2/3;
+}
+.note{
+  grid-column: 3/4;
+}
+.create-submit{
+  grid-column: 2/3;
+}
+
 .form-field-create,
 .form-field.form-check {
   display: flex;
@@ -431,21 +596,37 @@ button[type="submit"] {
 table {
   width: 100%;
   border-collapse: collapse;
+  
 }
+
 
 
 th, td {
   border: 1px solid #ddd;
   padding: 8px;
   background-color: hsl(210, 14%, 97%);
+  align-content: center;
+  text-align: center !important;
+  align-items: center;
 }
 
-th {
-  background-color: #f2f2f2;
+.table-sticky th {
+  background: #fff;
+  border-bottom: 2px solid #ddd;
   position: sticky;
   top: 0;
-  z-index: 1; /* За да стои над клетките на таблицата */
+  z-index: 990;
 }
+.table .thead-light th {
+    color: hsl(204, 38%, 97%);
+    background-color: #434b53;
+    border-color: #1b1b1b;
+}
+.table-sm td {
+  padding: 0.5em !important;
+}
+
+
 
 /* за страницата подробна справка за поръчка */
 .example-wrapper {

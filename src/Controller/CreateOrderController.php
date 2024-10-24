@@ -19,6 +19,10 @@ use App\Repository\GlassRepository;
 use App\Repository\DetailRepository;
 use App\Repository\MosquitoRepository;
 use App\Repository\StatusRepository;
+use App\Entity\StatusHistory;
+use App\Entity\GlassHistory;
+use App\Entity\DetailHistory;
+use App\Entity\MosquitoHistory;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Doctrine\DBAL\LockMode;
 use Symfony\Component\Form\FormError;
@@ -32,9 +36,12 @@ class CreateOrderController extends AbstractController
     #[Route('/create/order', name: 'app_create_order')]
     
     public function index(EntityManagerInterface $entityManager, OrderRepository $orderRepository,
-                         TypeMontageRepository $typeMontageRepository, GlassRepository $glassRepository,
-                         DetailRepository $detailRepository, MosquitoRepository $mosquitoRepository,
-                         StatusRepository $statusRepository, ValidatorInterface $validator, 
+                         TypeMontageRepository $typeMontageRepository, 
+                          GlassRepository $glassRepository,
+                          DetailRepository $detailRepository,
+                         MosquitoRepository $mosquitoRepository,
+                         StatusRepository $statusRepository, 
+                         ValidatorInterface $validator, 
                          SessionInterface $session, Request $request): Response
     {
         
@@ -123,13 +130,41 @@ class CreateOrderController extends AbstractController
                 $order->setStatus($status);
                 if($data['glass'] == 'true'){
                 $order->setGlass($glass);
+                //създаване на клас GlassHistory за запазване в БД
+                $glassHistory = new GlassHistory();
+                $glassHistory->setOrder($order);
+                $glassHistory->setUser($user);
+                $glassHistory->setGlass($glass);
+                $glassHistory->setNumberOrder($numberOrder);
+                $entityManager->persist($glassHistory);
                 }
                 if($data['detail'] == 'true'){
                     $order->setDetail($detail);
+                //създаване на клас DetailHistory за запазване в БД
+                $detailHistory = new DetailHistory();
+                $detailHistory->setOrder($order);
+                $detailHistory->setUser($user);
+                $detailHistory->setDetail($detail);
+                $detailHistory->setNumberOrder($numberOrder);
+                $entityManager->persist($detailHistory);
                 }
                 if($data['mosquito'] == 'true'){
                     $order->setMosquito($mosquito);
+                //създаване на клас MosquitoHistory за запазване в БД
+                $mosquitoHistory = new MosquitoHistory();
+                $mosquitoHistory->setOrder($order);
+                $mosquitoHistory->setUser($user);
+                $mosquitoHistory->setMosquito($mosquito);
+                $mosquitoHistory->setNumberOrder($numberOrder);
+                $entityManager->persist($mosquitoHistory);
                 }
+                //създаване на клас StatusHistory за запазване в БД
+                $statusHistory = new StatusHistory();
+                $statusHistory->setOrder($order);
+                $statusHistory->setUser($user);
+                $statusHistory->setStatus($status);
+                $statusHistory->setNumberOrder($numberOrder);
+                $entityManager->persist($statusHistory);
     
                 $entityManager->persist($order);
                 $entityManager->flush();

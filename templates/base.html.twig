@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="bg">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}PVC{% endblock %}</title>
@@ -21,52 +21,42 @@
     {% block javascripts %}
         {{ encore_entry_script_tags('app') }}
     {% endblock %}
-
-    <!-- Включете jQuery, Popper.js и Bootstrap JavaScript тук, ако ги използвате -->
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" 
             integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" 
-            crossorigin="anonymous" defer></script>
-    
+            crossorigin="anonymous" defer>
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" 
             integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" 
-            crossorigin="anonymous" defer></script>
-
+            crossorigin="anonymous" defer>
+    </script>
 </head>
-<body data-turbo="true">
+<body data-turbo="true"> 
     <div class="container-fluid">
-        <!-- Header Section -->
-        <div class="row">
-            <div class="{% if is_granted('IS_AUTHENTICATED_FULLY') %}col-12 header{% else %}col-12 headerLogin{% endif %}">
-                
-                <img class="img-fluid" src="{{ asset('build/images/logo.png') }}" alt="logo">
-                <h2>Потребител: 
-                    {% if is_granted('ROLE_USER') or is_granted('ROLE_SUPER_USER') or is_granted('ROLE_ADMIN') %}
-                        {{ app.user.name }}
-                    {% else %}
-                        гост
-                    {% endif %}
-                </h2>
-                
+        <div class="row {% if is_granted('IS_AUTHENTICATED_FULLY') %} header {% else %} headerLogin {% endif %}">
+            <div class="col-sm-10">
+                <img class="img" src="{{ asset('build/images/logo.png') }}" alt="logo" width="230" height="170">
             </div>
-        </div>
-    
-        <!-- Flash Messages -->
-        {% for message in app.flashes('success') %}
-            <div class="alert alert-success custom-alert">
-                {{ message }}
+             {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            <div class="col-sm-2 user-col">
+                <p class="user-text">Потребител: {{ app.user.name }}</p>
             </div>
-        {% endfor %}
-        
-        <div id="successMessage" class="alert alert-success" style="display: none;">
-            Статусите бяха успешно променени!
+            {% endif %}
+            </div>
         </div>
     </div>
-        <!-- Main Content Section -->
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success custom-alert">
+            {{ message }}
+        </div>
+    {% endfor %}
         
-                
-                {% block body %}{% endblock %}
-                
-
+    <div id="successMessage" class="alert alert-success" style="display: none;">
+        Статусите бяха успешно променени!
+    </div>
+    
+    
+    {% block body %}{% endblock %}
+    
 </body> 
 </html>
 

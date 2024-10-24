@@ -18,22 +18,31 @@
             background-image: url('{{ asset('build/images/IMG_6529.jpg') }}');
         }
     </style>
-    
-      <form class="mx-auto" action="{{ path('app_login') }}" method="post" >
-        <div class="mb-3 mt-5">
-          <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-          <h4 class="text-center">Login</h4>
-          <label for="username" class="form-label">Email address</label>
-          <input type="text" class="form-control" id="username" aria-describedby="emailHelp" name="_username" value="{{ last_username }}">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-sm-10 col-md-8 col-lg-6">
+          <form class="mx-auto" action="{{ path('app_login') }}" method="post" >
+            <div class="mb-3 mt-5">
+              <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+              <h4 class="text-center">Login</h4>
+              <label for="email" class="form-label">Email address</label>
+              <input type="text" class="form-control" id="email" aria-describedby="emailHelp" name="email" value="{{ last_username }}">
+            </div>
+            <div class="mb-3">
+              <label for="exampleInputPassword1" class="form-label">Password</label>
+              <input type="password" class="form-control" id="exampleInputPassword1" name="_password">
+            </div>
+            <div class="form-check mb-3">
+                    <label>
+                        <input type="checkbox" name="_remember_me" class="form-check-input"> Remember me
+                    </label>
+                </div>
+            <input type="hidden" name="_target_path" value="/order">
+            <button type="submit" value="/order" class="btn btn-primary">ВХОД</button>
+          </form>
         </div>
-        <div class="mb-3">
-          <label for="exampleInputPassword1" class="form-label">Password</label>
-          <input type="password" class="form-control" id="exampleInputPassword1" name="_password">
-        </div>
-        <input type="hidden" name="_target_path" value="/order">
-        <button type="submit" value="/order" class="btn btn-primary">Login</button>
-      </form>
-    
+      </div>
+    </div>
 
     
   

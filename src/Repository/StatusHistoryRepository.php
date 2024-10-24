@@ -70,8 +70,9 @@ class StatusHistoryRepository extends ServiceEntityRepository
 
         }
         */
-        public function findByDate(\DateTimeInterface $date)
+        public function findByDate(\DateTimeInterface $date, $statusId)
         {
+            
             $query = $this->entityManager->createQuery(
                 "SELECT statuses, _status, _user, _order, customer.name AS customerName, _type.name AS typeName
                 FROM App\Entity\StatusHistory statuses 
@@ -81,10 +82,10 @@ class StatusHistoryRepository extends ServiceEntityRepository
                 JOIN _order.customer customer
                 JOIN _order.type _type
                 WHERE DATE(statuses.createdAt) = :date
-                AND _status.name = :statusName"
+                AND _status.id = :statusId"
             );
             $query->setParameter('date', $date->format('Y-m-d'));
-            $query->setParameter('statusName', 'Готова');
+            $query->setParameter('statusId', $statusId);
             $queryResult = $query->getArrayResult();
 
             return $queryResult;
@@ -141,7 +142,7 @@ class StatusHistoryRepository extends ServiceEntityRepository
                 JOIN statuses._order _order
                 JOIN _order.customer customer
                 JOIN _order.type _type
-                WHERE DATE(statuses.createdAt) = :date
+                WHERE DATE(statuses.createdAt) = :date 
                 AND _status.id = :statusId"
             );
             $query->setParameter('date', $date->format('Y-m-d'));

@@ -53,12 +53,12 @@ public function index(
     DetailRepository $detailRepository, 
     Request $request, 
     SessionInterface $session,
-    PaginatorInterface $paginator
+    PaginatorInterface $paginator,
 ): Response {
     // Маркер за начало на изпълнението
     $start = microtime(true);
-    $user = $this->getUser();
     
+    $user = $this->getUser();
     if (!$user) {
         return new RedirectResponse($this->generateUrl('app_login'));
     }
@@ -79,18 +79,33 @@ public function index(
     //$template = $isAjax ? '_list.html.twig' : 'index.html.twig';
     
     $session = $request->getSession();
+    
+    /*$parameters = $request->query->all(); // Вземи всички параметри
+    $sort = $queryParameters['search_form']['sort'] ?? null; // Вземи 'sort' или null, ако не съществува
+    dd($sort);*/
+    $sort = $request->query->get('sort', 'id');
+    $sortDirection = $request->query->get('sortDirection', 'desc');
+    
+
+
     $form = $this->createForm(SearchFormType::class, null, [
         'method' => 'GET',
         'csrf_protection' => false,
     ]);
+    //dd($sort);
     $form->handleRequest($request);
-    //dd($request);
+   //dd($form);
+   $parameters = $request->query->all();
+   //$request->query->remove('sort');
+    //dd($parameters);
     if ($form->isSubmitted() && $form->isValid()) {
         
         //$request->query->set('page', 1); // Принудително задаваме page на 1 при ново търсене
         $data = $form->getData();
+       //dd($data);
         // Получаваме стойността на totalPages от GET заявката
         $totalPages = $request->query->get('totalPages', 1); 
+        
         
         $customer = $data['customer'];
         $type = $data['type'];
@@ -105,8 +120,10 @@ public function index(
         $queryBuilder = $orderRepository->createQueryBuilder('o')
             ->andWhere('o.createdAt >= :fromDate AND o.createdAt < :toDate')
             ->setParameter('fromDate', $fromDate)
-            ->setParameter('toDate', $toDate);
-
+            ->setParameter('toDate', $toDate)
+            ->orderBy('o.'. $sort, $sortDirection);
+            
+        
         if ($customer !== null) {
             $queryBuilder->andWhere('o.customer = :customer')
             ->setParameter('customer', $customer);
@@ -148,19 +165,23 @@ public function index(
         } else {
             $filter = false;
         }
+        //dd($queryBuilder);
+     /*   if ($sort === 'true') {
+            $queryBuilder->orderBy('o.price', 'DESC');
+        } else {
+            // Сортиране по id (по подразбиране)
+            $queryBuilder->orderBy('o.id', 'DESC');
+        }*/
+
         $queryBuilderForTotal = clone $queryBuilder;
         $totalSum = $queryBuilderForTotal
             ->select('SUM(o.quadrature)', 'SUM(o.price)', 'SUM(o.paid)', 'COUNT(o.id)')
             ->getQuery()
             ->getResult();
-            
-
-        
-
-        $orders = $queryBuilder
-            ->orderBy('o.id', 'DESC')
-            ->getQuery()
-            ->getResult();
+          $orders = $queryBuilder
+           ->orderBy('o.'. $sort, $sortDirection)
+           ->getQuery()
+           ->getResult();
         
 
         $adapter = new QueryAdapter($queryBuilder);
@@ -176,13 +197,8 @@ public function index(
         //dump($currentPageResults);
         //dump($pagerfanta);
 
-        $pagination = $paginator->paginate(
-            $queryBuilder, // query NOT result
-            $request->query->getInt('page', 1), // current page number
-            9 // limit per page
-        );
-        //dd($pagination);
-        $session->set('order_search_results', $orders);
+        
+       //$session->set('order_search_results', $orders);
         $lastStatus = $this->lastStatus($request, $statusRepository, $glassRepository, $mosquitoRepository, $detailRepository);
         //$orders = $pagerfanta->getCurrentPageResults();
         
@@ -205,9 +221,15 @@ public function index(
             'checkbox_status_detail' => $checkboxStatusDetail,
             'checkbox_status_mosquito' => $checkboxStatusMosquito,
             'total_sum' => $totalSum,
-            'totalPages' => $totalPages
+            'totalPages' => $totalPages,
+            'sort' => $sort,
+            'sortDirection' => $sortDirection
         ]); 
     }
+    
+
+
+
 
     $user = $this->getUser()->getRoles();
     
@@ -215,40 +237,52 @@ public function index(
     $fromDate = (clone $dateObject)->modify('-90 days')->format('Y-m-d');
     $toDate = (clone $dateObject)->modify('+1 day')->format('Y-m-d');
     //dd($request);
-    
+     
     $queryBuilder = $orderRepository->createQueryBuilderForAllOrders('o')
-       ->andWhere('o.createdAt >= :fromDate AND o.createdAt < :toDate')
+        ->andWhere('o.createdAt >= :fromDate AND o.createdAt < :toDate')
         ->setParameter('fromDate', $fromDate)
         ->setParameter('toDate', $toDate);
+
+        // Определяме сортиране
+        // Ако сортираме по баланс, винаги сортирай в низходящ ред
+        if ($sort === 'balance') {
+            $queryBuilder->orderBy('o.' . $sort, 'desc'); // Винаги е 'desc' за balance
+        } else {
+            // За всички други полета сортирай по зададеното поле и посока
+            $queryBuilder->orderBy('o.' . $sort, $sortDirection);
+        }
+        // Ако кликнем на "Номер" или друга колона, трябва да променим посоката
+    if ($sort === 'id' && $sortDirection === 'asc') {
+        $sortDirection = 'desc';
+    } elseif ($sort === 'id' && $sortDirection === 'desc') {
+        $sortDirection = 'asc';
+    }
+    //$request->query->remove('sort');
 
     $queryBuilderForTotal = clone $queryBuilder;
         $totalSum = $queryBuilderForTotal
             ->select('SUM(o.quadrature)', 'SUM(o.price)', 'SUM(o.paid)', 'COUNT(o.id)')
             ->getQuery()
             ->getResult();
-
-
     $adapter = new QueryAdapter($queryBuilder);
     $current = $request->query->get('page', 1);
-    
-    //dump($current);
     $pagerfanta = Pagerfanta::createForCurrentPageWithMaxPerPage(
         $adapter,
         $request->query->get('page', 1),
         15
     );
     $totalPages = $pagerfanta->getNbPages();  // Общият брой страници при първоначалното зареждане
-    
+    //dd($pagerfanta);
     $currentPageResults = $pagerfanta->getCurrentPage();
     //dump($currentPageResults);
-    $currentPage = $currentPageResults;
+   $currentPage = $currentPageResults;
 
-    $pagination = $paginator->paginate(
-        $queryBuilder, // query NOT result
-        $request->query->getInt('page', 1), // current page number
-        9 // limit per page
-    );
+    
+   
     $orders = $orderRepository->findBy([], ['id' => 'DESC']);
+    
+        
+    
     $session->set('order_search_results', $orders);
     $lastStatus = $this->lastStatus($request, $statusRepository, $glassRepository, $mosquitoRepository, $detailRepository);
     
@@ -266,7 +300,9 @@ public function index(
         'checkbox_status_detail' => false,
         'checkbox_status_mosquito' => false,
         'totalPages' => $totalPages,  // Подаваме общия брой страници
-        'total_sum' => $totalSum
+        'total_sum' => $totalSum,
+        'sort' => $sort,
+        'sortDirection' => $sortDirection
     ]);
     
     return $response;
@@ -308,16 +344,18 @@ public function index(
     {       
         //dd($order);
         // Вземаме стойността на полето for_date от обекта Order
-    $forDate = $order->getForDate();
+        $forDate = $order->getForDate();
     
-    // Проверяваме дали датата е по-стара от днешната
-    if ($forDate < new \DateTimeImmutable('today')) {
-        // Ако датата е в миналото, показваме съобщение и прекратяваме обработката
-        $this->addFlash('error', 'Не можете да редактирате поръчки с минала дата.');
+        // Проверяваме дали датата е по-стара от днешната
+        if ($forDate < new \DateTimeImmutable('today')) {
+            // Ако датата е в миналото, показваме съобщение и прекратяваме обработката
+            $this->addFlash('error', 'Не можете да редактирате поръчки с минала дата.');
         
-        // Може да направите пренасочване към страница или друга логика
+            // Може да направите пренасочване към страница или друга логика
         return $this->redirectToRoute('app_order'); // или друга страница
-    }
+        }
+        $user = $this->getUser();
+        $numberOrder = $order->getNumber();
        if ($order->getGlass() !== null ) {
             $glassValue = true;
         } else{
@@ -330,7 +368,7 @@ public function index(
         $form = $this->createForm(OrderType::class, $order, [
             'glass_value' => $glassValue,
             'mosquito_value' => $mosquitoValue,
-            'detail_value' => $detailValue
+            'detail_value' => $detailValue,
         ]);
         $form->handleRequest($request);
         //dd($form);
@@ -339,8 +377,7 @@ public function index(
         if ($request->getMethod() === 'POST') {
             $formData = $request->request->all(); // Вземаме всички POST данни
             //dd($form->getData()->getForDate());
-            
-            //$order->setNote($note);
+           
             //$glassValue = $formData['order']['glass'];
             //dd($glassValue);
             $newGlassValue = isset($formData['order']['glass']) ? (bool) $formData['order']['glass'] : false;
@@ -364,8 +401,8 @@ public function index(
                     }
                 }
             }
-           
-           
+            
+            
             /** @var UploadedFile $uploadedFile */
             $uploadedFile = $form['schemeFile']->getData();
             
@@ -387,18 +424,34 @@ public function index(
                 $order->setScheme($newFilename);
 
             }
-            $glass = $form['glass']->getData(); 
+            //dd($form->all());
+            $glass = $form['glass']->getData();
             $newGlass = $form['newGlass']->getData();
+            //dd($newGlass);
             if ($newGlass !== $glass ) {
-                if ($newGlass == true) {
+                if ($newGlass == true ) {
                     $newGlassId = $glassRepository->createQueryBuilder('g')
                     ->select('MIN(g.id)')
                     ->getQuery()
                     ->getSingleScalarResult();
                     $newGlass = $glassRepository->findOneBy(['id' => $newGlassId]);
                     $order->setGlass($newGlass);
+                    //създаване на клас GlassHistory за запазване в БД
+                $glassHistory = new GlassHistory();
+                $glassHistory->setOrder($order);
+                $glassHistory->setUser($user);
+                $glassHistory->setGlass($newGlass);
+                $glassHistory->setNumberOrder($numberOrder);
+                $entityManager->persist($glassHistory);
                 } else {
                     $order->setGlass(Null);
+                    //създаване на клас GlassHistory за запазване в БД
+                $glassHistory = new GlassHistory();
+                $glassHistory->setOrder($order);
+                $glassHistory->setUser($user);
+                $glassHistory->setGlass(Null);
+                $glassHistory->setNumberOrder($numberOrder);
+                $entityManager->persist($glassHistory);
                 }
             }
             $mosquito = $form['mosquito']->getData();
@@ -411,8 +464,22 @@ public function index(
                     ->getSingleScalarResult();
                     $newMosquito = $mosquitoRepository->findOneBy(['id' => $newMosquitoId]);
                     $order->setMosquito($newMosquito);
+                    //създаване на клас MosquitoHistory за запазване в БД
+                    $mosquitoHistory = new MosquitoHistory();
+                    $mosquitoHistory->setOrder($order);
+                    $mosquitoHistory->setUser($user);
+                    $mosquitoHistory->setMosquito($newMosquito);
+                    $mosquitoHistory->setNumberOrder($numberOrder);
+                    $entityManager->persist($mosquitoHistory);
                 } else {
                     $order->setMosquito(Null);
+                    //създаване на клас MosquitoHistory за запазване в БД
+                    $mosquitoHistory = new MosquitoHistory();
+                    $mosquitoHistory->setOrder($order);
+                    $mosquitoHistory->setUser($user);
+                    $mosquitoHistory->setMosquito(Null);
+                    $mosquitoHistory->setNumberOrder($numberOrder);
+                    $entityManager->persist($mosquitoHistory);
                 }
             }
             $detail = $form['detail']->getData();
@@ -425,12 +492,26 @@ public function index(
                     ->getSingleScalarResult();
                     $newDetail = $detailRepository->findOneBy(['id' => $newDetailId]);
                     $order->setDetail($newDetail);
+                    //създаване на клас DetailHistory за запазване в БД
+                    $detailHistory = new DetailHistory();
+                    $detailHistory->setOrder($order);
+                    $detailHistory->setUser($user);
+                    $detailHistory->setDetail($newDetail);
+                    $detailHistory->setNumberOrder($numberOrder);
+                    $entityManager->persist($detailHistory);
                 } else {
                     $order->setDetail(Null);
+                    //създаване на клас DetailHistory за запазване в БД
+                    $detailHistory = new DetailHistory();
+                    $detailHistory->setOrder($order);
+                    $detailHistory->setUser($user);
+                    $detailHistory->setDetail(Null);
+                    $detailHistory->setNumberOrder($numberOrder);
+                    $entityManager->persist($detailHistory);
                 }
             }
             
-
+            
             $entityManager->flush();
 
             return $this->redirectToRoute('app_order', [], Response::HTTP_SEE_OTHER);

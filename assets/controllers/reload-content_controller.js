@@ -57,10 +57,10 @@ export default class extends Controller {
         this.contentTarget.innerHTML = html;
        /* this.contentTarget.style.opacity = 1;*/
         // След като съдържанието е обновено, презареждаме страницата
-       /* setTimeout(() => {
+        setTimeout(() => {
             location.reload();  // Презареждане на страницата
         }, 0);  // Можеш да добавиш малко забавяне, ако е нужно
-*/
+
        
     }
 

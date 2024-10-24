@@ -13,10 +13,10 @@ class LoginController extends AbstractController
     #[Route('/index', name: 'app_login')]
     public function index(AuthenticationUtils $authenticationUtils, Security $security): Response
     {
-        // Ако потребителят вече е логнат, пренасочи го
-       /* if ($security->getUser()) {
-        return $this->redirectToRoute('app_order'); // Пренасочва към началната страница или друга
-    }*/
+        // Ако потребителят има запазена бисквитка REMEMBERME, пренасочи го
+        if ($security->isGranted('IS_AUTHENTICATED_FULLY')) {
+            return $this->redirectToRoute('app_order'); // Пренасочване към поръчките
+        }
 
         // get the login error if there is one
          $error = $authenticationUtils->getLastAuthenticationError();

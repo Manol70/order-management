@@ -83,6 +83,7 @@ class OrderRepository extends ServiceEntityRepository
             glass.name != 'Взет' OR 
             mosquito.name != 'Взет' OR 
             detail.name != 'Взет')"
+            
         );
         $query->setParameter('customerId', $customerId);
         $queryResult = $query->getArrayResult();
@@ -90,13 +91,14 @@ class OrderRepository extends ServiceEntityRepository
         return $queryResult;
     }
     
+    
 
 
     public function createQueryBuilderForAllOrders()
-{
-    return $this->createQueryBuilder('o')
-                ->orderBy('o.id', 'DESC');
-}
+    {
+        return $this->createQueryBuilder('o')
+                    ->orderBy('o.id', 'DESC');
+    }
 
 public function getTotalOrders( $fromDate,  $toDate)
 { 

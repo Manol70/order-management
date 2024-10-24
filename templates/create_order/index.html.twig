@@ -1,73 +1,73 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello CreateOrderController!{% endblock %}
+{% block title %}Нова поръчка{% endblock %}
 
 {% block body %}
 <style>
     
 </style>
 <div class="create-header">
-<a href="/order"><input type="button" class="btn btn-success" value="НАЧАЛНА СТРАНИЦА" data-turbo-frame="orders_frame"></a>
-<h1> НОВА ПОРЪЧКА № {{ numberOrder }} </h1>
+    <a href="/order"><input type="button" class="btn btn-success" value="НАЧАЛО" data-turbo-frame="orders_frame"></a>
+    <h2> НОВА ПОРЪЧКА № {{ numberOrder }} </h2>
 
-{# Показване на Flash съобщенията #}
-{% for message in app.flashes('error') %}
-    <div class="alert alert-danger">{{ message }}</div>
-{% endfor %}
+    {# Показване на Flash съобщенията #}
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger">{{ message }}</div>
+    {% endfor %}
 </div> 
 <div class="create-form-container">
     {{ form_start(createOrderData) }}
-    <div class="form-grid"> <!-- Използваме CSS grid layout тук -->
-        <div class="form-field-create">
+    <div class="form-grid">
+        <div class="form-field-create customer">
             {{ form_label(createOrderData.customer) }}
             {{ form_widget(createOrderData.customer, {'attr': {'class': 'form-control'}}) }}
         </div>
-        <div class="form-field-create">
+        <div class="form-field-create type">
             {{ form_label(createOrderData.type) }}
             {{ form_widget(createOrderData.type, {'attr': {'class': 'form-control'}}) }}
         </div>
-        <div class="form-field-create">
+        <div class="form-field-create quadrature">
             {{ form_label(createOrderData.quadrature) }}
             {{ form_widget(createOrderData.quadrature, {'attr': {'class': 'form-control'}}) }}
             {{ form_errors(createOrderData.quadrature) }} {# Показва грешки за полето quadrature #}
         </div>
-        <div class="form-field form-check ">
+        <div class="form-field form-check glass">
             {{ form_widget(createOrderData.glass, {'attr': {'class': 'form-check-input'}}) }}
             {{ form_label(createOrderData.glass, null, {'label_attr': {'class': 'form-check-label'}}) }}
         </div>
-        <div class="form-field form-check">
+        <div class="form-field form-check detail">
             {{ form_widget(createOrderData.detail, {'attr': {'class': 'form-check-input'}}) }}
             {{ form_label(createOrderData.detail, null, {'label_attr': {'class': 'form-check-label'}}) }}
         </div>
-        <div class="form-field form-check">
+        <div class="form-field form-check mosquito">
             {{ form_widget(createOrderData.mosquito, {'attr': {'class': 'form-check-input'}}) }}
             {{ form_label(createOrderData.mosquito, null, {'label_attr': {'class': 'form-check-label'}}) }}
         </div>
-        <div class="form-field-create">
+        <div class="form-field-create price">
             {{ form_label(createOrderData.price) }}
             {{ form_widget(createOrderData.price, {'attr': {'class': 'form-control'}}) }}
             {{ form_errors(createOrderData.price) }} {# Показва грешки за полето price #}
         </div>
-        <div class="form-field-create">
+        <div class="form-field-create for_date">
             {{ form_label(createOrderData.for_date) }}
             {{ form_widget(createOrderData.for_date, {'attr': {'class': 'form-control'}}) }}
             {{ form_errors(createOrderData.for_date) }} {# Показва грешки за полето for_date #}
         </div>
-        <div class="form-field-create">
+        <div class="form-field-create note">
             {{ form_label(createOrderData.note) }}
             {{ form_widget(createOrderData.note, {'attr': {'class': 'form-control'}}) }}
         </div>
-
-    {{ form_widget(createOrderData) }}
-       <div class="form-field-create" >  
-        <button type="submit" class="btn btn-primary create-submit">Създай поръчка!</button> 
+        <div class="form-field-create create-submit">  
+            {{ form_widget(createOrderData) }}
+            <button type="submit" class="btn btn-primary create-submit">Създай поръчка!</button> 
         </div>
     {{ form_end(createOrderData) }}
     </div>
 </div> 
 <h2 class="recent-orders-title">Последни поръчки</h2>
-<div class="clearfix"></div>
-<table class="table recent-orders-table">
+
+<div class="table-responsive-sm p-0 mt-2">
+    <table class="table table-sm table-hover table-sticky">
         <thead class="thead-light">
             <tr>
                 <th>Номер</th>
@@ -88,7 +88,7 @@
             </tr>
         </thead>
         <tbody>
-        {% for order in orders %}
+       {% for order in orders %}
             <tr >
                 <td> {{ order.number }} </td>
                 <td> {{ order.customer.name }} </td>
@@ -136,4 +136,7 @@
         {% endfor %}
             </tr>
         </tbody>
+    </table>
+</div>   
+ 
 {% endblock %}

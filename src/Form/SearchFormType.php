@@ -19,6 +19,9 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use DateTimeImmutable;
+use EasyCorp\Bundle\EasyAdminBundle\Field\HiddenField;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 
 class SearchFormType extends AbstractType
 {
@@ -87,7 +90,19 @@ class SearchFormType extends AbstractType
         ->add('source', HiddenType::class, [
             'data' => 'filter'
         ]);
-        
+      /* ->add('sort', HiddenType::class, [
+            'mapped' => false,
+            'data' => 'false', 
+       ]);
+     /*   ->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+            $data = $event->getData();
+    
+            // Винаги нулираме стойността на 'sort' при всяко ново изпращане на формата
+            $data['sort'] = 'false';
+            
+            $event->setData($data);
+        });
+        */
         
      
     }

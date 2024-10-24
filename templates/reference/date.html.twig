@@ -9,7 +9,7 @@
 <div class="example-wrapper">
     <a href="/order"><input type="button" class="btn btn-success" value="НАЧАЛО" data-turbo-frame="orders_frame" style="float: left; margin-top: 20px;"></a>
     
-    <h1>СПРАВКА ЗА {{ date|date('d.m.Y') }} </h1>
+    <h2>СПРАВКА ЗА {{ date|date('d.m.Y') }} </h2>
 
 <div class="reference-form" data-turbo="false">
     {{ form_start(referenceDateStatusForm) }}
@@ -30,8 +30,9 @@
         <button type="submit" class="btn btn-primary">Виж</button> 
         {{ form_end(referenceDateStatusForm) }}  
 </div>
-<table>
-    <thead>
+<div class="table-responsive-sm p-0 mt-2">
+    <table class="table table-sm table-hover table-sticky">
+        <thead class="thead-light"> 
         <tr>
             <th> ПОРЪЧКА № </th>
             <th> ТИП </th>
@@ -61,7 +62,6 @@
         </tr>
     </tfoot>
 </table>
-
 </div>
 
 {% endblock %}

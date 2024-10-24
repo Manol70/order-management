@@ -18,7 +18,7 @@ class GlassHistory
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?int $glass_id = null;
 
     #[ORM\Column]
@@ -36,6 +36,8 @@ class GlassHistory
     #[ORM\ManyToOne(inversedBy: 'glassHistories')]
     private ?Glass $glass = null;
 
+    
+
     public function getId(): ?int
     {
         return $this->id;
@@ -46,7 +48,7 @@ class GlassHistory
         return $this->glass_id;
     }
 
-    public function setGlassId(int $glass_id): static
+    public function setGlassId(?int $glass_id): static
     {
         $this->glass_id = $glass_id;
 
@@ -112,4 +114,6 @@ class GlassHistory
 
         return $this;
     }
+
+    
 }

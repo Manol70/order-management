@@ -3,14 +3,20 @@
 {% block title %}Edit Order{% endblock %}
 
 {% block body %}
-    <div class="create-header">
-<a href="/order"><input type="button" class="btn btn-success" value="НАЧАЛНА СТРАНИЦА" data-turbo-frame="orders_frame"></a>
-<h1> РЕДАКТИРАНЕ НА ПОРЪЧКА № {{ order.number }} </h1>
-
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-3">
+            <a href="/order"><input type="button" class="btn btn-success" value="НАЧАЛНА СТРАНИЦА" data-turbo-frame="orders_frame"></a>
+        </div>
+        <div class="col-sm-9">
+            <h2> РЕДАКТИРАНЕ НА ПОРЪЧКА № {{ order.number }} </h2>
+        </div>
+    </diV>
+</div>
 {# Показване на Flash съобщенията #}
 {% for message in app.flashes('error') %}
-    <div class="alert alert-danger">{{ message }}</div>
-{% endfor %}
+<div class="alert alert-danger">{{ message }}</div>
+    {% endfor %}
 </div> 
 <div class="create-form-container">
     {{ form_start(form) }}

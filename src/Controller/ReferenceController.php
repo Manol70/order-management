@@ -56,7 +56,7 @@ class ReferenceController extends AbstractController
         $glass = $glassHistoryRepository ->findByOrderId($orderId);
         $detail = $detailHistoryRepository->findByOrderId($orderId);
         $mosquito = $mosquitoHistoryRepository->findByOrderId($orderId);
-        
+        // dd($glass);
         return $this->render('reference/order.html.twig', [
             'order' => $order,
             'payments' => $payments,
@@ -186,7 +186,7 @@ class ReferenceController extends AbstractController
         // Извличане на статуса "Готова" от базата данни
     //$statusRepository = $entityManager->getRepository(Status::class);
     $defaultStatus = $statusRepository->findOneBy(['name' => 'Готова']);
-    //dd($defaultStatus);
+    $statusId = $defaultStatus->getId();
         
         
 
@@ -242,15 +242,16 @@ class ReferenceController extends AbstractController
                         'statuses' => $statuses,
                         'totalQuadrature' => $totalQuadrature,
                         'referenceDateStatusForm' => $form->createView()
-                    ]);
+                    ]); 
                 } elseif($type == null and $status != null){
                     $statusId = $status->getId();
+                    
                     $statuses = $statusHistoryRepository->findByDateAndStatusId($dateObject, $statusId);
                     $totalQuadrature = 0;
                     foreach ($statuses as $status) {
                         $totalQuadrature += $status[0]['_order']['quadrature'];
                     }
-                    //dd($status);
+                    
                     return $this->render('reference/date.html.twig', [
                         'date' => $newDate,
                         'statuses' => $statuses,
@@ -260,7 +261,7 @@ class ReferenceController extends AbstractController
                 }
             } else{
         //dd($request);   
-        $statuses = $statusHistoryRepository->findByDate($dateObject);
+        $statuses = $statusHistoryRepository->findByDate($dateObject, $statusId);
             }
         //dd($statuses);
         $totalQuadrature = 0;

@@ -28,7 +28,7 @@ class CustomerAutocompleteField extends AbstractType
         $resolver->setDefaults([
             'class' => Customer::class,
             'attr' => ['data-controller' => 'custom-autocomplete',],
-            'placeholder' => 'Избери клиент',
+            'placeholder' => 'Избери',
             // 'searchable_fields' => ['name'],
             'label' => 'Въведи клиент',
             'choice_label' => 'name',

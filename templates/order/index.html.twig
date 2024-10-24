@@ -12,104 +12,96 @@
   
 
   <style>
-        body {
-            
+        body { 
             /* Вмъкни стила за фоновата снимка чрез инлайн стил */
             /*background-image: url('{{ asset('build/images/IMG_6529.jpg') }}');*/
             background-color: #eee4e4; /*search-form-container */
         }
-    </style>
+    </style> 
 </head>
-   
-    <div class="btn-group" role="group" aria-label="Basic example">
-        <a href="/order" class="btn btn-primary">НАЧАЛО</a>
-        <a href="/admin" class="btn btn-primary">Админ</a>
-        <a href="{{ path('admin', { 'crudAction': 'new', 'crudControllerFqcn': 'App\\Controller\\Admin\\CustomerCrudController' }) }}" class="btn btn-primary">Нов клиент</a>
-        <a href="/create/order" class="btn btn-primary">Нова поръчка</a> 
-        {% if is_granted('ROLE_ADMIN') %}
-            <a href="/reference/index" class="btn btn-primary">Справка</a>
-        {% endif %}
-        <!-- Включване на бутоните в div елементите като част от същата btn-group -->
-        <div class="btn-group-item" {{ stimulus_controller('version-control', { isFullVersion: true }) }}>
-            <button data-action="version-control#toggle" data-version="1" class="btn btn-primary">Съкратена версия</button>
+<div class="container">
+    <div class="row">
+        <div class="btn-group" role="group" aria-label="Basic example">
+            <a href="/order" class="custom-btn">НАЧАЛО</a>
+            <a href="/admin" class="custom-btn">Админ</a>
+            <a href="{{ path('admin', { 'crudAction': 'new', 'crudControllerFqcn': 'App\\Controller\\Admin\\CustomerCrudController' }) }}" class="custom-btn">Нов клиент</a>
+            <a href="/create/order" class="custom-btn">Нова поръчка</a> 
+            <a href="/reference/index" class="custom-btn">Справка</a>
+            <div {{ stimulus_controller('version-control', { isFullVersion: true }) }}>
+                <button data-action="version-control#toggle" data-version="1" class="custom-btn">Съкратена версия</button>
+            </div>
+            <div class="short-version">
+                <a href="{{ path('export_table') }}" class="custom-btn">Експорт в Excel</a>
+            </div>
+            <a href="{{ path('app_logout') }}" class="custom-btn" data-turbo="false">ИЗХОД</a>
         </div>
-        <div class="btn-group-item short-version">
-            <a href="{{ path('export_table') }}" class="btn btn-primary">Експорт в Excel</a>
-        </div>
-        <a href="{{ path('app_logout') }}" class="btn btn-primary" data-turbo="false" onclick="setTimeout(function(){ window.location.reload(true); }, 100);">ИЗХОД</a>
     </div>
+</div>    
    {% for label, messages in app.flashes %}
     <div class="alert alert-{{ label }}" role="alert" style="color: red; font-weight: bold;">
         {% for message in messages %}
             {{ message }}
         {% endfor %}
     </div> 
-{% endfor %}
-
-<div class="search-form-container">
-    {{ form_start(searchForm, { 'method': 'GET', 'action': path('app_order'), turbo:"false" }) }}
-    
-    <div class="form-row align-items-end"> <!-- Това ще подравни полетата и бутона -->
-        <div class="form-field">
-            {{ form_label(searchForm.customer) }}
-            {{ form_widget(searchForm.customer, {'attr': {'class': 'form-control'}}) }}
-        </div>
-        <div class="form-field">
-            {{ form_label(searchForm.type) }}
-            {{ form_widget(searchForm.type, {'attr': {'class': 'form-control'}}) }}
-        </div>
-        <div class="form-field">
-            {{ form_label(searchForm.status) }}
-            {{ form_widget(searchForm.status, {'attr': {'class': 'form-control'}}) }}
-        </div>
-        <div class="form-field">
-            {{ form_label(searchForm.glass) }}
-            {{ form_widget(searchForm.glass, {'attr': {'class': 'form-control'}}) }}
-        </div>
-        <div class="form-field">
-            {{ form_label(searchForm.detail) }}
-            {{ form_widget(searchForm.detail, {'attr': {'class': 'form-control'}}) }}
-        </div>
-        <div class="form-field">
-            {{ form_label(searchForm.mosquito) }}
-            {{ form_widget(searchForm.mosquito, {'attr': {'class': 'form-control'}}) }}
-        </div>
-         <div class="form-field">
-            {{ form_label(searchForm.from_date) }}
-            {{ form_widget(searchForm.from_date, {'attr': {'class': 'form-control'}}) }}
-        </div>
-         <div class="form-field">
-            {{ form_label(searchForm.to_date) }}
-            {{ form_widget(searchForm.to_date, {'attr': {'class': 'form-control'}}) }}
-        </div>
-         <!-- Скрито поле за totalPages -->
-        <input type="hidden" name="totalPages" value="{{ totalPages }}" />
-        <div class="form-field">
-            <button type="submit" class="btn btn-primary submit-button">Виж поръчките</button> 
-        </div>
-
+    {% endfor %}
+<div class="container">
+    <div class="row">
+        <div class="search-form-container">
+            {{ form_start(searchForm, { 'method': 'GET', 'action': path('app_order'), turbo:"false" }) }}
+            <div class="form-row align-items-end"> <!-- Това ще подравни полетата и бутона -->
+                <div class="form-field">
+                    {{ form_label(searchForm.customer) }}
+                    {{ form_widget(searchForm.customer, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class="form-field">
+                    {{ form_label(searchForm.type) }}
+                    {{ form_widget(searchForm.type, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class="form-field">
+                    {{ form_label(searchForm.status) }}
+                    {{ form_widget(searchForm.status, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class="form-field">
+                    {{ form_label(searchForm.glass) }}
+                    {{ form_widget(searchForm.glass, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class="form-field">
+                    {{ form_label(searchForm.detail) }}
+                    {{ form_widget(searchForm.detail, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class="form-field">
+                    {{ form_label(searchForm.mosquito) }}
+                    {{ form_widget(searchForm.mosquito, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class="form-field">
+                    {{ form_label(searchForm.from_date) }}
+                    {{ form_widget(searchForm.from_date, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class="form-field">
+                    {{ form_label(searchForm.to_date) }}
+                    {{ form_widget(searchForm.to_date, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <!-- Скрито поле за totalPages -->
+                <input type="hidden" name="totalPages" value="{{ totalPages }}" />
+                <div class="form-field">
+                    <button type="submit" class="btn btn-primary submit-button">Виж поръчките</button> 
+                </div>
+            </div>
+            {{ form_end(searchForm) }}
+        </div> 
     </div>
-    
-    {{ form_end(searchForm) }}
-    
-</div>
-
+</div>  
  
 <div {{ stimulus_controller('reload-content',{
     url: path('app_order', { ajax: 1 }),
     totalPages: totalPages|json_encode 
-    
-}) }}
-data-action="modal-form:success->reload-content#refreshContent"
+    }) }}
+    data-action="modal-form:success->reload-content#refreshContent"
 >
    <div data-reload-content-target="content">
-    
-        {% include 'order/_list.html.twig' %}
-       
-    </div>
-
+   {% include 'order/_list.html.twig' %}  
+   </div>
 </div>
-
 
 
 

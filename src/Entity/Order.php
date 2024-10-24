@@ -105,6 +105,11 @@ class Order
     #[ORM\OneToMany(mappedBy: '_order', targetEntity: DetailHistory::class)]
     private Collection $detailHistories;
 
+    #[ORM\Column(type: "decimal", precision: 10, scale: 2, nullable: false)]
+    private float $balance = 0.00;
+
+    
+
     
 
     public function __construct()
@@ -166,6 +171,7 @@ class Order
     public function setPrice(float $price): static
     {
         $this->price = $price;
+        $this->updateBalance(); // Актуализирай баланса, ако се промени цената
 
         return $this;
     }
@@ -178,9 +184,16 @@ class Order
     public function setPaid(float $paid): static
     {
         $this->paid = $paid;
+        $this->updateBalance(); // Актуализирай баланса при всяко плащане
 
         return $this;
     }
+
+    private function updateBalance(): void
+    {
+        $this->balance = $this->price - $this->paid;
+    }
+
 
     public function getScheme(): ?string
     {
@@ -433,5 +446,17 @@ class Order
 
         return $this;
     }
+
+    public function getBalance(): ?float
+    {
+        return $this->balance;
+    }
+//Данните се сетват автоматично при промяна на price и paid  
+/*    public function setBalance(?float $balance): static
+    {
+        $this->balance = $balance;
+
+        return $this;
+    }*/
     
 }
