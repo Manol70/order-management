@@ -29,7 +29,7 @@ export default class extends Controller {
         if(totalPagesFromUrl !==null && currentPage > totalPagesFromUrl){
             filterForm = true;
             console.log("filterForm:", filterForm);
-            alert("Проверка на URL");
+            
         }
         //this.urlValue = window.location.origin + '/order/?ajax=1&page=' + currentPage;
         const urlSearch = window.location.search;
@@ -38,11 +38,11 @@ export default class extends Controller {
         if(filterForm == true){
             this.urlValue = window.location.origin + '/order/?ajax=1' +urlSearch;
             console.log("Updated URL1:", this.urlValue);
-            alert("Проверка на URL1");
+            
         } else{
             this.urlValue = window.location.origin + '/order/?ajax=1&page=' + currentPage;
             console.log("Updated URL2:", this.urlValue);
-            alert("Проверка на URL2");
+            
         }
         console.log("Updated URL:", this.urlValue);
     }

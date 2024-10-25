@@ -26,84 +26,49 @@ class StatusHistoryRepository extends ServiceEntityRepository
         $this->entityManager = $entityManager;
     }
 
-//    /**
-//     * @return StatusHistory[] Returns an array of StatusHistory objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('s.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?StatusHistory
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
-
-        public function findByOrderId($orderId): array
-        {
-            return $this->createQueryBuilder('p')
-                ->andWhere('p._order = :orderId')
-                ->setParameter('orderId', $orderId)
-                ->getQuery()
-                ->getResult();
-        }
+    public function findByOrderId($orderId): array
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p._order = :orderId')
+            ->setParameter('orderId', $orderId)
+            ->getQuery()
+            ->getResult();
+    }
         
-       /* public function findByDate1($date)
-        {
-            return $this->createQueryBuilder('s')
-                ->andwhere('DATE(s.createdAt) = :date')
-                ->setParameter('date', $date->format('Y-m-d'))
-                ->getQuery()
-                ->getResult();
-
-        }
-        */
-        public function findByDate(\DateTimeInterface $date, $statusId)
-        {
-            
-            $query = $this->entityManager->createQuery(
-                "SELECT statuses, _status, _user, _order, customer.name AS customerName, _type.name AS typeName
-                FROM App\Entity\StatusHistory statuses 
-                JOIN statuses.status _status
-                JOIN statuses.user _user
-                JOIN statuses._order _order
-                JOIN _order.customer customer
-                JOIN _order.type _type
-                WHERE DATE(statuses.createdAt) = :date
-                AND _status.id = :statusId"
-            );
+    public function findByDate(\DateTimeInterface $date, $statusId)
+     {
+        $query = $this->entityManager->createQuery(
+            "SELECT statuses, _status, _user, _order, customer.name AS customerName, _type.name AS typeName
+            FROM App\Entity\StatusHistory statuses 
+            JOIN statuses.status _status
+            JOIN statuses.user _user
+            JOIN statuses._order _order
+            JOIN _order.customer customer
+            JOIN _order.type _type
+            WHERE DATE(statuses.createdAt) = :date
+            AND _status.id = :statusId"
+        );
             $query->setParameter('date', $date->format('Y-m-d'));
             $query->setParameter('statusId', $statusId);
             $queryResult = $query->getArrayResult();
 
             return $queryResult;
-        }
-        public function findByDateAndTypeId(\DateTimeInterface $date, int $typeId)
-        {
-            $query = $this->entityManager->createQuery(
-                "SELECT statuses, _status, _user, _order, customer.name AS customerName, _type.name AS typeName
-                FROM App\Entity\StatusHistory statuses 
-                JOIN statuses.status _status
-                JOIN statuses.user _user
-                JOIN statuses._order _order
-                JOIN _order.customer customer
-                JOIN _order.type _type
-                WHERE DATE(statuses.createdAt) = :date
-                AND _status.name = :statusName
-                AND _type.id = :typeId"
-            );
+    }
+
+    public function findByDateAndTypeId(\DateTimeInterface $date, int $typeId)
+    {
+        $query = $this->entityManager->createQuery(
+            "SELECT statuses, _status, _user, _order, customer.name AS customerName, _type.name AS typeName
+            FROM App\Entity\StatusHistory statuses 
+            JOIN statuses.status _status
+            JOIN statuses.user _user
+            JOIN statuses._order _order
+            JOIN _order.customer customer
+            JOIN _order.type _type
+            WHERE DATE(statuses.createdAt) = :date
+            AND _status.name = :statusName
+            AND _type.id = :typeId"
+        );
             $query->setParameter('date', $date->format('Y-m-d'));
             $query->setParameter('statusName', 'Готова');
             $query->setParameter('typeId', $typeId);
@@ -111,61 +76,62 @@ class StatusHistoryRepository extends ServiceEntityRepository
 
             return $queryResult;
         }
-        public function findByDateTypeIdStatusId(\DateTimeInterface $date, int $typeId, int $statusId)
-        {
-            $query = $this->entityManager->createQuery(
+
+    public function findByDateTypeIdStatusId(\DateTimeInterface $date, int $typeId, int $statusId)
+    {
+        $query = $this->entityManager->createQuery(
                 "SELECT statuses, _status, _user, _order, customer.name AS customerName, _type.name AS typeName
-                FROM App\Entity\StatusHistory statuses 
-                JOIN statuses.status _status
-                JOIN statuses.user _user
-                JOIN statuses._order _order
-                JOIN _order.customer customer
-                JOIN _order.type _type
-                WHERE DATE(statuses.createdAt) = :date
-                AND _status.id = :statusId
-                AND _type.id = :typeId"
-            );
+            FROM App\Entity\StatusHistory statuses 
+            JOIN statuses.status _status
+            JOIN statuses.user _user
+            JOIN statuses._order _order
+            JOIN _order.customer customer
+            JOIN _order.type _type
+            WHERE DATE(statuses.createdAt) = :date
+            AND _status.id = :statusId
+            AND _type.id = :typeId"
+        );
             $query->setParameter('date', $date->format('Y-m-d'));
             $query->setParameter('statusId', $statusId);
             $query->setParameter('typeId', $typeId);
             $queryResult = $query->getArrayResult();
 
             return $queryResult;
-        }
-        public function findByDateAndStatusId(\DateTimeInterface $date, int $statusId)
-        {
-            $query = $this->entityManager->createQuery(
-                "SELECT statuses, _status, _user, _order, customer.name AS customerName, _type.name AS typeName
-                FROM App\Entity\StatusHistory statuses 
-                JOIN statuses.status _status
-                JOIN statuses.user _user
-                JOIN statuses._order _order
-                JOIN _order.customer customer
-                JOIN _order.type _type
-                WHERE DATE(statuses.createdAt) = :date 
-                AND _status.id = :statusId"
-            );
+    }
+
+    public function findByDateAndStatusId(\DateTimeInterface $date, int $statusId)
+    {
+        $query = $this->entityManager->createQuery(
+            "SELECT statuses, _status, _user, _order, customer.name AS customerName, _type.name AS typeName
+            FROM App\Entity\StatusHistory statuses 
+            JOIN statuses.status _status
+            JOIN statuses.user _user
+            JOIN statuses._order _order
+            JOIN _order.customer customer
+            JOIN _order.type _type
+            WHERE DATE(statuses.createdAt) = :date 
+            AND _status.id = :statusId"
+        );
             $query->setParameter('date', $date->format('Y-m-d'));
             $query->setParameter('statusId', $statusId);
             $queryResult = $query->getArrayResult();
 
             return $queryResult;
-        }
-        public function findByDateAllTypeStatus(\DateTimeInterface $date)
-        {
-            $query = $this->entityManager->createQuery(
-                "SELECT statuses, _status, _user, _order, customer.name AS customerName, _type.name AS typeName
-                FROM App\Entity\StatusHistory statuses 
-                JOIN statuses.status _status
-                JOIN statuses.user _user
-                JOIN statuses._order _order
-                JOIN _order.customer customer
-                JOIN _order.type _type
-                WHERE DATE(statuses.createdAt) = :date"
-                
-            );
-            $query->setParameter('date', $date->format('Y-m-d'));
-            
+    }
+
+    public function findByDateAllTypeStatus(\DateTimeInterface $date)
+    {
+        $query = $this->entityManager->createQuery(
+            "SELECT statuses, _status, _user, _order, customer.name AS customerName, _type.name AS typeName
+            FROM App\Entity\StatusHistory statuses 
+            JOIN statuses.status _status
+            JOIN statuses.user _user
+            JOIN statuses._order _order
+            JOIN _order.customer customer
+            JOIN _order.type _type
+            WHERE DATE(statuses.createdAt) = :date"                
+        );
+            $query->setParameter('date', $date->format('Y-m-d'));    
             $queryResult = $query->getArrayResult();
 
             return $queryResult;

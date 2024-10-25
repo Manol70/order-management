@@ -22,13 +22,13 @@ class MosquitoHistoryRepository extends ServiceEntityRepository
     }
 
     public function findByOrderId($orderId): array
-        {
-            return $this->createQueryBuilder('p')
-                ->andWhere('p._order = :orderId')
-                ->setParameter('orderId', $orderId)
-                ->getQuery()
-                ->getResult();
-        }   
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p._order = :orderId')
+            ->setParameter('orderId', $orderId)
+            ->getQuery()
+            ->getResult();
+    }   
 
 //    /**
 //     * @return MosquitoHistory[] Returns an array of MosquitoHistory objects

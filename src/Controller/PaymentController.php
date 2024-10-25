@@ -2,18 +2,12 @@
 
 namespace App\Controller;
 
-use App\Form\PaymentForm;
 use App\Entity\Payment;
 use App\Repository\OrderRepository;
 use App\Repository\CustomerRepository;
 use App\Form\PaymentType;
 use App\Repository\PaymentRepository;
 use App\Entity\Order;
-use App\Entity\User;
-use App\Repository\UserRepository;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -35,55 +29,32 @@ class PaymentController extends AbstractController
     #[Route('/payables', name: 'app_payment_payables', methods: ['GET', 'POST'])]
     public function payables(Request $request, EntityManagerInterface $entityManager, OrderRepository $orderRepository, CustomerRepository $customerRepository): Response
     {
-        //$customer_id = $request->request->get('customerId');
         $scrollPosition = $request->request->get('scrollPosition');
-    //dd($scrollPosition, $customerId);
-
-    // Добавете логове за дебъгване
-   
-
-    if ($scrollPosition) {
-        $request->getSession()->set('scrollPosition', $scrollPosition);
-    }
-        $user = $this->getUser();
-        $roles = $this->getUser()->getRoles();
-        //dd($request);
+        if ($scrollPosition) {
+            $request->getSession()->set('scrollPosition', $scrollPosition);
+        }
         $customer_id = $request->query->get('customerId');
-        //dd($customer_id);
         $orders = $orderRepository->getUnpaidOrdersByCustomerId($customer_id);
-        //dd($orders);
         $order = $orderRepository->findOneBy(['customer' => $customer_id]);
         $customer = $order->getCustomer();
-        //dd($customer);
         $customerName = $order->getCustomer()->getName();
-        
-        // Създаване на форма за въвеждане на плащания
-        
          
         $form = $this->createForm(PaymentType::class,);
-        
         $form->handleRequest($request);
             
         if ($form->isSubmitted() && $form->isValid()) {
-            //dd($request->request->all());
             $orderPaymentsJson = $request->request->get('orderPaymentsJson');
-            // dd($orderPaymentsJson);
             $orderPayments = json_decode($orderPaymentsJson, true);
-            //dd($orderPayments);
             $data = $form->getData();
-            //dd($data);
 
             $this->processPayments($orderPayments, $entityManager, $customer, $orderRepository);
-            // Връщане на отговор към клиента
-           // $orders = $orderRepository->findBy([], ['id' => 'DESC']);
-            //dd($orders);
             // Редирект към основната страница
             return $this->redirectToRoute('app_order');
-
-            return new JsonResponse(['success' => true]);
-            //return new JsonResponse(['success' => true]);
-
+        } else {
+            // Връщане на JSON отговор при невалидна форма
+            return new JsonResponse(['success' => false, 'errors' => (string) $form->getErrors(true, false)]);
         }
+
         return $this->render('payment/payables.html.twig', [
             'orders' => $orders, 'customer' => $customerName, 'form' => $form->createView()
         ]);
@@ -102,15 +73,11 @@ class PaymentController extends AbstractController
                 $user = $this->getUser();
                 $orderId = $orderPayment['orderId'];
                 $order = $orderRepository->getOrderById($orderId);
-                
                 $paymentAmount = $orderPayment['paymentAmount'];
-                
                 $orderNumber = $orderPayment['orderNumber'];
                 $paymentDoc = $orderPayment['paymentDoc'];
                 $docNumber = $orderPayment['docNumber'];
                 
-            
-
                 // Създаване на нов запис в таблицата Payment
                 $payment = new Payment();
                 $payment->setNumberOrder($orderNumber);
@@ -194,40 +161,4 @@ class PaymentController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_payment_show', methods: ['GET'])]
-    public function show(Payment $payment): Response
-    {
-        return $this->render('payment/show.html.twig', [
-            'payment' => $payment,
-        ]);
-    }
-
-    #[Route('/{id}/edit', name: 'app_payment_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Payment $payment, EntityManagerInterface $entityManager): Response
-    {
-        $form = $this->createForm(PaymentType::class, $payment);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_payment_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('payment/edit.html.twig', [
-            'payment' => $payment,
-            'form' => $form,
-        ]);
-    }
-
-    #[Route('/{id}', name: 'app_payment_delete', methods: ['POST'])]
-    public function delete(Request $request, Payment $payment, EntityManagerInterface $entityManager): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$payment->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($payment);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('app_payment_index', [], Response::HTTP_SEE_OTHER);
-    }
 }

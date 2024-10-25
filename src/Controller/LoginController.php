@@ -13,15 +13,12 @@ class LoginController extends AbstractController
     #[Route('/index', name: 'app_login')]
     public function index(AuthenticationUtils $authenticationUtils, Security $security): Response
     {
-        // Ако потребителят има запазена бисквитка REMEMBERME, пренасочи го
         if ($security->isGranted('IS_AUTHENTICATED_FULLY')) {
-            return $this->redirectToRoute('app_order'); // Пренасочване към поръчките
+            return $this->redirectToRoute('app_order'); // Пренасочване към поръчките, при rememberme
         }
 
-        // get the login error if there is one
          $error = $authenticationUtils->getLastAuthenticationError();
 
-         // last username entered by the user
          $lastUsername = $authenticationUtils->getLastUsername();
         
         return $this->render('login/index.html.twig', [

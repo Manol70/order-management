@@ -9,8 +9,8 @@
     <table class="table table-sm table-hover table-sticky" id="order-table">
         <thead class="thead-light">
             <tr>
-                <th>
-                    Номер
+                <th>Номер <br>
+                {% if currentPage == 1%}
                     {% if sort == 'id' %}
                         {% if sortDirection == 'asc' %}
                             <a href="{{ path('app_order', 
@@ -19,8 +19,8 @@
                             &#9660; <!-- Стрелка за възходящо сортиране -->
                             </a>
                             &#9609;
-                        {% else %}
-                            <br>
+                        {% else %}  
+                            
                             &#9609;
                             <a href="{{ path('app_order', 
                                 app.request.query.all() | merge({'sort': 'id', 'sortDirection': 'desc'})
@@ -29,19 +29,18 @@
                             </a>
                         {% endif %}
                     {% else %}
-                        <a href="{{ path('app_order', {
-                            'sort': 'id',
-                            'sortDirection': 'desc'
-                        }) }}" target="_top" title="сортирай низходящо">
+                        <a href="{{ path('app_order',
+                            app.request.query.all() | merge({'sort': 'id', 'sortDirection': 'desc'})
+                        ) }}" target="_top" title="сортирай низходящо">
                             &#9650;
                         </a>
-                         <a href="{{ path('app_order', {
-                            'sort': 'id',
-                            'sortDirection': 'asc'
-                        }) }}" target="_top" title="сортирай възходящо">
+                        <a href="{{ path('app_order',
+                            app.request.query.all() | merge({'sort': 'id', 'sortDirection': 'asc'})
+                        ) }}" target="_top" title="сортирай възходящо">
                             &#9660; <!-- Стрелка надолу (триъгълник) -->
                         </a>
                     {% endif %}
+                {% endif %}    
                 </th>
                 <th>Клиент</th>
                 <th class="short-version">Схема</th>
@@ -51,18 +50,18 @@
                 <th>за дата</th>
                 <th>цена</th>
                 <th>платено</th>
-                <th>            
-                    Дължима <br> сума
-                    {% if sort == 'id' %}
-                        <a href="{{ path('app_order', {
-                            'sort': 'balance',
-                            'sortDirection': 'asc'
-                        }) }}" target="_top">
-                        &#9660;
-                    {% else %}
-                        &#9609;
-                    {% endif %}
+                <th> Дължима <br> сума
+                    {% if currentPage == 1 %}
+                        {% if sort == 'id' %}
+                            <a href="{{ path('app_order',
+                                app.request.query.all() | merge({'sort': 'balance', 'sortDirection': 'asc'})
+                            ) }}" target="_top">
+                            &#9660;
+                        {% else %}
+                            &#9609;
+                        {% endif %}
                         </a>
+                    {% endif %}    
                 </th>
                 <th>плащане</th>
                 <th>статус</th>

@@ -90,23 +90,7 @@ class SearchFormType extends AbstractType
         ->add('source', HiddenType::class, [
             'data' => 'filter'
         ]);
-      /* ->add('sort', HiddenType::class, [
-            'mapped' => false,
-            'data' => 'false', 
-       ]);
-     /*   ->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
-            $data = $event->getData();
-    
-            // Винаги нулираме стойността на 'sort' при всяко ново изпращане на формата
-            $data['sort'] = 'false';
-            
-            $event->setData($data);
-        });
-        */
-        
-     
     }
-
 
     public function configureOptions(OptionsResolver $resolver)
     {

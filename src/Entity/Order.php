@@ -108,10 +108,6 @@ class Order
     #[ORM\Column(type: "decimal", precision: 10, scale: 2, nullable: false)]
     private float $balance = 0.00;
 
-    
-
-    
-
     public function __construct()
     {
         $this->glassHistories = new ArrayCollection();
@@ -119,8 +115,6 @@ class Order
         $this->mosquitoHistories = new ArrayCollection();
         $this->detailHistories = new ArrayCollection();
     }
-
-    
    
     public function getId(): ?int
     {

@@ -25,10 +25,8 @@ class StatusController extends AbstractController
     #[Route('/status/glass', name: 'app_status_glass')]
     public function statusGlass(Request $request, GlassRepository $glassRepository, OrderRepository $orderRepository): Response
     {
-        // Проверка дали данните се получават правилно
-        //dd($request->query->all());
+        
         $orderId = $request->query->get('orderId');
-        //dd($orderId);
         $order = $orderRepository->findOneBy(['id'=>$orderId]);
         $numberOrder = $order->getNumber();
         $currentGlassId = $order->getGlass()->getId();
@@ -42,9 +40,7 @@ class StatusController extends AbstractController
             ->getQuery()
             ->getSingleScalarResult();
         $newGlass = $glassRepository->findOneBy(['id' => $newGlassId]);
-        //dd($newStatus);
         $newGlassName = $newGlass->getName(); 
-        //dd($request);
         return $this->render('status/glass.html.twig', [
             'orderId' => $orderId,
             'currentGlassName' => $currentGlassName,
@@ -84,16 +80,13 @@ class StatusController extends AbstractController
     #[Route('/status/detail', name: 'app_status_detail')]
     public function statusDetail(Request $request, DetailRepository $detailRepository, OrderRepository $orderRepository): Response
     {
-        //dd($request);
         $orderId = $request->query->get('orderId');
         $order = $orderRepository->findOneBy(['id'=>$orderId]);
         $numberOrder = $order->getNumber();
         $currentDetailId = $order->getDetail()->getId();
-        //dd($currentDetailId);
         $currentDetail = $detailRepository->findOneBy(['id' => $currentDetailId]);
         $currentDetailName = $currentDetail->getName();
         // Намераме следващият статус
-        //dd($currentDetailId);
         $newDetailId = $detailRepository->createQueryBuilder('d')
             ->select('MIN(d.id)')
             ->where('d.id > :currentDetailId')
@@ -102,7 +95,6 @@ class StatusController extends AbstractController
             ->getSingleScalarResult();
         $newDetail = $detailRepository->findOneBy(['id' => $newDetailId]);
         $newDetailName = $newDetail->getName();
-        //dd($newDetailName); 
         return $this->render('status/detail.html.twig', [
             'orderId' => $orderId,
             'currentDetailName' => $currentDetailName,
@@ -117,14 +109,9 @@ class StatusController extends AbstractController
                                 OrderController $orderController, GlassRepository $glassRepository,
                                 MosquitoRepository $mosquitoRepository, DetailRepository $detailRepository): Response
     {
-       /* if($orderId){
-            dd($orderId);
-        }
-*/
         $currentPage = $request->query->get('currentPage');
         $orderId = $request->query->get('orderId');
         $order = $orderRepository->findOneBy(['id'=>$orderId]);
-        $currentStatus = $order->getStatus();
         $numberOrder = $order->getNumber();
         $currentStatusGlass = $order->getGlass();
         $currentStatusMosquito = $order->getMosquito();
@@ -138,13 +125,10 @@ class StatusController extends AbstractController
         $lastStatusMosquitoId = $lastStatus['lastStatusMosquito']->getId();
         $lastStatusDetail = $lastStatus['lastStatusDetail'];
         $lastStatusDetailId = $lastStatus['lastStatusDetail']->getId();
-        //dd($lastStatusGlassId);
         $penultStatus = $orderController->penultStatus($request, $statusRepository, $glassRepository, $mosquitoRepository, $detailRepository);
-        
         $penultStatusGlass = $penultStatus['penultStatusGlass'];
         $penultStatusMosquito = $penultStatus['penultStatusMosquito'];
         $penultStatusDetail = $penultStatus['penultStatusDetail'];
-        //dd($penultStatus);
         $statusId = $order->getStatus()->getId();
         $currentStatusName = $statusRepository->findOneBy(['id' => $statusId]);
         $currentStatusName = $currentStatusName->getName();
@@ -156,7 +140,6 @@ class StatusController extends AbstractController
             ->getQuery()
             ->getSingleScalarResult();
         $newStatus = $statusRepository->findOneBy(['id' => $newStatusId]);
-        //dd($newStatus);
         
         $newStatusName = $newStatus->getName();
         $newStatusGlassId = '';
@@ -168,28 +151,7 @@ class StatusController extends AbstractController
         $messageGlass = '';
         $messageMosquito = '';
         $messageDetail = '';
-        
-
-        
         if($lastStatusOrder == $newStatus){
-            /*if($order->getGlass() == $penultStatusGlass
-                AND $order->getMosquito() == null 
-                AND $order->getDetail() == null)
-                {
-                    return $this->render('status/order.html.twig', [
-                        'orderId' => $orderId,
-                        'currentStatus' => $currentStatusName,
-                        'newStatusName' => $newStatusName,
-                        'newStatusId' => $newStatusId,
-                        'newGlassId' => $lastStatusGlassId,
-                        'glass' => true,
-                        'newMosquitoId'  => '',
-                        'mosquito' => false,
-                        'newDetailId' => '',
-                        'detail' => false,
-                        'message' => 'Към поръчката има Отбележете, ако искате статусът му да бъде променен на ВЗЕТ'
-                    ]);
-                }*/
             if ($currentStatusGlass == $penultStatusGlass){
                 $glassChange = true;
                 $newStatusGlassId = $lastStatusGlassId;
@@ -199,7 +161,6 @@ class StatusController extends AbstractController
                       AND $currentStatusGlass !== $lastStatusGlass){
                 $messageGlass = 'Към поръчката има СТЪКЛОПАКЕТ, който НЕ Е готов за предаване и остава с текущия статус';
             }
-
             if ($currentStatusMosquito == $penultStatusMosquito){
                 $mosquitoChange = true;
                 $newStatusMosquitoId = $lastStatusMosquitoId;
@@ -217,22 +178,8 @@ class StatusController extends AbstractController
                       AND $currentStatusDetail !== $penultStatusDetail
                       AND $currentStatusDetail !== $lastStatusDetail){
                 $messageDetail = 'Към поръчката има ДОП. ПРОФИЛ, който НЕ Е готов за предаване и остава с текущия статус';
-            }  
-            
-            /*if($order->getDetail() !== Null AND $order->getDetail() !== $lastStatus['lastStatusDetail'] ){
-                return new JsonResponse('The status cannot be changed', 200);
-                return $this->render('status/orderNoChangeStatus.html.twig', [
-                    'orderId' => $orderId,
-                    'currentStatus' => $currentStatusName,
-                    'newStatusName' => $newStatusName,
-                    'newStatusId' => $newStatusId,
-                    'canChangeStatus' => true,
-
-                ]);
-            }*/
+            }     
         }
-        //dd($glassChange);
-        //dd($request);
         return $this->render('status/order.html.twig', [
             'orderId' => $orderId,
             'currentStatus' => $currentStatusName,
@@ -257,61 +204,54 @@ class StatusController extends AbstractController
                                     GlassRepository $glassRepository, MosquitoRepository $mosquitoRepository,
                                     DetailRepository $detailRepository,
                                     EntityManagerInterface $em): Response
-{
-    dd($request);
-    // Получаване на ID на избраните поръчки и новия статус от заявката
-    $selectedOrders = $request->get('selectedOrders');
-    //dd($selectedOrders);
-    $currentStatusId = $request->request->get('statusId');
-    $lastStatusId = $statusRepository->lastStatusOrder();
-    //dd($currentStatusId);
-    //dd($lastStatusId);
-    $newStatusId = $statusRepository->determineNewStatus($currentStatusId);
-    if ($newStatusId == $lastStatusId){
-        foreach ($selectedOrders as $orderId) {
-            //dd($orderId);
-            $this->statusOrder($request, $statusRepository, $orderRepository, 
-                                                     $orderController, $glassRepository, 
-                                                     $mosquitoRepository, $detailRepository, $orderId);
-        }
-        
-    }
-    $newStatus = $statusRepository->find($newStatusId);
-    //dd($newStatus);
-    if ($newStatus) {
-        $em->beginTransaction();
-        try {
+    {
+        // Получаване на ID на избраните поръчки и новия статус от заявката
+        $selectedOrders = $request->get('selectedOrders');
+        $currentStatusId = $request->request->get('statusId');
+        $lastStatusId = $statusRepository->lastStatusOrder();
+        $newStatusId = $statusRepository->determineNewStatus($currentStatusId);
+        if ($newStatusId == $lastStatusId){
             foreach ($selectedOrders as $orderId) {
-                // Намери поръчката по ID
-                $order = $orderRepository->find($orderId);
-                if ($order) {
-                    // Актуализирай статуса на поръчката
-                    $order->setStatus($newStatus);
-                    $em->persist($order);
-
-                    // Създаване на запис в StatusHistory
-                    $statusHistory = new StatusHistory();
-                    $statusHistory->setOrder($order);
-                    $statusHistory->setUser($this->getUser()); 
-                    $statusHistory->setStatus($newStatus);
-                    $statusHistory->setNumberOrder($order->getNumber());
-                    $em->persist($statusHistory);
-                }
+                //dd($orderId);
+                $this->statusOrder($request, $statusRepository, $orderRepository, 
+                                $orderController, $glassRepository, 
+                                $mosquitoRepository, $detailRepository, $orderId);
             }
-            // Запази промените в базата данни
-            $em->flush();
-            $em->commit();
-        } catch (\Exception $e) {
-            $em->rollback();
-            throw $e; // Прехвърляй грешката нагоре
         }
-    }
-    // Добавяне на flash съобщение
-    $this->addFlash('success', 'Статусите бяха променени успешно.');
-    // Пренасочване към страницата с поръчките
-    return $this->redirectToRoute('app_order',[
-        'fromStatus' => true
-    ]);
-}
+        $newStatus = $statusRepository->find($newStatusId);
+        if ($newStatus) {
+            $em->beginTransaction();
+            try {
+                foreach ($selectedOrders as $orderId) {
+                    // Намери поръчката по ID
+                    $order = $orderRepository->find($orderId);
+                    if ($order) {
+                        // Актуализирай статуса на поръчката
+                        $order->setStatus($newStatus);
+                        $em->persist($order);
 
+                        // Създаване на запис в StatusHistory
+                        $statusHistory = new StatusHistory();
+                        $statusHistory->setOrder($order);
+                        $statusHistory->setUser($this->getUser()); 
+                        $statusHistory->setStatus($newStatus);
+                        $statusHistory->setNumberOrder($order->getNumber());
+                        $em->persist($statusHistory);
+                    }
+                }
+                // Запази промените в базата данни
+                $em->flush();
+                $em->commit();
+            } catch (\Exception $e) {
+                $em->rollback();
+                throw $e; // Прехвърляй грешката нагоре
+            }
+        }
+        // Добавяне на flash съобщение
+        $this->addFlash('success', 'Статусите бяха променени успешно.');
+        // Пренасочване към страницата с поръчките
+        return $this->redirectToRoute('app_order',[
+            'fromStatus' => true
+        ]);
+    }
 }

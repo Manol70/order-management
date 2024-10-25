@@ -33,8 +33,7 @@ class CreateOrderDataFormType extends AbstractType
             'choice_label' => function(Customer $Customer){
                 return $Customer->getName();
             },
-            
-            'attr' => ['class' => 'customer-autocomplete-field'] // добавяне на клас за стилизиране
+            'attr' => ['class' => 'customer-autocomplete-field'], // добавяне на клас за стилизиране
         ])
         ->add('type', EntityType::class,[
             'class' => Type::class,
@@ -68,12 +67,12 @@ class CreateOrderDataFormType extends AbstractType
             'label' => 'За дата',
             'input'  => 'datetime_immutable',
             'constraints' => [
-            new NotBlank(['message' => 'Моля, въведете дата.']),
-            new GreaterThanOrEqual([
-            'value' => new \DateTimeImmutable('today'),
-            'message' => 'Датата не може да бъде по-стара от днешната.',
-        ]),
-    ],
+                new NotBlank(['message' => 'Моля, въведете дата.']),
+                new GreaterThanOrEqual([
+                    'value' => new \DateTimeImmutable('today'),
+                    'message' => 'Датата не може да бъде по-стара от днешната.',
+                ]),
+            ],
         ])
         ->add('glass', CheckboxType::class, array(
             'label' => 'стъклопакет',

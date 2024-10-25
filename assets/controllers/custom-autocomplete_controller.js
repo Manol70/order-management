@@ -6,7 +6,7 @@ export default class extends Controller {
         this._onPreConnect = this._onPreConnect.bind(this);
         this._onConnect = this._onConnect.bind(this);
     }
-
+ 
     connect() {
         this.element.addEventListener('autocomplete:pre-connect', this._onPreConnect);
         this.element.addEventListener('autocomplete:connect', this._onConnect);
@@ -28,7 +28,7 @@ export default class extends Controller {
 
     _onConnect(event) {
         // TomSelect has just been intialized and you can access details from the event
-        console.log(event.detail.tomSelect); // TomSelect instance
+        console.log("Tom Select instance:", event.detail.tomSelect); // TomSelect instance
         console.log(event.detail.options); // Options used to initialize TomSelect
     }
 }

@@ -3,17 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Order;
-use App\Entity\Customer;
-use App\Entity\TypeMontage;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Form\FormTypeInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\OrderRepository;
 use App\Form\CreateOrderDataFormType;
-use App\Form\AddOrderFormType;
 use App\Repository\TypeMontageRepository;
 use App\Repository\GlassRepository;
 use App\Repository\DetailRepository;
@@ -23,10 +19,7 @@ use App\Entity\StatusHistory;
 use App\Entity\GlassHistory;
 use App\Entity\DetailHistory;
 use App\Entity\MosquitoHistory;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Doctrine\DBAL\LockMode;
-use Symfony\Component\Form\FormError;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 
 use function PHPSTORM_META\type;
@@ -36,17 +29,15 @@ class CreateOrderController extends AbstractController
     #[Route('/create/order', name: 'app_create_order')]
     
     public function index(EntityManagerInterface $entityManager, OrderRepository $orderRepository,
-                         TypeMontageRepository $typeMontageRepository, 
-                          GlassRepository $glassRepository,
-                          DetailRepository $detailRepository,
-                         MosquitoRepository $mosquitoRepository,
-                         StatusRepository $statusRepository, 
-                         ValidatorInterface $validator, 
-                         SessionInterface $session, Request $request): Response
+                        TypeMontageRepository $typeMontageRepository, 
+                        GlassRepository $glassRepository,
+                        DetailRepository $detailRepository,
+                        MosquitoRepository $mosquitoRepository,
+                        StatusRepository $statusRepository, 
+                        Request $request): Response
     {
         
         $lastOrders = $orderRepository->findBy([],['number' => 'desc'], 5);
-        //dd($lastOrders); 
         $lastOrder = $lastOrders[0];
         $lastNumber = $lastOrder->getNumber();
         $lastOrderYear = $lastOrder->getCreatedAt()->format('Y'); 
@@ -83,7 +74,6 @@ class CreateOrderController extends AbstractController
                     ->setParameter('startOfYear', $startOfYear)
                     ->setParameter('endOfYear', $endOfYear)
                     ->getQuery()
-                    /*->getResult();*/
                     ->getOneOrNullResult();
                     
                  
@@ -183,7 +173,6 @@ class CreateOrderController extends AbstractController
             if ($request->isXmlHttpRequest()) {
                 return new Response(null, 204);
             }
-            
             //dd($entityManager);
             $orders = $orderRepository->findall();
             $this->addFlash('success', 'ПОРЪЧКАТА Е СЪЗДАДЕНА!');
@@ -197,9 +186,9 @@ class CreateOrderController extends AbstractController
             'numberOrder' => $newNumber,
             'orders' => $lastOrders
         ], new Response(
-            null,
-            $form->isSubmitted() && !$form->isValid() ? 422 : 200,
-        ));
+                null,
+                $form->isSubmitted() && !$form->isValid() ? 422 : 200,
+            ));
         
     }
 }

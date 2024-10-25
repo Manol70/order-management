@@ -21,49 +21,24 @@ class PaymentRepository extends ServiceEntityRepository
         parent::__construct($registry, Payment::class);
     }
 
-//    /**
-//     * @return Payment[] Returns an array of Payment objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('p.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-        public function findByOrderId($orderId): array
-        {
-            return $this->createQueryBuilder('p')
-                ->andWhere('p._order = :orderId')
-                ->setParameter('orderId', $orderId)
-                ->getQuery()
-                ->getResult();
-        }   
 
-        public function findByCustomerId($customerId): array
-        {
+    public function findByOrderId($orderId): array
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p._order = :orderId')
+            ->setParameter('orderId', $orderId)
+            ->getQuery()
+            ->getResult();
+    }   
+
+    public function findByCustomerId($customerId): array
+    {
             
-            return $this->createQueryBuilder('p')
-                ->andWhere('p.customer = :customerId')
-                ->setParameter('customerId', $customerId)
-                ->getQuery()
-                ->getResult();
-        }   
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.customer = :customerId')
+            ->setParameter('customerId', $customerId)
+            ->getQuery()
+            ->getResult();
+    }   
 
-
-
-/*      public function findOneBySomeField($value): ?Payment
-      {
-          return $this->createQueryBuilder('p')
-              ->andWhere('p.exampleField = :val')
-              ->setParameter('val', $value)
-              ->getQuery()
-              ->getOneOrNullResult()
-          ;
-      }
- */     
 }

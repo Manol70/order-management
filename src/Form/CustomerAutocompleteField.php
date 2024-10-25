@@ -29,15 +29,17 @@ class CustomerAutocompleteField extends AbstractType
             'class' => Customer::class,
             'attr' => ['data-controller' => 'custom-autocomplete',],
             'placeholder' => 'Избери',
-            // 'searchable_fields' => ['name'],
             'label' => 'Въведи клиент',
             'choice_label' => 'name',
-            //'multiple' => true,
             'max_characters' => 1,
-            //'required' => false,
            /* 'constraints' => [
-                new Count(min: 1, minMessage: 'We need to eat *something*'),
+                new Count(max: 1, minMessage: 'We need to eat *something*'),
             ],*/
+            'autocomplete' => true,
+            'tom_select_options' =>[
+                'maxItems' => 1, 'closeAfterSelect' => true
+            ],
+            
             'filter_query' => function(QueryBuilder $qb, string $searchString, CustomerRepository $repository) {
                 if (!$searchString) {
                     return;

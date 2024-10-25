@@ -79,7 +79,7 @@ class Detail
 
     /**
      * @return Collection<int, DetailHistory>
-     */
+    */
     public function getDetailHistories(): Collection
     {
         return $this->detailHistories;

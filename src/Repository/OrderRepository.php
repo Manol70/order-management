@@ -90,9 +90,6 @@ class OrderRepository extends ServiceEntityRepository
 
         return $queryResult;
     }
-    
-    
-
 
     public function createQueryBuilderForAllOrders()
     {
@@ -100,109 +97,109 @@ class OrderRepository extends ServiceEntityRepository
                     ->orderBy('o.id', 'DESC');
     }
 
-public function getTotalOrders( $fromDate,  $toDate)
-{ 
-    return $this->createQueryBuilder('o')
-        ->select('COUNT(o.id) as total_orders')
-        ->where('o.createdAt BETWEEN :createdAt AND :to_date')
-        ->setParameter('createdAt', $fromDate)
+    public function getTotalOrders( $fromDate,  $toDate)
+    { 
+        return $this->createQueryBuilder('o')
+            ->select('COUNT(o.id) as total_orders')
+            ->where('o.createdAt BETWEEN :createdAt AND :to_date')
+            ->setParameter('createdAt', $fromDate)
+            ->setParameter('to_date', $toDate)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function getTotalQuadrature( $fromDate,  $toDate)
+    { 
+        return $this->createQueryBuilder('o')
+            ->select('SUM(o.quadrature) as total_quadrature')
+            ->where('o.createdAt BETWEEN :createdAt AND :to_date')
+            ->setParameter('createdAt', $fromDate)
+            ->setParameter('to_date', $toDate)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function getTotalAmount( $fromDate,  $toDate)
+    { 
+        return $this->createQueryBuilder('o')
+            ->select('SUM(o.price) as total_amount')
+            ->where('o.createdAt BETWEEN :createdAt AND :to_date')
+            ->setParameter('createdAt', $fromDate)
+            ->setParameter('to_date', $toDate)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function getTotalPaid( $fromDate,  $toDate)
+    { 
+        return $this->createQueryBuilder('o')
+            ->select('SUM(o.paid) as total_paid')
+            ->where('o.createdAt BETWEEN :createdAt AND :to_date')
+            ->setParameter('createdAt', $fromDate)
+            ->setParameter('to_date', $toDate)
+            ->getQuery()
+            ->getSingleScalarResult();
+    } 
+
+    public function getTopTurnover(EntityManager $entityManager, $fromDate,  $toDate)
+    { 
+        $query = $entityManager->createQuery(
+            'SELECT 
+                c.id AS customerId,
+                c.name AS customerName,
+                SUM(o.price) AS totalRevenue
+            FROM App\Entity\Order o
+            JOIN o.customer c
+            WHERE o.createdAt BETWEEN :from_date AND :to_date
+            GROUP BY c.id
+            ORDER BY totalRevenue DESC'
+        )
+        ->setParameter('from_date', $fromDate)
         ->setParameter('to_date', $toDate)
-        ->getQuery()
-        ->getSingleScalarResult();
-}
+        ->setMaxResults(10);
+        $result = $query->getResult();
+        return $result;
+    }
 
-public function getTotalQuadrature( $fromDate,  $toDate)
-{ 
-    return $this->createQueryBuilder('o')
-        ->select('SUM(o.quadrature) as total_quadrature')
-        ->where('o.createdAt BETWEEN :createdAt AND :to_date')
-        ->setParameter('createdAt', $fromDate)
+    public function getTopQuadratureByCustomer(EntityManager $entityManager, $fromDate,  $toDate)
+    {
+        $query = $entityManager->createQuery(
+            'SELECT 
+                c.id AS customerId,
+                c.name AS customerName,
+                SUM(o.quadrature) AS totalQuadrature
+            FROM App\Entity\Order o
+            JOIN o.customer c
+            WHERE o.createdAt BETWEEN :from_date AND :to_date
+            GROUP BY c.id
+            ORDER BY totalQuadrature DESC'
+        )
+        ->setParameter('from_date', $fromDate)
         ->setParameter('to_date', $toDate)
-        ->getQuery()
-        ->getSingleScalarResult();
-}
+        ->setMaxResults(10);
+        $result = $query->getResult();
+        return $result;
+    }
 
-public function getTotalAmount( $fromDate,  $toDate)
-{ 
-    return $this->createQueryBuilder('o')
-        ->select('SUM(o.price) as total_amount')
-        ->where('o.createdAt BETWEEN :createdAt AND :to_date')
-        ->setParameter('createdAt', $fromDate)
+    public function getTopCountOrderByCustomer(EntityManager $entityManager, $fromDate,  $toDate)
+    {
+        $query = $entityManager->createQuery(
+            'SELECT 
+                c.id AS customerId,
+                c.name AS customerName,
+                COUNT(o.id) AS orderCount
+            FROM App\Entity\Order o
+            JOIN o.customer c
+            WHERE o.createdAt BETWEEN :from_date AND :to_date
+            GROUP BY c.id
+            ORDER BY orderCount DESC'
+        )
+        ->setParameter('from_date', $fromDate)
         ->setParameter('to_date', $toDate)
-        ->getQuery()
-        ->getSingleScalarResult();
-}
-
-public function getTotalPaid( $fromDate,  $toDate)
-{ 
-    return $this->createQueryBuilder('o')
-        ->select('SUM(o.paid) as total_paid')
-        ->where('o.createdAt BETWEEN :createdAt AND :to_date')
-        ->setParameter('createdAt', $fromDate)
-        ->setParameter('to_date', $toDate)
-        ->getQuery()
-        ->getSingleScalarResult();
-} 
-
-public function getTopTurnover(EntityManager $entityManager, $fromDate,  $toDate)
-{ 
-    $query = $entityManager->createQuery(
-        'SELECT 
-            c.id AS customerId,
-            c.name AS customerName,
-            SUM(o.price) AS totalRevenue
-        FROM App\Entity\Order o
-        JOIN o.customer c
-        WHERE o.createdAt BETWEEN :from_date AND :to_date
-        GROUP BY c.id
-        ORDER BY totalRevenue DESC'
-    )
-    ->setParameter('from_date', $fromDate)
-    ->setParameter('to_date', $toDate)
-    ->setMaxResults(10);
-    $result = $query->getResult();
-    return $result;
-}
-
-public function getTopQuadratureByCustomer(EntityManager $entityManager, $fromDate,  $toDate)
-{
-    $query = $entityManager->createQuery(
-        'SELECT 
-            c.id AS customerId,
-            c.name AS customerName,
-            SUM(o.quadrature) AS totalQuadrature
-        FROM App\Entity\Order o
-        JOIN o.customer c
-        WHERE o.createdAt BETWEEN :from_date AND :to_date
-        GROUP BY c.id
-        ORDER BY totalQuadrature DESC'
-    )
-    ->setParameter('from_date', $fromDate)
-    ->setParameter('to_date', $toDate)
-    ->setMaxResults(10);
-    $result = $query->getResult();
-    return $result;
-}
-
-public function getTopCountOrderByCustomer(EntityManager $entityManager, $fromDate,  $toDate)
-{
-    $query = $entityManager->createQuery(
-        'SELECT 
-            c.id AS customerId,
-            c.name AS customerName,
-            COUNT(o.id) AS orderCount
-        FROM App\Entity\Order o
-        JOIN o.customer c
-        WHERE o.createdAt BETWEEN :from_date AND :to_date
-        GROUP BY c.id
-        ORDER BY orderCount DESC'
-    )
-    ->setParameter('from_date', $fromDate)
-    ->setParameter('to_date', $toDate)
-    ->setMaxResults(10);
-    $result = $query->getResult();
-    return $result;   
-}
+        ->setMaxResults(10);
+        $result = $query->getResult();
+        return $result;   
+    }
 
 
 

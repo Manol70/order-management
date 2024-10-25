@@ -13,11 +13,11 @@ class ReferenceDateStatusFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-       //dd($options);
        $defaultDate = $options['default_date'] ?? null;
        $defaultStatus = $options['default_status'] ?? null;
        
         $builder
+        
         ->add('for_date', DateType::class,[
             'label' => 'Избери друга дата',
             'widget' => 'single_text',
