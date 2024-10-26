@@ -15,7 +15,6 @@ import getNiceMessage from './get_nice_message';
 import { session } from "@hotwired/turbo";
 session.drive = false;
 
-console.log(getNiceMessage(3));
 
 // start the Stimulus application
 import './bootstrap';

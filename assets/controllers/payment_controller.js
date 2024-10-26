@@ -13,9 +13,7 @@ export default class extends Controller {
 
     async submitForm(event) {
         event.preventDefault();
-        
         const formData = new FormData(this.formTarget);
-        
         const response = await fetch(this.formTarget.action, {
             method: this.formTarget.method,
             body: formData
@@ -28,9 +26,8 @@ export default class extends Controller {
                 const html = await contentResponse.text();
                 // Обновяване на съдържанието на страницата
                 document.getElementById('mainContent').innerHTML = html;
-
             } else {
-                console.error('Payment failed');
+               console.error('Payment failed');
             }
         } else {
             console.error('Error submitting form', response.status, response.statusText);

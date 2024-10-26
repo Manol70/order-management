@@ -7,8 +7,6 @@ export default class extends Controller {
 
 
     connect() {
-        console.log("Connected to version controller");
-        // Четене на състоянието от localStorage, ако съществува
         const savedVersion = localStorage.getItem('tableVersion') || 'full';
         this.isFullVersionValue = savedVersion === 'full';
         

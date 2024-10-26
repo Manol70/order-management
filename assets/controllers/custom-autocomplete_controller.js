@@ -20,7 +20,7 @@ export default class extends Controller {
 
     _onPreConnect(event) {
         // TomSelect has not been initialized - options can be changed
-        console.log(event.detail.options); // Options that will be used to initialize TomSelect
+        //console.log(event.detail.options); // Options that will be used to initialize TomSelect
         event.detail.options.onChange = (value) => {
             // ...
         };
@@ -28,7 +28,7 @@ export default class extends Controller {
 
     _onConnect(event) {
         // TomSelect has just been intialized and you can access details from the event
-        console.log("Tom Select instance:", event.detail.tomSelect); // TomSelect instance
-        console.log(event.detail.options); // Options used to initialize TomSelect
+        //console.log("Tom Select instance:", event.detail.tomSelect); // TomSelect instance
+        //console.log(event.detail.options); // Options used to initialize TomSelect
     }
 }

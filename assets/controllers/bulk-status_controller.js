@@ -9,12 +9,6 @@ export default class extends Controller {
     }
 
     connect() {
-        console.log('bulk-status контролер е свързан.');
-        console.log('Получени URL-и:', this.urlsValue);
-        console.log('Получен Status ID:', this.statusIdValue);
-        console.log('Получен modalTitle:', this.modalTitleValue);
-        
-
         this.hasChanges = false;  // Добавяме променлива, която следи за промени
         this.currentUrlIndex = 0;
         this.startCycle();
@@ -23,43 +17,31 @@ export default class extends Controller {
     }
 
     handleSuccess() {
-        console.log('Operation was successful.');
-        this.hasChanges = true; // Може да актуализирате променливата при успешна операция
-        //this.showSuccessMessage(); // Показваме съобщение за успех
+        this.hasChanges = true; // Актуализиране на променливата при успешна операция
     }
 
     disconnect() {
-        console.log('Removing event listeners.');
         window.removeEventListener('success', this.handleSuccess.bind(this));
     }
 
     startCycle() {
         if (this.currentUrlIndex < this.urlsValue.length) {
             const url = this.urlsValue[this.currentUrlIndex];
-            
-            console.log('Обработка на URL:', url);
             const bulk = true;  // Задаваме `bulk` на true при множествени промени
             this.showOrderModal(url, bulk);
         } else {
-                        
-            console.log('Всички поръчки са обработени.');
             this.hasChanges = true;
-            console.log('hasChanges:', this.hasChanges)
-            // Проверка дали всички URL адреси са обработени
-        if (this.currentUrlIndex == this.urlsValue.length) {
-            
-                        
-            if (this.hasChanges) {  // Показваме съобщението само ако е направена промяна
-                alert('Всички поръчки са обработени.'); 
-                        
-                this.showSuccessMessage();
-                setTimeout(() => {
-                    window.location.href = "/order"; // Презареждане на страницата след успешна промяна
-                }, 0); // Презареждане след 0 секунди, може да се добави време за изчакване
-            } else {
+            if (this.currentUrlIndex == this.urlsValue.length) {
+                if (this.hasChanges) {  // Показваме съобщението само ако е направена промяна
+                    alert('Всички поръчки са обработени.'); 
+                    this.showSuccessMessage();
+                    setTimeout(() => {
+                        window.location.href = "/order"; // Презареждане на страницата след успешна промяна
+                    }, 0); // Презареждане след 0 секунди, може да се добави време за изчакване
+                } else {
                 // Ако няма промени, просто презареждаме страницата без да показваме съобщение за успех
                 window.location.href = "/order";
-            }
+                }
             }
         }
     }
@@ -70,33 +52,26 @@ export default class extends Controller {
             'modal-form'
         );
             if (modalController) {
-            modalController.formUrlValue = url;
-            modalController.bulkValue = bulk;
-            console.log('bulkShowOrderModal:', modalController.bulkValue);
-            modalController.modalTitleValue = this.modalTitleValue; // Добавяне на заглавието
-            await modalController.openModal();
+                modalController.formUrlValue = url;
+                modalController.bulkValue = bulk;
+                modalController.modalTitleValue = this.modalTitleValue; // Добавяне на заглавието
+                await modalController.openModal();
 
-            modalController.element.addEventListener('hidden.bs.modal', () => {
-                console.log('Модалът е затворен, преминаваме към следващия URL.');
-                
-                this.currentUrlIndex++;
-                this.startCycle(); // Преминаваме към следващия URL
-            }, { once: true });
-        } else {
-            console.error('Не беше намерен контролер за модала.');
-        }
+                modalController.element.addEventListener('hidden.bs.modal', () => {
+                    this.currentUrlIndex++;
+                    this.startCycle(); // Преминаваме към следващия URL
+                }, { once: true });
+            } else {
+            }
     
     }
 
 
     showSuccessMessage() {
-        console.log('Attempting to show success message.');
         const successMessage = document.getElementById('successMessage');
         if (successMessage) {
             successMessage.style.display = 'block';
-            
         } else {
-            console.error('Element with id "successMessage" not found.');
         }
     }
 }

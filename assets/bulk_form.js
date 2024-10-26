@@ -1,6 +1,5 @@
     document.addEventListener('turbo:load', function () { 
         function setupBulkButton(buttonId, statusType) {
-            console.log('STATUS TYPE:', statusType);
             const button = document.getElementById(buttonId);
             if (button) {
                 button.addEventListener('click', function () {
@@ -16,21 +15,14 @@
                         modalTitle = checkbox.getAttribute('data-title');
                     });
     
-                    console.log(`selectedOrders (${statusType}):`, selectedOrders);
-                    console.log(`statusId (${statusType}):`, statusId);
-                    console.log(`modalTitle (${statusType}):`, modalTitle);
-    
                     if (selectedOrders.length === 0) {
                         alert('Моля, изберете поне една поръчка.');
                         return;
                     }
-                    console.log("STATUSTYPE:", statusType);
                     if (statusType=='status'){
                         var urls = selectedOrders.map(orderId => `/status/order?orderId=${orderId}`);
-                        console.log(`if-url: (${statusType}):`, urls);
                     } else {
                     var urls = selectedOrders.map(orderId => `/status/${statusType}?orderId=${orderId}`);
-                    console.log(`url (${statusType}):`, urls);
                     }    
                     var modalCycleButton = document.createElement('button');
                     modalCycleButton.setAttribute('data-controller', 'bulk-status');
@@ -44,7 +36,7 @@
                     modalCycleButton.click();
                 });
             } else {
-                //console.error(`Button with id ${buttonId} not found.`);
+               // console.error(`Button with id ${buttonId} not found.`);
             }
         }
     
@@ -58,8 +50,6 @@
             var glassButton = document.getElementById('changeStatusButtonGlass');
             var detailButton = document.getElementById('changeStatusButtonDetail');
             var mosquitoButton = document.getElementById('changeStatusButtonMosquito');
-            console.log('STATUScheckBOX:', statusCheckboxes);
-            console.log('STATUSbutton:', statusButton);
             if (statusButton && statusCheckboxes.length>0) {
                 // Ако има избрани чекбоксове за статус, деактивирай бутоните за glass, detail, mosquito
                 if(glassButton){

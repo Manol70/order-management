@@ -16,7 +16,7 @@ class Customer
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 50, unique: true)]
     private ?string $name = null;
 
     #[ORM\Column(length: 50, nullable: true)]
@@ -31,7 +31,7 @@ class Customer
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $phone2 = null;
 
-    #[ORM\Column(length: 50, nullable: true)]
+    #[ORM\Column(length: 50, nullable: true, unique: true)]
     private ?string $mail = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
